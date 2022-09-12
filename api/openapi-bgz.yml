@@ -1,0 +1,420 @@
+openapi: '3.0.3'
+info:
+  title: BGZ opvragen
+  version: '0.1.0'
+  description: |
+    Beschrijving van de endpoints zoals benodigd voor de uitwisseling van de BGZ,
+    tussen zorgverleners/toedieners onderling en tussen zorgverleners en PGO.
+    Deze endpoints zijn gebaseerd op de FHIR endpoints zoals beschreven op de
+    [FHIR website](http://hl7.org/fhir/http.html).
+
+servers:
+  - url: https://test.server/fhir/R4/
+    description: FHIR R4 server
+tags:
+  - name: BGZ
+    description: Opvragen/aanleveren van BGZ
+  - name: infra
+    description: Infrastructurele informatie
+paths:
+  /:
+    post:
+      description: |
+        Aanleveren van Task (notified pull). 
+        Client is BGZ-opleverend-systeem. 
+        Server is BGZ-opvragend-systeem.
+      summary: Task aanleveren
+      tags:
+        - BGZ
+      parameters:
+        - $ref: '#/components/parameters/AORTA-ID'
+        - $ref: '#/components/parameters/acces_token_AORTA'
+      requestBody:
+        description: |
+          Bundle met daarin de objecten nodig om de Task met alle referenties door te geven.
+        required: true
+        content:
+          application/fhir+xml;fhirVersion=4.0:
+            schema:
+              $ref: '#/components/schemas/NotifiedPullTaskBundle'
+            examples:
+              NotifiedPullTaskBundle:
+                $ref: '#/components/examples/NotifiedPullTaskBundle'
+      responses:
+        '200':
+          description: Task correct verwerkt
+          content:
+            application/fhir+xml:
+              schema:
+                $ref: '#/components/schemas/NotifiedPullTaskBundleResponse'
+              examples:
+                ok-bericht:
+                  $ref: '#/components/examples/NotifiedPullTaskBundleResponseOK'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        '422':
+          description: The proposed resource violated applicable FHIR profiles or server business rules
+          content:
+            application/fhir+xml:
+              schema:
+                $ref: '#/components/schemas/NotifiedPullTaskBundleResponse'
+              examples:
+                transaction-error:
+                  $ref: '#/components/examples/NotifiedPullTaskBundleResponseError'
+      security:
+        - create_task:
+            - 'user/Task.write'
+
+  /fhirresource:
+    get:
+      description: |
+        ophalen van de gedefinieerde zib. 
+        `fhirresource` moet hierbij vervangen worden door de individuele Resources zoals beschreven in de Notified-Pull Task.
+      summary: Opvragen individuele zibs
+      tags:
+        - BGZ
+      parameters:
+        - $ref: '#/components/parameters/AORTA-ID'
+        - $ref: '#/components/parameters/AORTA-Transactie'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/fhir+xml;fhirVersion=4.0:
+              schema:
+                $ref: '#/components/schemas/FHIRresource'
+              examples:
+                FHIRresource:
+                  $ref: '#/components/examples/FHIRresource'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+      security:
+        - get_bgz:
+          - 'patient/Patient.read'
+          - 'patient/Coverage.read'
+          - 'patient/Consent.read'
+          - 'patient/Condition.read'
+          - 'patient/Observation.read'
+          - 'patient/NutritionOrder.read'
+          - 'patient/Flag.read'
+          - 'patient/AllergyIntolerance.read'
+          - 'patient/MedicationStatement.read'
+          - 'patient/MedicationRequest.read'
+          - 'patient/MedicationDispense.read'
+          - 'patient/DeviceUseStatement.read'
+          - 'patient/Immunization.read'
+          - 'patient/Procedure.read'
+          - 'patient/Encounter.read'
+          - 'patient/ProcedureRequest.read'
+          - 'patient/ImmunizationRecommendation.read'
+          - 'patient/DeviceRequest.read'
+          - 'patient/Appointment.read'
+
+components:
+  parameters:
+  # ##################################################
+  # globale headers
+  # ##################################################
+    AORTA-ID:
+      name: AORTA-ID
+      in: header
+      description: |
+        Het initialRequestID attribuut bevat bevat het ID van het allereerste request in de hele keten van resource 
+        client tot resource server. 
+        Het initialRequestID attribuut bevat de waarde van het Request-ID dat werd ingestuurd 
+        door het XIS-systeem. Het initialRequestID dient te worden opgenomen in de logbestanden van alle partijen in de 
+        keten (Resource Client, Resource Broker, Transformatie Server en Resource Server), zodat bij foutopsporing de 
+        verschillende logbestanden aan elkaar kunnen worden gerelateerd.
+        
+        Het requestID is voor iedere request message uniek. In requests wordt deze gegenereerd door de client. Ook het 
+        requestID dient te worden opgenomen in de verschillende logbestanden, zodat altijd duidelijk is op welk 
+        bericht een log entry van toepassing is.
+      required: true
+      schema:
+        type: object
+        properties:
+          initialRequestID:
+            type: string
+            format: uuid
+            description: |
+              Het initialRequestID attribuut bevat bevat het ID 
+              van het allereerste request in de hele keten van 
+              resource client tot resource server. 
+              Het initialRequestID attribuut bevat de waarde van het 
+              Request-ID dat werd ingestuurd door het XIS-systeem. 
+          requestID:
+            type: string
+            format: uuid
+            description: |
+              Het requestID is voor iedere request message uniek. 
+              In requests wordt deze gegenereerd door de client. 
+      example: 'AORTA-ID: initialRequestID=2d455679-8c48-48ec-ac9b-667363139d09; requestID=6BFBA5B8-DFF3-11EC-A603-000D3AA8019F'
+
+    AORTA-ConsentToken:
+      name: AORTA-ConsentToken
+      in: header
+      description: |
+        AORTAonFHIR consentToken
+        Meer uitleg over dit token is te vinden op [Confluence](https://confluence.vzvz.nl/display/UBEBVLEL/Token+specificaties+-+0.7.x#Tokenspecificaties0.7.x-InhoudenformaatvanhetSAMLAORTAconsent_token)
+      required: true
+      schema:
+        type: string
+        format: SAML-token
+        example: "<saml:Assertion>dummy token</saml:Assertion>"
+    acces_token_AORTA:
+      name: acces_token_AORTA
+      in: header
+      description: |
+        AORTAonFHIR accessToken
+        Meer uitleg over dit token is te vinden op [Confluence](https://confluence.vzvz.nl/display/UBEBVLEL/Token+specificaties+-+0.7.x#Tokenspecificaties0.7.x-InhoudenformaatvanhetSAMLAORTAconsent_token)
+      required: true
+      schema:
+        type: string
+        format: JWT
+        example: "Bearer <insert_your_JWT_here>"
+    AORTA-Transactie:
+      name: AORTA-Transactie
+      in: header
+      description: |
+        AORTAonFHIR transactieToken
+        Meer uitleg over dit token is te vinden op [Confluence](https://confluence.vzvz.nl/display/UBEBVLEL/Token+specificaties+-+0.7.x#Tokenspecificaties0.7.x-InhoudenformaatvanhetSAMLAORTAconsent_token)
+      required: true
+      schema:
+        type: string
+        format: SAML-token
+        example: "{dummy token}"
+
+  schemas:
+    NotifiedPullTaskBundle:
+      description: |
+        FHIR Bundle die alle objecten bevat om een Task te creëren.
+        Het schema staat beschreven op [Simplifier](https://simplifier.net/VZVZ)
+      type: object
+      externalDocs:
+        url: https://simplifier.net/VZVZ 
+    NotifiedPullTaskBundleResponse:
+      description: |
+        Antwoord op een Bundle van profile NotifiedPullTaskBundle.
+        Het schema staat beschreven op [Simplifier](https://simplifier.net/VZVZ)
+      type: object
+      externalDocs:
+        url: https://simplifier.net/VZVZ
+    FHIRresource:
+      description: |
+        `fhirresource` staat voor elke Resource die opgevraagd wordt in het kader van de BGZ.
+      type: object
+      externalDocs:
+        url: https://simplifier.net/VZVZ
+    OperationOutcome:
+      description: |
+        Algemeen foutobject met daarin de issues die de fouten beschrijven.
+      type: object
+      externalDocs:
+        url: https://simplifier.net/VZVZ
+  securitySchemes:
+    create_task:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: 'https://api.test.server/v1/oauth/authorize'
+          scopes:
+            'user/Task.write': create Task
+
+    get_bgz:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: 'https://api.test.server/v1/oauth/authorize'
+          scopes:
+            'patient/Patient.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
+            'patient/Coverage.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
+            'patient/Consent.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0 
+            'patient/Condition.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
+            'patient/Observation.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
+            'patient/NutritionOrder.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
+            'patient/Flag.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
+            'patient/AllergyIntolerance.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
+            'patient/MedicationStatement.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
+            'patient/MedicationRequest.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
+            'patient/MedicationDispense.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
+            'patient/DeviceUseStatement.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
+            'patient/Immunization.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
+            'patient/Procedure.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
+            'patient/Encounter.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
+            'patient/ProcedureRequest.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
+            'patient/ImmunizationRecommendation.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
+            'patient/DeviceRequest.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
+            'patient/Appointment.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
+  responses:
+    400:
+      description: |
+        - Syntax incorrect or 
+        - Parameters missing or invalid
+        - Ongeldig verzoek
+      content:
+        application/fhir+xml:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+          examples:
+            OperationOutcome:
+              $ref: '#/components/examples/OperationOutcome'
+    401:
+      description: Access token absent or invalid
+      headers:
+        authenticateHeader:
+          schema:
+            type: string 
+            format: 'WWW-Authenticate header'
+          required: false
+          examples:
+            OperationOutcome:
+              $ref: '#/components/examples/OperationOutcome'
+    403:
+      description: |
+        Request outside access token scope or
+        Voldoet niet aan beschikbaarheidscriterium
+      headers:
+        authenticateHeader:
+          schema:
+            type: string 
+            format: 'WWW-Authenticate header'
+          required: true
+          examples:
+            OperationOutcome:
+              $ref: '#/components/examples/OperationOutcome'
+      content:
+        application/fhir+xml:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+          examples:
+            OperationOutcome:
+              $ref: '#/components/examples/OperationOutcome'
+    404:
+      description: |
+        FHIR resourcetype niet ondersteund of
+        ZIB niet ondersteund
+      content:
+        application/fhir+xml:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+          examples:
+            OperationOutcome:
+              $ref: '#/components/examples/OperationOutcome'
+
+  examples:
+    NotifiedPullTaskBundle:
+      summary: Notified-Pull Task
+      externalValue: 'https://simplifier.net/VZVZ/nl-vzvz-notified-pull-bundle-example'
+      value: |
+        <?xml version="1.0" encoding="UTF-8"?>
+        <Bundle xmlns="http://hl7.org/fhir">
+            <id value="nl-vzvz-notified-pull-bundle-example"/>
+            <type value="transaction"/>
+            <timestamp value="2022-02-28T16:07:25+01:00"/>
+            <entry>
+              <fullUrl value="Task/nl-vzvz-Task-notified-pull-request-example"/>
+              <resource>
+                <Task xmlns="http://hl7.org/fhir">
+                  <id value="nl-vzvz-Task-notified-pull-request-example"/>
+                  <meta>
+                    <profile value="http://vzvz.nl/fhir/StructureDefinition/nl-vzvz-Task-notified-pull"/>
+                  </meta>
+          <!-- ..... -->
+                </Task>
+              </resource>
+              <request>
+                <method value="POST"/>
+                <url value="Task"/>
+              </request>
+            </entry>
+          <!-- ..... -->
+        </Bundle>
+
+    NotifiedPullTaskBundleResponseOK:
+      summary: aangeboden bundle is correct verwerkt
+      value: |
+        <?xml version="1.0" encoding="UTF-8"?>
+        <Bundle xmlns="http://hl7.org/fhir">
+          <id value="urn:uuid:bundle-example-response"/>
+          <type value="transaction-response"/>
+          <timestamp value="2022-02-28T16:07:25+01:00"/>
+          <entry>
+            <fullUrl value="http://example.org/fhir/R4/Task/123.456.567890"/>
+            <response>
+              <status value="201 Created"/>
+              <lastModified value="2022-05-09T12:25:27+02:00"/>
+            </response>
+          </entry>
+          <entry>
+            <fullUrl value="http://example.org/fhir/
+          'Patient/1234567"/': Onderdeel van Verzamelen Basisgegevens zorg 3.0
+            <response>
+              <!-- patiënt is al bekend, niet bijgewerkt -->
+              <status value="200 OK"/>
+            </response>
+          </entry>
+          <entry>
+            <fullUrl value="http://example.org/fhir/Device/9000028"/>
+            <response>
+              <!-- device is al bekend, niet bijgewerkt -->
+              <status value="200 OK"/>
+            </response>
+          </entry>
+          <entry>
+            <!-- interne referentie voor de organisatie in deze bundle -->
+            <fullUrl value="http://example.org/fhir/Organization/123456789"/>
+            <response>
+              <!-- organisatie is al bekend, niet bijgewerkt -->
+              <status value="200 OK"/>
+            </response>
+          </entry>
+        </Bundle>
+    
+    FHIRresource:
+      summary: verzameling van instanties van betreffende resource
+      value: |
+        <?xml version="1.0" encoding="UTF-8"?>
+        <Bundle xmlns="http://hl7.org/fhir">
+            <id value="nl-core-medicationagreement-bundle-example"/>
+            <type value="searchset"/>
+            <timestamp value="2022-02-28T16:07:25+01:00"/>
+            <!-- .... -->
+        </Bundle>
+    NotifiedPullTaskBundleResponseError:
+      summary: een of meerdere entries in de aangeboden bundle kunnen niet correct verwerkt worden
+      value: |
+        <?xml version="1.0" encoding="UTF-8"?>
+        <OperationOutcome xmlns="http://hl7.org/fhir">
+            <id value="nl-vzvz-notified-pull-bundle-error-response-example"/>
+            <issue>
+                <severity value="error"/>
+                <code value="business-rule"/>
+                <diagnostics value="BSN en geboortedatum horen niet bij elkaar"/>
+                <expression value="Bundle.entry[1].Patient.identifier[0].value"/>
+            </issue>
+        </OperationOutcome>
+    
+    OperationOutcome:
+      summary: FHIR fouten
+      value: |
+        <OperationOutcome>
+          <issue>
+            <severity value="error"/>
+            <code value=""/>
+            <diagnostics value=""/>
+            <expression value=""/>
+          </issue>
+        </OperationOutcome>
+
