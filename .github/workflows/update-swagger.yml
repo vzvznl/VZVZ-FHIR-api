@@ -25,9 +25,8 @@ jobs:
           # Download the release
           curl -sL -o $RELEASE_TAG https://api.github.com/repos/swagger-api/swagger-ui/tarball/$RELEASE_TAG
           # Extract the dist directory
-          cd docs
           tar -xzf $RELEASE_TAG --strip-components=1 $(tar -tzf $RELEASE_TAG | head -1 | cut -f1 -d"/")/dist
-          cd -
+          mv -r dist docs
           ls -al docs
           rm $RELEASE_TAG
           # Move index.html to the root
