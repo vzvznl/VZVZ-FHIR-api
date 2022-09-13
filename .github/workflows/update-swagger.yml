@@ -21,12 +21,14 @@ jobs:
           SWAGGER_YAML: "openapi-bgz.yaml"
         run: |
           # Delete the dist directory and index.html
-          rm -fr docs/dist/* docs/index.html
-          mkdir -p docs/dist
+          rm -fr docs/dist docs/index.html
           # Download the release
           curl -sL -o $RELEASE_TAG https://api.github.com/repos/swagger-api/swagger-ui/tarball/$RELEASE_TAG
           # Extract the dist directory
-          tar -xzf $RELEASE_TAG --strip-components=1 $(tar -tzf $RELEASE_TAG | head -1 | cut -f1 -d"/")/dist --directory docs/dist
+          cd docs
+          tar -xzf $RELEASE_TAG --strip-components=1 $(tar -tzf $RELEASE_TAG | head -1 | cut -f1 -d"/")/dist
+          cd -
+          ls -al docs
           rm $RELEASE_TAG
           # Move index.html to the root
           mv docs/dist/index.html docs
