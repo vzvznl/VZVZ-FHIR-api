@@ -23,14 +23,14 @@ jobs:
           # Delete the dist directory and index.html
           rm -fr docs/dist docs/index.html
           # Download the release
-          curl -sL -o $RELEASE_TAG https://api.github.com/repos/swagger-api/swagger-ui/tarball/$RELEASE_TAG
+          curl -sL -o $RELEASE_TAG.tar.gz https://api.github.com/repos/swagger-api/swagger-ui/tarball/$RELEASE_TAG
           ls -al
           # Extract the dist directory
-          echo tar -xzf $RELEASE_TAG --strip-components=1 $(tar -tzf $RELEASE_TAG | head -1 | cut -f1 -d"/")/dist
-          tar -xzf $RELEASE_TAG --strip-components=1 $(tar -tzf $RELEASE_TAG | head -1 | cut -f1 -d"/")/dist
+          echo tar -xzf $RELEASE_TAG.tar.gz --strip-components=1 $(tar -tzf $RELEASE_TAG.tar.gz | head -1 | cut -f1 -d"/")/dist
+          tar -xvzf ${RELEASE_TAG}.tar.gz --strip-components=1 $(tar -tzf $RELEASE_TAG.tar.gz | head -1 | cut -f1 -d"/")/dist
           mv dist docs
           ls -al docs
-          rm $RELEASE_TAG
+          rm $RELEASE_TAG.tar.gz
           # Move index.html to the root
           mv docs/dist/index.html docs
           # Fix references in dist/swagger-initializer and index.html
