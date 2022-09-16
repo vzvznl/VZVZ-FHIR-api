@@ -62,16 +62,10 @@
       <saml:AttributeValue>2.16.840.1.113883.2.4.3.111.15.1</saml:AttributeValue>
     </saml:Attribute>
     <saml:Attribute Name="contextCode">
-      <saml:AttributeValue>BGZ-PULL</saml:AttributeValue>
+      <saml:AttributeValue>BGZ</saml:AttributeValue>
     </saml:Attribute>
     <saml:Attribute Name="clientID">
       <saml:AttributeValue>urn:oid:2.16.840.1.113883.2.4.6.6.900538</saml:AttributeValue>
-    </saml:Attribute>
-    <saml:Attribute Name="autorisatieregel/context">
-      <saml:AttributeValue>http://example.org/autorisatieregel</saml:AttributeValue>
-    </saml:Attribute>
-    <saml:Attribute Name="Mandaatverlener">
-      <saml:AttributeValue>987654321:01.015</saml:AttributeValue>
     </saml:Attribute>
   </saml:AttributeStatement>
 </saml:Assertion>
