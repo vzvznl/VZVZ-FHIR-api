@@ -1,0 +1,82 @@
+---
+# ##################################################
+# globale token headers
+# ##################################################
+AORTA-ID:
+  name: AORTA-ID
+  in: header
+  description: |
+    Het initialRequestID attribuut bevat bevat het ID van het allereerste request in de hele keten van resource 
+    client tot resource server. 
+    Het initialRequestID attribuut bevat de waarde van het Request-ID dat werd ingestuurd 
+    door het XIS-systeem. Het initialRequestID dient te worden opgenomen in de logbestanden van alle partijen in de 
+    keten (Resource Client, Resource Broker, Transformatie Server en Resource Server), zodat bij foutopsporing de 
+    verschillende logbestanden aan elkaar kunnen worden gerelateerd.
+    
+    Het requestID is voor iedere request message uniek. In requests wordt deze gegenereerd door de client. Ook het 
+    requestID dient te worden opgenomen in de verschillende logbestanden, zodat altijd duidelijk is op welk 
+    bericht een log entry van toepassing is.
+  required: true
+  schema:
+    type: object
+    additionalProperties: false
+    properties:
+      initialRequestID:
+        type: string
+        pattern: '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'
+        maxLength: 100
+        format: uuid
+        description: |
+          Het initialRequestID attribuut bevat bevat het ID 
+          van het allereerste request in de hele keten van 
+          resource client tot resource server. 
+          Het initialRequestID attribuut bevat de waarde van het 
+          Request-ID dat werd ingestuurd door het XIS-systeem. 
+      requestID:
+        type: string
+        pattern: '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'
+        maxLength: 100
+        format: uuid
+        description: |
+          Het requestID is voor iedere request message uniek. 
+          In requests wordt deze gegenereerd door de client. 
+  example: 'AORTA-ID: initialRequestID=2d455679-8c48-48ec-ac9b-667363139d09; requestID=6BFBA5B8-DFF3-11EC-A603-000D3AA8019F'
+
+AORTA-ConsentToken:
+  name: AORTA-ConsentToken
+  in: header
+  description: |
+    AORTAonFHIR consentToken
+    Meer uitleg over dit token is te vinden op [Confluence](https://confluence.vzvz.nl/display/UBEBVLEL/Token+specificaties+-+0.7.x#Tokenspecificaties0.7.x-InhoudenformaatvanhetSAMLAORTAconsent_token)
+  required: true
+  schema:
+    title: SAML-token
+    type: string
+    maxLength: 5000
+    format: byte
+    example: "<saml:Assertion>dummy token</saml:Assertion>"
+acces_token_AORTA:
+  name: acces_token_AORTA
+  in: header
+  description: |
+    AORTAonFHIR accessToken
+    Meer uitleg over dit token is te vinden op [Confluence](https://confluence.vzvz.nl/display/UBEBVLEL/Token+specificaties+-+0.7.x#Tokenspecificaties0.7.x-InhoudenformaatvanhetSAMLAORTAconsent_token)
+  required: true
+  schema:
+    type: string
+    maxLength: 5000
+    pattern: 'Bearer ^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$'
+    example: "Bearer <insert_your_JWT_here>"
+AORTA-Transactie:
+  name: AORTA-Transactie
+  in: header
+  description: |
+    AORTAonFHIR transactieToken
+    Meer uitleg over dit token is te vinden op [Confluence](https://confluence.vzvz.nl/display/UBEBVLEL/Token+specificaties+-+0.7.x#Tokenspecificaties0.7.x-InhoudenformaatvanhetSAMLAORTAconsent_token)
+  required: true
+  schema:
+    type: string
+    maxLength: 5000
+    pattern: '.+'
+    format: SAML-token
+    example: "{dummy token}"
