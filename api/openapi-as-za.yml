@@ -1,0 +1,347 @@
+openapi: '3.0.3'
+info:
+  title: Autorisatie Server ZA
+  version: '0.1.0'
+  description: |
+    Beschrijving van de endpoints zoals benodigd voor de aanroep 
+    van de Autorisatie Server.
+    Deze beschrijving betreft __versie 0.7x__ van AORTA on FHIR.
+
+    Nadere informatie m.b.t. deze server is te vinden op 
+    [Autorisatie Server Interfaces - 0.7.x](https://public.vzvz.nl/display/UBEBVLEL/Autorisatie+Server+Interfaces+-+0.7.x)
+
+servers:
+  - url: https://as-za.server/
+    description: Autorisatie Server ZorgAanbieder
+  
+security:
+  - OAuth2:
+      - read
+      - write
+
+tags:
+  - name: Extern
+    description: API endpoints zichtbaar voor externe systemen
+  - name: Intern
+    description: API endpoints alleen zichtbaar voor interne systemen
+  - name: AORTA
+    description: AORTA gerelateerde interfaces
+  - name: MedMij
+    description: MedMij gerelateerde interfaces
+paths:
+  /.well-known/oauth-authorization-server/{path_extension}:
+    get:
+      description: |
+        Opvragen van metadata voor een endpoint conform sectie 3.1 van 
+        [RFC8414](https://www.rfc-editor.org/rfc/rfc8414#section-3.1)
+      summary: Opvragen van metadata voor een endpoint
+      tags:
+        - Extern
+        - AORTA
+        - MedMij
+      parameters:
+        - $ref: '#/components/parameters/path_extension'
+        - $ref: '#/components/parameters/AORTA-ID'
+      responses:
+        200:
+          description: Request succesvol
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/MetaDataResponseAorta'
+                  - $ref: '#/components/schemas/MetaDataResponseMedMij'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        406:
+          $ref: '#/components/responses/406'
+        429:
+          $ref: '#/components/responses/429'
+        default:
+          description: Default
+          content:
+              application/json:
+                schema:
+                  type: string
+                  maxLength: 2
+                  pattern: OK
+
+
+  /jwks/{jwks_uri}:
+    get:
+      description: |
+        Ophalen van de public key zodat de handtekening in een JWK gecontroleerd kan worden.
+      summary: Ophalen public key ter controle van de JWK handtekening
+      tags:
+        - Extern
+        - AORTA
+      parameters:
+        - name: jwks_uri
+          description: het pad zoals beschreven in het [MetaData Object](components/schemas/MetaDataResponseAorta.yml)
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/url'
+          example: 'jwks.json'
+      responses:
+        200:
+          $ref: 'components/responses/jwksSuccessResponse.yml'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        406:
+          $ref: '#/components/responses/406'
+        429:
+          $ref: '#/components/responses/429'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                type: string
+                pattern: 'Unexpected error'
+                maxLength: 1024
+  /token/{token_uri}:
+    post:
+      description: |-
+        Access token ophalen
+      summary: Acces token ophalen
+      tags:
+        - Extern
+        - AORTA
+      parameters:
+        - $ref: '#/components/parameters/AORTA-ID'
+        - $ref: '#/components/parameters/token_uri'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: string
+              pattern: '[a-zA-Z0-9&=% :.~]+'
+              maxLength: 5000
+            example: |-
+              grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Atoken-exchange
+              &audience=urn%3Aoid%3A2.16.840.1.113883.2.4.6.6.352
+              &requested_token_type=urn%3Aietf%3Aparams%3Aoauth%3Atoken-type%3Ajwt
+              &subject_token=<base64url-encoded SAML Assertion>
+              &subject_token_type=urn%3Aietf%3Aparams%3Aoauth%3Atoken-type%3Asaml2
+              &actor_token=<base64url-encoded SAML Assertion>
+              &actor_token_type=urn%3Aietf%3Aparams%3Aoauth%3Atoken-type%3Asaml2
+              &registration_token=<base64url-encoded SAML Assertion>
+              &registration_token_type=urn%3Aietf%3Aparams%3Aoauth%3Atoken-type%3Asaml2
+              &consent_token=<base64url-encoded SAML Assertion>
+              &consent_token_type=urn%3Aietf%3Aparams%3Aoauth%3Atoken-type%3Asaml2
+              &scope=search:Coverage:1.0:request search:Patient:1.0:request~aorta.contextcode.BGZOPV~normaal
+      responses:
+        200:
+          $ref: 'components/responses/AortaAccessTokenSuccessResponse.yml'
+        400:
+          $ref: 'components/responses/OAuth2TokenErrorResponse.yml'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        406:
+          $ref: '#/components/responses/406'
+        415:
+          $ref: '#/components/responses/415'
+        429:
+          $ref: '#/components/responses/429'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                type: string
+                pattern: 'Unexpected error'
+                maxLength: 1024
+  /log:
+    get:
+      description: logging ophalen
+      summary: logging ophalen
+      tags:
+        - Intern
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+                maxLength: 5000
+        400:
+            $ref: 'components/responses/OAuth2TokenErrorResponse.yml'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        406:
+          $ref: '#/components/responses/406'
+        415:
+          $ref: '#/components/responses/415'
+        429:
+          $ref: '#/components/responses/429'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                type: string
+                pattern: 'Unexpected error'
+                maxLength: 1024
+
+components:
+  parameters:
+    AORTA-ID:
+      $ref: 'components/schemas/aorta-tokens.yml#/AORTA-ID'
+
+    acces_token_AORTA:
+      $ref: 'components/schemas/aorta-tokens.yml#/acces_token_AORTA'
+
+    path_extension:
+      name: path_extension
+      in: path
+      required: true
+      schema:
+        type: string
+        maxLength: 1024
+        pattern: '^(\/?[a-zA-Z0-9_-]+\/?)+'
+        format: uri
+      example: 'some-extension'
+    token_uri:
+      name: token_uri
+      description: het pad zoals beschreven in [ASMetaDataResponseAorta]()
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/url'
+      example: 'https://server.example.org/oauth/token'
+  headers:
+    authenticateHeader:
+      schema:
+        type: string 
+        maxLength: 1024
+        pattern: 'string'
+        format: 'WWW-Authenticate header'
+        example: 'string'
+
+  schemas:
+    MetaDataResponseAorta:
+      $ref: 'components/schemas/MetaDataResponseAorta.yml'
+    MetaDataResponseMedMij:
+      $ref: 'components/schemas/MetaDataResponseMedMij.yml'
+    url:
+      $ref: 'components/schemas/url.yml'
+    cache-control:
+      type: string
+      maxLength: 100
+
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: 'https://api.test.server/v1/oauth/authorize'
+          tokenUrl: 'https://server.example.com/oauth'
+          scopes:
+            'user/Task.write': create Task
+
+
+  responses:
+    400:
+      description: |
+        - Syntax incorrect or 
+        - Parameters missing or invalid
+        - Ongeldig verzoek
+      content:
+        application/fhir+xml:
+          schema:
+            type: string
+            pattern: 'outcome'
+            maxLength: 1024
+          example: 'outcome'
+    401:
+      description: Access token absent or invalid
+      headers:
+        authenticateHeader:
+          $ref: '#/components/headers/authenticateHeader'
+      content:
+        application/fhir+xml:
+          schema:
+            type: string
+            pattern: 'outcome'
+            maxLength: 1024
+          example: 'outcome'
+    403:
+      description: >
+        Request outside access token scope or
+        Voldoet niet aan beschikbaarheidscriterium
+      headers:
+        authenticateHeader:
+          $ref: '#/components/headers/authenticateHeader'
+      content:
+        application/fhir+xml:
+          schema:
+            type: string
+            pattern: 'outcome'
+            maxLength: 1024
+          example: 'outcome'
+    404:
+      description: |
+        FHIR resourcetype niet ondersteund of
+        ZIB niet ondersteund
+      content:
+        application/fhir+xml:
+          schema:
+            type: string
+            pattern: 'outcome'
+            maxLength: 1024
+          example: 'outcome'
+    406:
+      description: |
+        FHIR resourcetype niet ondersteund of
+        ZIB niet ondersteund
+      content:
+        application/fhir+xml:
+          schema:
+            type: string
+            pattern: 'outcome'
+            maxLength: 1024
+          example: 'outcome'
+    415:
+      description: |
+        FHIR resourcetype niet ondersteund of
+        ZIB niet ondersteund
+      content:
+        application/fhir+xml:
+          schema:
+            type: string
+            pattern: 'outcome'
+            maxLength: 1024
+          example: 'outcome'
+
+    429:
+      description: |
+        FHIR resourcetype niet ondersteund of
+        ZIB niet ondersteund
+      content:
+        application/fhir+xml:
+          schema:
+            type: string
+            pattern: 'outcome'
+            maxLength: 1024
+          example: 'outcome'
+

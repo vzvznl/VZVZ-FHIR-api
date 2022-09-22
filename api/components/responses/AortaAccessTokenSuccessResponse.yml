@@ -1,0 +1,81 @@
+# OAuth2TokenSuccessResponse.yml
+description: |-
+  Successful Response.
+
+  [The OAuth2.0 Authorization Framework - 5.1. Successful Response](https://tools.ietf.org/html/rfc6749#section-5.1)
+
+  The authorization server issues an access token and optional refresh token, and constructs the response by adding the following parameters to the entity-body of the HTTP response with a 200 (OK) status code.
+headers:
+  Cache-Control:
+    schema:
+      type: string
+      maxLength: 100
+      pattern: 'no-store'
+    example: no-store
+  Pragma:
+    schema:
+      type: string
+      enum:
+        - 'no-cache'
+      example: no-cache
+content:
+  application/json:
+    schema:
+      title: AccessToken
+      description: |-
+        Access Token
+
+        [The OAuth2.0 Authorization Framework - 1.4. Access Token](https://tools.ietf.org/html/rfc6749#section-1.4)
+
+        Access tokens are credentials used to access protected resources.  An access token is a string representing an authorization issued to the client.  The string is usually opaque to the client.  Tokens represent specific scopes and durations of access, granted by the resource owner, and enforced by the resource server and authorization server.
+      type: object
+      additionalProperties: false
+      required:
+        - access_token
+        - token_type
+      properties:
+        access_token:
+          description: |-
+            Een JWT-based [AORTA access_token](https://public.vzvz.nl/display/UBEBVLEL/Token+specificaties+-+0.7.x#Tokenspecificaties0.7.x-AAT-JWT).
+            Er wordt één token uitgegeven met een audience element voor ieder te bevragen xIS van deze zorgaanbieder, die om kan gaan met het requested_token_type.
+          type: string
+          format: byte
+          pattern: '^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$'
+          maxLength: 5000
+          example: '2YotnFZFEjr1zCsicMWpAA='
+        issued_token_type:
+          description: |-
+            Type aanduiding van de representatievorm van het uitgegeven access_token. 
+            Vaste waarde "urn:ietf:params:oauth:token-type:jwt".
+          type: string
+          maxLength: 36
+          pattern: 'urn:ietf:params:oauth:token-type:jwt'
+        token_type:
+          description: |-
+            Vaste waarde "Bearer".
+          type: string
+          pattern: 'Bearer'
+          maxLength: 5000
+          example: Bearer
+        expires_in:
+          description: |-
+            Geldigheid in seconden van het uitgegeven [AORTA access_token](https://public.vzvz.nl/display/UBEBVLEL/Token+specificaties+-+0.7.x#Tokenspecificaties0.7.x-AAT-JWT).
+            Deze bedraagt 20 seconden.
+          type: integer
+          example: 20
+        scope:
+          description: |-
+            Dezelfde string, zoals ontvangen in het token exchange response, maar met daarin slechts de onderdelen die daadwerkelijk zijn toegekend.
+            Wanneer een transformatie is vereist voor een interactie, dan wordt dit in de geretourneerde scope aangegeven door het interactie-id uit te breiden met "/<transformation-id>".
+          type: string
+          pattern: '[a-zA-Z0-9: .]+'
+          maxLength: 1024
+          example: 'search:Coverage:1.0:request search:Patient:1.0:request~aorta.contextcode.BGZOPV~normaal'
+    example: >
+      {
+        "access_token": "2YotnFZFEjr1zCsicMWpAA",
+        "issued_token_type": "urn:ietf:params:oauth:token-type:jwt",
+        "token_type": "Bearer",
+        "expires_in": 20,
+        "scope": "search:Appointment:1.0:request/3~aorta.contextcode.AFSPROPV~normaal"
+      }
