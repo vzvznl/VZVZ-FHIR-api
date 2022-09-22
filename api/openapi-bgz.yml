@@ -8,24 +8,32 @@ info:
     Deze endpoints zijn gebaseerd op de FHIR endpoints zoals beschreven op de
     [FHIR website](http://hl7.org/fhir/http.html).
 
+    **Let op**: _deze Swagger beschrijving probeert de workflow weer te geven,
+    dus de server kan verschillen bij de individuele paths._
+
 servers:
-  - url: https://test.server/fhir/R4/
-    description: FHIR R4 server
+  - url: https://bron.server/fhir/R4/
+    description: BGZ-opleverend-systeem
+  - url: https://vrager.server/fhir/R4
+    description: BGZ-opvragend-systeem
 tags:
+  - name: Notified-Pull
+    description: Verstuur Task als notificatie
   - name: BGZ
-    description: Opvragen/aanleveren van BGZ
-  - name: infra
-    description: Infrastructurele informatie
+    description: Opleveren van BGZ resources
 paths:
   /:
     post:
       description: |
-        Aanleveren van Task (notified pull). 
-        Client is BGZ-opleverend-systeem. 
+        Aanleveren van Task (notified pull).
+
+        Client is BGZ-opleverend-systeem.
+        
         Server is BGZ-opvragend-systeem.
-      summary: Task aanleveren
+
+      summary: Task aanleveren aan BGZ-opvragend-systeem
       tags:
-        - BGZ
+        - Notified-Pull
       parameters:
         - $ref: '#/components/parameters/AORTA-ID'
         - $ref: '#/components/parameters/acces_token_AORTA'
@@ -76,7 +84,11 @@ paths:
       description: |
         ophalen van de gedefinieerde zib. 
         `fhirresource` moet hierbij vervangen worden door de individuele Resources zoals beschreven in de Notified-Pull Task.
-      summary: Opvragen individuele zibs
+
+        Client is BGZ-opvragend-systeem.
+        
+        Server is BGZ-opleverend-systeem.
+      summary: Opvragen individuele zibs bij BGZ-opleverend-systeem
       tags:
         - BGZ
       parameters:
@@ -128,73 +140,16 @@ components:
   # globale headers
   # ##################################################
     AORTA-ID:
-      name: AORTA-ID
-      in: header
-      description: |
-        Het initialRequestID attribuut bevat bevat het ID van het allereerste request in de hele keten van resource 
-        client tot resource server. 
-        Het initialRequestID attribuut bevat de waarde van het Request-ID dat werd ingestuurd 
-        door het XIS-systeem. Het initialRequestID dient te worden opgenomen in de logbestanden van alle partijen in de 
-        keten (Resource Client, Resource Broker, Transformatie Server en Resource Server), zodat bij foutopsporing de 
-        verschillende logbestanden aan elkaar kunnen worden gerelateerd.
-        
-        Het requestID is voor iedere request message uniek. In requests wordt deze gegenereerd door de client. Ook het 
-        requestID dient te worden opgenomen in de verschillende logbestanden, zodat altijd duidelijk is op welk 
-        bericht een log entry van toepassing is.
-      required: true
-      schema:
-        type: object
-        properties:
-          initialRequestID:
-            type: string
-            format: uuid
-            description: |
-              Het initialRequestID attribuut bevat bevat het ID 
-              van het allereerste request in de hele keten van 
-              resource client tot resource server. 
-              Het initialRequestID attribuut bevat de waarde van het 
-              Request-ID dat werd ingestuurd door het XIS-systeem. 
-          requestID:
-            type: string
-            format: uuid
-            description: |
-              Het requestID is voor iedere request message uniek. 
-              In requests wordt deze gegenereerd door de client. 
-      example: 'AORTA-ID: initialRequestID=2d455679-8c48-48ec-ac9b-667363139d09; requestID=6BFBA5B8-DFF3-11EC-A603-000D3AA8019F'
+      $ref: 'components/schemas/aorta-tokens.yml#/AORTA-ID'
 
     AORTA-ConsentToken:
-      name: AORTA-ConsentToken
-      in: header
-      description: |
-        AORTAonFHIR consentToken
-        Meer uitleg over dit token is te vinden op [Confluence](https://confluence.vzvz.nl/display/UBEBVLEL/Token+specificaties+-+0.7.x#Tokenspecificaties0.7.x-InhoudenformaatvanhetSAMLAORTAconsent_token)
-      required: true
-      schema:
-        type: string
-        format: SAML-token
-        example: "<saml:Assertion>dummy token</saml:Assertion>"
+      $ref: 'components/schemas/aorta-tokens.yml#/AORTA-ConsentToken'
+
     acces_token_AORTA:
-      name: acces_token_AORTA
-      in: header
-      description: |
-        AORTAonFHIR accessToken
-        Meer uitleg over dit token is te vinden op [Confluence](https://confluence.vzvz.nl/display/UBEBVLEL/Token+specificaties+-+0.7.x#Tokenspecificaties0.7.x-InhoudenformaatvanhetSAMLAORTAconsent_token)
-      required: true
-      schema:
-        type: string
-        format: JWT
-        example: "Bearer <insert_your_JWT_here>"
+      $ref: 'components/schemas/aorta-tokens.yml#/acces_token_AORTA'
+
     AORTA-Transactie:
-      name: AORTA-Transactie
-      in: header
-      description: |
-        AORTAonFHIR transactieToken
-        Meer uitleg over dit token is te vinden op [Confluence](https://confluence.vzvz.nl/display/UBEBVLEL/Token+specificaties+-+0.7.x#Tokenspecificaties0.7.x-InhoudenformaatvanhetSAMLAORTAconsent_token)
-      required: true
-      schema:
-        type: string
-        format: SAML-token
-        example: "{dummy token}"
+      $ref: 'components/schemas/aorta-tokens.yml#/AORTA-Transactie'
 
   schemas:
     NotifiedPullTaskBundle:
@@ -284,6 +239,7 @@ components:
     403:
       description: |
         Request outside access token scope or
+        
         Voldoet niet aan beschikbaarheidscriterium
       headers:
         authenticateHeader:
