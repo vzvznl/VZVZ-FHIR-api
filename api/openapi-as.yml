@@ -1,0 +1,317 @@
+openapi: '3.0.3'
+info:
+  version: 0.0.3
+  title: Adressering Server
+  description: Aorta Adressering Server API
+
+externalDocs:
+  description: Project documentatie zie confluence
+  url: https://public.vzvz.nl/display/UBEBVLEL/Adressering+Server+Interfaces+-+0.7.x
+
+servers: 
+  - url: https://localhost/1.0.0/api/adresseringservice
+    description: Dev server
+  - url: https://test.server/1.0.0/api/adresseringservice
+    description: Test en acceptatie server
+
+security:
+  - OAuth2:
+      - readOnly
+
+paths:
+  /getRoutingInfo:
+    post:
+      operationId: getRoutingInfo
+      summary: Opleveren van informatie over welke applicaties een gewenste interactie ondersteunen en hoe deze geïnitieerd moeten worden
+      description: Het doel van de Adressering Server is het opleveren van informatie over welke applicaties een gewenste interactie ondersteunen en over de wijze waarop die interactie vervolgens kan worden geïnitieerd. Hierbij wordt rekening gehouden met eventuele, voor de betreffende applicaties beschikbare, transformaties.
+      parameters:        
+        - $ref: '#/components/parameters/AORTA-ID'
+      requestBody:
+        description: |
+          Lijst met destinations en interacties
+        required: true
+        content:
+          application/json;charset=utf-8:
+            schema:
+              $ref: '#/components/schemas/getRoutingInfoReq'
+            examples:
+              routingInfoReq:
+                $ref: '#/components/examples/routingInfoReq'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getRoutingInfoRes'
+              examples:
+                ok-bericht:
+                  $ref: '#/components/examples/routingInfoRes'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        406:
+          $ref: '#/components/responses/406'
+        415:
+          $ref: '#/components/responses/415'
+        429:
+          $ref: '#/components/responses/429'
+        default:
+          $ref: '#/components/responses/400'
+
+components:
+  parameters:
+  # ##################################################
+  # globale headers
+  # ##################################################
+    AORTA-ID:
+      name: AORTA-ID
+      in: header
+      description: |
+        Het initialRequestID attribuut bevat bevat het ID van het allereerste request in de hele keten van resource 
+        client tot resource server. 
+        Het initialRequestID attribuut bevat de waarde van het Request-ID dat werd ingestuurd 
+        door het XIS-systeem. Het initialRequestID dient te worden opgenomen in de logbestanden van alle partijen in de 
+        keten (Resource Client, Resource Broker, Transformatie Server en Resource Server), zodat bij foutopsporing de 
+        verschillende logbestanden aan elkaar kunnen worden gerelateerd.
+        
+        Het requestID is voor iedere request message uniek. In requests wordt deze gegenereerd door de client. Ook het 
+        requestID dient te worden opgenomen in de verschillende logbestanden, zodat altijd duidelijk is op welk 
+        bericht een log entry van toepassing is.
+      required: true
+      schema:
+        type: object
+        additionalProperties: false
+        properties:
+          initialRequestID:
+            type: string
+            pattern: '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'
+            format: uuid
+            description: |
+              Het initialRequestID attribuut bevat bevat het ID 
+              van het allereerste request in de hele keten van 
+              resource client tot resource server. 
+              Het initialRequestID attribuut bevat de waarde van het 
+              Request-ID dat werd ingestuurd door het XIS-systeem. 
+          requestID:
+            type: string
+            pattern: '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'
+            format: uuid
+            description: |
+              Het requestID is voor iedere request message uniek. 
+              In requests wordt deze gegenereerd door de client. 
+      example: 'AORTA-ID: initialRequestID=2d455679-8c48-48ec-ac9b-667363139d09; requestID=6BFBA5B8-DFF3-11EC-A603-000D3AA8019F'
+
+  schemas:
+    getRoutingInfoReq:
+      description: |
+        Object met de beoogde bestemming van de interactie  
+      type: object
+      required:
+        - interaction
+      properties:
+        destination:
+            $ref: '#/components/schemas/destination'
+        interaction:
+          type: array
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/interactionById'
+              - $ref: '#/components/schemas/interactionByUrl'
+          maxItems: 100
+    getRoutingInfoRes:
+      type: array
+      maxItems: 500
+      items:
+        type: object
+        additionalProperties: false
+        required:
+          - interactionId
+        properties:
+          interactionId:
+            description: |-
+              Interactie-id van het te adresseren bericht, of van de te adresseren berichten.
+            type: string
+            pattern: '[a-zA-Z0-9:.]+'
+            maxLength: 1024
+          destinationInfo:
+            type: array
+            maxItems: 500
+            items:
+              type: object
+              additionalProperties: false
+              properties:
+                destination: 
+                  $ref: '#/components/schemas/destination'
+                fqdn:
+                  type: string
+                  pattern: '[a-zA-Z0-9.-]+'
+                  maxLength: 1024
+                transformationId:
+                  type: string
+                  pattern: '[a-zA-Z0-9]+'
+                  maxLength: 1024
+    destination:
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          description: Beoogde bestemming van de interactie.
+          type: string
+          pattern: '[0-9]{3,9}'
+          maxLength: 1024
+        codeSystem:
+          description: Het gehanteerde codesysteem. (URA of appID)
+          type: string
+          enum: 
+            - 'urn:oid:2.16.840.1.113883.2.4.6.6'
+            - 'urn:oid:2.16.528.1.1007.3.3'
+    interactionById:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          description: |-
+            Interactie-id van het te adresseren bericht, 
+            of van de te adresseren berichten.
+          type: string
+          pattern: '[a-zA-Z0-9:.]+'
+          maxLength: 1024
+    interactionByUrl:
+      type: object
+      additionalProperties: false
+      properties:
+        method:
+          type: string
+          enum:
+            - GET
+            - PUT
+            - POST
+            - DELETE
+        url:
+          type: string
+          pattern: '^(\/[a-zA-Z0-9_-]+\/?)*$'
+          maxLength: 1024
+        aortaVersion:
+          description: |-
+            De gebruikte versie van de interactie.
+            
+            Het aortaVersion attribuut wordt gespecificeerd conform semver, 
+            dus bijvoorbeeld "1.0.0" of "2.0". De Adressering Server houdt bij het 
+            zoeken naar applicaties slechts rekening met het major nummer, 
+            omdat compatibiliteit hierdoor afdoende is geborgd.
+          type: string
+          pattern: '^([0-9]+)\.([0-9]+)(\.([0-9]+)(?:([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?)?$'
+          maxLength: 100
+          example: '2.0'
+
+  responses:
+    400:
+      description: Bad Request
+      content:
+        text/plain:
+          schema:
+            type: string
+            pattern: 'Bad Request'
+            maxLength: 100
+
+    401:
+      description: Unauthorized
+      content:
+        text/plain:
+          schema:
+            type: string
+            pattern: 'Unauthorized'
+            maxLength: 100
+    403:
+      description: Forbidden
+      content:
+        text/plain:
+          schema:
+            type: string
+            pattern: 'Forbidden'
+            maxLength: 100
+    406:
+      description: Not Acceptable
+      content:
+        text/plain:
+          schema:
+            type: string
+            pattern: 'Not Acceptable'
+            maxLength: 100
+    415:
+      description: Unsupported Media Type
+      content:
+        text/plain:
+          schema:
+            type: string
+            pattern: 'Bad Request'
+            maxLength: 100
+    429:
+      description: Too Many Requests
+      content:
+        text/plain:
+          schema:
+            type: string
+            pattern: 'Too Many Requests'
+            maxLength: 100
+
+  examples:
+    routingInfoReq:
+      value: |-
+        {
+          "destination": {
+              "code": "592",
+              "codeSystem": "urn:oid:2.16.528.1.1007.3.3"
+          },
+          "interaction": [{
+              "method": "GET",
+              "url": "3287/MedicationRequest/23483147812",
+              "aortaVersion": "1.0"
+          }, {
+              "method": "GET",
+              "url": "4001/MedicationRequest/23483147813",
+              "aortaVersion": "2.0"
+          }, {
+              "id": "search:Appointment:1.0:request"
+          }]
+        }
+
+    routingInfoRes:
+      summary: Response voorbeeld
+      value: |-
+        [{
+          "interactionId": "read:MedicationRequest:1.0:request",
+          "destinationInfo": [{
+            "destination": {
+              "code": "3287",
+              "codeSystem": "urn:oid:2.16.840.1.113883.2.4.6.6"
+            },
+            "fqdn": "bron-1.zorgaanbieder.nl"
+          }]
+        }, {
+          "interactionId": "read:MedicationRequest:2.0:request"
+        }, {
+          "interactionId": "search:Appointment:1.0:request",
+          "destinationInfo": [{
+              "destination": {
+                "code": "3288",
+                "codeSystem": "urn:oid:2.16.840.1.113883.2.4.6.6"
+              },
+              "fqdn": "bron-2.zorgaanbieder.nl",
+              "transformationId": "3"
+          }]
+        }]
+
+  securitySchemes:    
+    OAuth2:
+          type: oauth2
+          flows:
+            authorizationCode:
+              scopes:
+                readOnly: read objects in your account
+              authorizationUrl: 'https://example.com/oauth/authorize'
+              tokenUrl: 'https://example.com/oauth/token'
