@@ -55,11 +55,12 @@ AORTA-ConsentToken:
     maxLength: 5000
     format: byte
     example: "<saml:Assertion>dummy token</saml:Assertion>"
+
 acces_token_AORTA:
   name: acces_token_AORTA
   in: header
   description: |
-    AORTAonFHIR accessToken
+    AORTAonFHIR accessToken \
     Meer uitleg over dit token is te vinden op [Confluence](https://confluence.vzvz.nl/display/UBEBVLEL/Token+specificaties+-+0.7.x#Tokenspecificaties0.7.x-InhoudenformaatvanhetSAMLAORTAconsent_token)
   required: true
   schema:
@@ -71,7 +72,7 @@ AORTA-Transactie:
   name: AORTA-Transactie
   in: header
   description: |
-    AORTAonFHIR transactieToken
+    AORTAonFHIR transactieToken \
     Meer uitleg over dit token is te vinden op [Confluence](https://confluence.vzvz.nl/display/UBEBVLEL/Token+specificaties+-+0.7.x#Tokenspecificaties0.7.x-InhoudenformaatvanhetSAMLAORTAconsent_token)
   required: true
   schema:

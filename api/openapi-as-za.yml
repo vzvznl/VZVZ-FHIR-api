@@ -259,7 +259,6 @@ components:
           scopes:
             'user/Task.write': create Task
 
-
   responses:
     400:
       description: |
@@ -321,6 +320,7 @@ components:
             pattern: 'outcome'
             maxLength: 1024
           example: 'outcome'
+
     415:
       description: |
         FHIR resourcetype niet ondersteund of
