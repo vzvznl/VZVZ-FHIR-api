@@ -4,7 +4,7 @@ info:
   version: '0.0.1'
   description: |
     Beschrijving van de endpoints zoals benodigd voor de uitwisseling van de huisartsgegevens,
-    tussen zorgverleners en PGO via LSP+.
+    tussen zorgverleners en PGO via LSP+. \
     Deze endpoints zijn gebaseerd op de FHIR endpoints zoals beschreven op de
     - [Confluence LSP+ site](https://confluence.vzvz.nl/pages/viewpage.action?pageId=110605009)
     - [Publieke omgeving AORTA on FHIR](https://public.vzvz.nl/display/UBEBVLEL/AORTA+on+FHIR+specificaties+-+0.7.17)
