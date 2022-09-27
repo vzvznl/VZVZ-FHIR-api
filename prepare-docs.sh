@@ -12,7 +12,7 @@ for l in $( ls -1 "${ROOT_DIR}"/api/open*.yml ); do
     file=$( basename "${l}" )
 
     # create symlinks for each openapi file
-    ln -sf "${l}" "${ROOT_DIR}/docs/${file}"
+    ln -sf "../api/${file}" "${ROOT_DIR}/docs/${file}"
 
     # create an html version for each openapi file
 
