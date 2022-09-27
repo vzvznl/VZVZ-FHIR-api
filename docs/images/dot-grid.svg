@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+    <defs>
+        <clipPath id="clip-path">
+            <path id="Rectangle_72" fill="#fff" d="M0 0H20V20H0z"/>
+        </clipPath>
+        <style>
+            .cls-3{fill:#9fb0be}
+        </style>
+    </defs>
+    <g id="dot-grid" clip-path="url(#clip-path)">
+        <g id="Group_44">
+            <circle id="Ellipse_12" cx="1" cy="1" r="1" class="cls-3" transform="translate(-1 4)"/>
+            <circle id="Ellipse_13" cx="1" cy="1" r="1" class="cls-3" transform="translate(9 4)"/>
+            <circle id="Ellipse_14" cx="1" cy="1" r="1" class="cls-3" transform="translate(19 4)"/>
+            <circle id="Ellipse_12-2" cx="1" cy="1" r="1" class="cls-3" transform="translate(-1 14)"/>
+            <circle id="Ellipse_13-2" cx="1" cy="1" r="1" class="cls-3" transform="translate(9 14)"/>
+            <circle id="Ellipse_14-2" cx="1" cy="1" r="1" class="cls-3" transform="translate(19 14)"/>
+        </g>
+    </g>
+</svg>
