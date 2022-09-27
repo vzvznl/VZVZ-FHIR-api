@@ -310,9 +310,7 @@ components:
             maxLength: 1024
           example: 'outcome'
     406:
-      description: |
-        FHIR resourcetype niet ondersteund of
-        ZIB niet ondersteund
+      description: Not acceptable
       content:
         application/fhir+xml:
           schema:
@@ -323,8 +321,7 @@ components:
 
     415:
       description: |
-        FHIR resourcetype niet ondersteund of
-        ZIB niet ondersteund
+        Unsupported media type
       content:
         application/fhir+xml:
           schema:
@@ -335,8 +332,7 @@ components:
 
     429:
       description: |
-        FHIR resourcetype niet ondersteund of
-        ZIB niet ondersteund
+        Too many requests
       content:
         application/fhir+xml:
           schema:
