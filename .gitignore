@@ -3,3 +3,4 @@ api/openapi-petstore.yml
 api/openapi-vacc.yml
 java*.zip
 token/schemas
+/archive
