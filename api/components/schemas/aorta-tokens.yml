@@ -3,8 +3,6 @@
 # globale token headers
 # ##################################################
 AORTA-ID:
-  name: AORTA-ID
-  in: header
   description: |
     Het initialRequestID attribuut bevat bevat het ID van het allereerste request in de hele keten van resource 
     client tot resource server. 
@@ -16,31 +14,43 @@ AORTA-ID:
     Het requestID is voor iedere request message uniek. In requests wordt deze gegenereerd door de client. Ook het 
     requestID dient te worden opgenomen in de verschillende logbestanden, zodat altijd duidelijk is op welk 
     bericht een log entry van toepassing is.
+
+    Het AORTA-ID moet in elke request en response meegegeven worden.
+  type: object
+  additionalProperties: false
+  properties:
+    initialRequestID:
+      type: string
+      pattern: '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'
+      maxLength: 100
+      format: uuid
+      description: |
+        Het initialRequestID attribuut bevat bevat het ID 
+        van het allereerste request in de hele keten van 
+        resource client tot resource server. 
+        Het initialRequestID attribuut bevat de waarde van het 
+        Request-ID dat werd ingestuurd door het XIS-systeem. 
+    requestID:
+      type: string
+      pattern: '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'
+      maxLength: 100
+      format: uuid
+      description: |
+        Het requestID is voor iedere request message uniek. 
+        In requests wordt deze gegenereerd door de client. 
+  example: 'AORTA-ID: initialRequestID=2d455679-8c48-48ec-ac9b-667363139d09; requestID=6BFBA5B8-DFF3-11EC-A603-000D3AA8019F'
+
+AORTA-Version:
+  name: AORTA-version
+  in: header
+  description: |
+    versie van de interactie die uitgewisseld wordt
   required: true
   schema:
     type: object
     additionalProperties: false
     properties:
-      initialRequestID:
-        type: string
-        pattern: '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'
-        maxLength: 100
-        format: uuid
-        description: |
-          Het initialRequestID attribuut bevat bevat het ID 
-          van het allereerste request in de hele keten van 
-          resource client tot resource server. 
-          Het initialRequestID attribuut bevat de waarde van het 
-          Request-ID dat werd ingestuurd door het XIS-systeem. 
-      requestID:
-        type: string
-        pattern: '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'
-        maxLength: 100
-        format: uuid
-        description: |
-          Het requestID is voor iedere request message uniek. 
-          In requests wordt deze gegenereerd door de client. 
-  example: 'AORTA-ID: initialRequestID=2d455679-8c48-48ec-ac9b-667363139d09; requestID=6BFBA5B8-DFF3-11EC-A603-000D3AA8019F'
+      
 
 AORTA-ConsentToken:
   name: AORTA-ConsentToken
