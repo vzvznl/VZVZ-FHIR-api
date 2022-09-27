@@ -1,0 +1,9 @@
+OperationOutcomeSTU3:
+  description: |
+    Algemeen foutobject met daarin de issues die de fouten beschrijven. \
+    Zie ook: [FHIR STU3 OperationOutcome](http://hl7.org/fhir/STU3/operationoutcome.html)
+  externalDocs:
+    description: FHIR STU3 OperationOutcome
+    url: http://hl7.org/fhir/STU3/operationoutcome.html
+  type: object
+  

@@ -1,0 +1,49 @@
+unauthorizedOperationOutcome:
+  summary: OperationOutcome bij een Unauthorized error
+  value: |
+    <OperationOutcome>
+      <issue>
+        <severity value="error"/>
+        <code value="security"/>
+      </issue>
+    </OperationOutcome>
+notSupportedOperationOutcome:
+  summary: OperationOutcome bij een Not Found error
+  value: |
+    <OperationOutcome>
+      <issue>
+        <severity value="error"/>
+        <code value="not-supported"/>
+      </issue>
+    </OperationOutcome>
+badRequestOperationOutcomeXML:
+  summary: OperationOutcome
+  description: |
+    OperationOutcome bij een bad request error
+
+    Dit is een voorbeeld omdat er meerdere foutcodes mogelijk zijn
+  value: |
+    <OperationOutcome>
+      <issue>
+        <severity value="error"/>
+        <code value="invalid"/>
+      </issue>
+    </OperationOutcome>
+badRequestOperationOutcomeJSON:
+  summary: OperationOutcome
+  description: |
+    OperationOutcome bij een bad request error
+
+    Dit is een voorbeeld omdat er meerdere foutcodes mogelijk zijn
+  value: |-
+    {
+      "resourceType": "OperationOutcome",
+      [
+        {
+          "issue": {
+            "severity": "error",
+            "code": "invalid"
+          }
+        }
+      ]
+    }

@@ -1,0 +1,20 @@
+emptyBundleXML:
+  summary: empty bundle
+  description: |
+    Empty bundle to indicate no results or unsupported search parameter value
+  value:
+    xml: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <Bundle>
+        <type value="searchset"/>
+      </Bundle>
+
+emptyBundleJSON:
+  summary: empty bundle
+  description: |
+    Empty bundle to indicate no results or unsupported search parameter value
+  value: >
+    {
+      "resourceType": "Bundle",
+      "type": "searchset"
+    }

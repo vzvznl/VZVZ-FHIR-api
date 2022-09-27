@@ -1,0 +1,56 @@
+searchResultsXML:
+  summary: Results Found
+  description: |
+    Bundle of type _searchset_ containing results to a search query
+  value: |
+    <?xml version="1.0" encoding="UTF-8"?>
+    <Bundle xmlns="http://hl7.org/fhir">
+      <id value="bundle-example"/>
+      <type value="searchset"/>
+      <total value="3"/>
+      <link>
+          <relation value="self"/>
+          <url value="https://example.org"/>
+      </link>
+      <entry>
+          <fullUrl value="urn:uuid:783fbc26-6334-43cc-bf19-c7c73dc07101"/>
+          <resource>
+            <Appointment>
+            <!-- .... -->                  
+            </Appointment>
+          </resource>
+          <search>
+            <mode value="match"/>
+          </search>
+      </entry>
+      
+searchResultsJSON:
+  summary: Results Found
+  description: |
+    Bundle of type _searchset_ containing results to a search query
+  value: |
+    {
+      "resourceType": "Bundle",
+      "id": "bundle-example",
+      "type": "searchset",
+      "total": 3,
+      "link": [
+          {
+            "relation": "self",
+            "url": "https://example.org"
+          },
+      ],
+      "entry": [
+        {
+          "fullUrl": ""urn:uuid:783fbc26-6334-43cc-bf19-c7c73dc07101",
+          "resource": {
+            "resourceType": "Appointment",
+            "comment": "// other elements"
+          },
+          "search": {
+            "mode": "match"
+          }
+        }
+      ]
+    }
+
