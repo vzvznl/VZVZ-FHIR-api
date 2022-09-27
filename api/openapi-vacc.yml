@@ -1,0 +1,784 @@
+openapi: '3.0.3'
+info:
+  title: VZVZ Vaccinaties
+  version: '0.3.0'
+  description: |
+    Beschrijving van de endpoints zoals benodigd voor de uitwisseling van vaccinatie
+    registraties, zowel gepersonaliseerd als anoniem, tussen zorgverleners/toedieners en 
+    RIVM.
+    Deze endpoints zijn gebaseerd op de FHIR endpoints zoals beschreven op de
+    [FHIR website](http://hl7.org/fhir/http.html).
+
+servers:
+  - url: https://test.server/fhir/R4/
+    description: FHIR R4 server
+tags:
+  - name: Vaccinaties
+    description: Aanleveren van vaccinaties, zowel gepersonaliseerd als procesinformatie
+  - name: Batchnummers
+    description: Opvragen van vaccinatie-batchnummers
+  - name: infra
+    description: Infrastructurele informatie
+paths:
+  /:
+    post:
+      description: |
+        Bijwerken van één vaccinatie registratie.
+        Dit is het officiële endpoint voor alle Bundles.
+        Om duidelijk te maken wat de verschillen zijn, worden de betreffende Bundles
+        als 2 aparte endpoints (`/pers/` en `/anon/`) uitgewerkt.
+        __LET OP__: dit zijn geen geldige endpoints!
+      summary: Officieel endpoint voor aanlevering vaccinaties.
+      tags:
+        - Vaccinaties
+      responses:
+        '200':
+          description: Bundle correct verwerkt
+  /pers:
+    post:
+      description: |
+        Beschrijving van het `/` endpoint voor de gepersonaliseerde vaccinatie.
+
+        Met bijwerken worden 2 operaties bedoeld: update en delete.
+        De gewenste operatie (update of delete) wordt in de request van de Bundle.entry
+        aangegeven.
+        Indien de bij te werken resource nog niet bestaat, wordt deze aangemaakt
+        met hetzelfde id/identifier als de Immunization.id/Immunization.identifier.
+
+        __LET OP__: Dit is niet het officiële endpoint
+      summary: voorbeeld add, update, delete gepersonaliseerde vaccinatie registratie
+      tags:
+        - Vaccinaties
+      parameters:
+        - $ref: '#/components/parameters/AORTA-ID'
+        - $ref: '#/components/parameters/AORTA-Transactie'
+      requestBody:
+        description: |
+          Bundle met daarin de objecten nodig om de volledige vaccinatie registratie
+          door te geven.
+        required: true
+        content:
+          application/fhir+xml;fhirVersion=4.0:
+            schema:
+              $ref: '#/components/schemas/RIVMNLVaccinationBundle'
+            examples:
+              RIVMNLVaccinationBundle:
+                $ref: '#/components/examples/RIVMNLVaccinationBundle'
+      responses:
+        '200':
+          description: Bundle correct verwerkt
+          content:
+            application/fhir+xml:
+              schema:
+                $ref: '#/components/schemas/RIVMNLVaccinationBundleResponse'
+              examples:
+                ok-bericht:
+                  $ref: '#/components/examples/RIVMNLVaccinationBundleResponseOK'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        '422':
+          description: The proposed resource violated applicable FHIR profiles or server business rules
+          content:
+            application/fhir+xml:
+              schema:
+                $ref: '#/components/schemas/RIVMNLVaccinationBundleResponse'
+              examples:
+                transaction-error:
+                  $ref: '#/components/examples/RIVMNLVaccinationBundleResponseError'
+      security:
+        - aof_auth:
+            - 'patient/immunization.write'
+
+  /anon:
+    post:
+      description: |
+        Beschrijving van het `/` endpoint voor de procesinformatie.
+
+        Met bijwerken worden 2 operaties bedoeld: update en delete.
+        De gewenste operatie (update of delete) wordt in de request van de Bundle.entry
+        aangegeven.
+        Indien de bij te werken resource nog niet bestaat, wordt deze aangemaakt
+        met hetzelfde id/identifier als de Immunization.id/Immunization.identifier.
+
+        __LET OP__: Dit is niet het officiële endpoint
+      summary: voorbeeld add, update, delete procesinformatie
+      tags:
+        - Vaccinaties
+      parameters:
+        - $ref: '#/components/parameters/AORTA-ID'
+        - $ref: '#/components/parameters/AORTA-Transactie'
+      requestBody:
+        description: |
+          Bundle met daarin de objecten nodig om de volledige vaccinatie registratie
+          door te geven.
+        required: true
+        content:
+          application/fhir+xml;fhirVersion=4.0:
+            schema:
+              $ref: '#/components/schemas/RIVMNLVaccinationProcessBundle'
+            examples:
+              RIVMNLVaccinationProcessBundle:
+                $ref: '#/components/examples/RIVMNLVaccinationProcessBundle'
+      responses:
+        '200':
+          description: Successful update
+          content:
+            application/fhir+xml:
+              schema:
+                $ref: '#/components/schemas/RIVMNLVaccinationProcessBundleResponse'
+              example:
+                $ref: '#/components/examples/RIVMLVaccinationProcessBundleResponseOK'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        '422':
+          description: The proposed resource violated applicable FHIR profiles or server business rules
+          content:
+            application/fhir+xml:
+              schema:
+                $ref: '#/components/schemas/RIVMNLVaccinationProcessBundleResponse'
+      security:
+        - aof_auth:
+            - 'patient/procesinfo.write'
+
+  /Medication:
+    get:
+      description: |
+        ophalen van alle geldige batchnummers. Er zijn geen variabele parameters nodig,
+        omdat het resultaat altijd een lijst met alleen de geldige batchnummers
+        zijn die op moment van opvragen geldig zijn.
+        De intentie is dat deze query met een frequentie van 1x per dag uitgevoerd wordt,
+        zodat de gebruiker altijd de beschikking heeft over een lijst met geldige nummers.
+      summary: Opvragen vaccinatie batchnummers
+      tags:
+        - Batchnummers
+      parameters:
+        - $ref: '#/components/parameters/AORTA-ID'
+        - $ref: '#/components/parameters/AORTA-Transactie'
+        - $ref: '#/components/parameters/profile'
+        - $ref: '#/components/parameters/statusBatchnummer'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/fhir+xml;fhirVersion=4.0:
+              schema:
+                $ref: '#/components/schemas/BundleLotNumber'
+              examples:
+                BundleLotNumber:
+                  $ref: '#/components/examples/BundleLotNumber'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+      security:
+        - aof_auth:
+            - 'user/lotnumbers.read'
+
+components:
+  parameters:
+  # ##################################################
+  # globale headers
+  # ##################################################
+    AORTA-ID:
+      name: AORTA-ID
+      in: header
+      description: |
+        Het initialRequestID attribuut bevat bevat het ID van het allereerste request in de hele keten van resource 
+        client tot resource server. 
+        Het initialRequestID attribuut bevat de waarde van het Request-ID dat werd ingestuurd 
+        door het XIS-systeem. Het initialRequestID dient te worden opgenomen in de logbestanden van alle partijen in de 
+        keten (Resource Client, Resource Broker, Transformatie Server en Resource Server), zodat bij foutopsporing de 
+        verschillende logbestanden aan elkaar kunnen worden gerelateerd.
+        
+        Het requestID is voor iedere request message uniek. In requests wordt deze gegenereerd door de client. Ook het 
+        requestID dient te worden opgenomen in de verschillende logbestanden, zodat altijd duidelijk is op welk 
+        bericht een log entry van toepassing is.
+
+        Weergave in header: `AORTA-ID: initialRequestID=2d455679-8c48-48ec-ac9b-667363139d09; requestID=6BFBA5B8-DFF3-11EC-A603-000D3AA8019F`
+      required: true
+      schema:
+        type: object
+        properties:
+          initialRequestID:
+            type: string
+            format: uuid
+          requestID:
+            type: string
+            format: uuid
+      style: simple
+      explode: true
+
+    AORTA-Transactie:
+      name: AORTA-Transactie
+      in: header
+      description: |
+        AORTAonFHIR transactieToken
+        Meer uitleg over dit token is te vinden op [TODO](dummylink)
+      required: true
+      schema:
+        type: string
+        format: SAML-token
+        example: "{dummy token}"
+
+    profile:
+      name: definition
+      in: query
+      description: Het opvragen van de batchnummers gebeurt door het aangeven van het juiste profiel.
+      required: true
+      schema:
+        type: string
+        default: "http://vzvz.nl/fhir/nl-vzvz-rivm-Lotnumber"
+    statusBatchnummer:
+      name: status
+      in: query
+      description: |
+        Alleen opvragen met status 'active'
+      required: true
+      schema:
+        type: string
+        default: "active"
+  schemas:
+    RIVMNLVaccinationBundle:
+      description: |
+        FHIR Bundle die alle objecten bevat om 1 gepersonaliseerde 
+        vaccinatie registratie uit te wisselen.
+        Het schema staat beschreven op [Simplifier](https://simplifier.net/covidvaccinations)
+      type: object
+      externalDocs:
+        url: https://simplifier.net/covidvaccinations 
+    RIVMNLVaccinationBundleResponse:
+      description: |
+        Antwoord op een Bundle van profile RIVMNLVaccinationBundle.
+        Het schema staat beschreven op [Simplifier](https://simplifier.net/covidvaccinations)
+      type: object
+      externalDocs:
+        url: https://simplifier.net/covidvaccinations
+    RIVMNLVaccinationProcessBundle:
+      description: |
+        FHIR Bundle die alle objecten bevat om 1 procesinformatie 
+        vaccinatie registratie uit te wisselen.
+        Het schema staat beschreven op [Simplifier](https://simplifier.net/covidvaccinations)
+      type: object
+      externalDocs:
+        url: https://simplifier.net/covidvaccinations 
+    RIVMNLVaccinationProcessBundleResponse:
+      description: |
+        Antwoord op een Bundle van profile RIVMNLVaccinationProcessBundle.
+        Het schema staat beschreven op [Simplifier](https://simplifier.net/covidvaccinations)
+      type: object
+      externalDocs:
+        url: https://simplifier.net/covidvaccinations 
+    BundleLotNumber:
+      description: |
+        FHIR Bundle met alle RIVMNLLotNumber entries die de geldige vaccinatie-batchnummers bevatten.
+        Het schema staat beschreven op [Simplifier](https://simplifier.net/covidvaccinations)
+      type: object
+      externalDocs:
+        url: https://simplifier.net/covidvaccinations
+    OperationOutcome:
+      description: |
+        Algemeen foutobject met daarin de issues die de fouten beschrijven.
+      type: object
+      externalDocs:
+        url: https://simplifier.net/covidvaccinations
+  securitySchemes:
+    aof_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: 'https://api.server.test/v1/oauth/authorize'
+          scopes:
+            'patient/immunization.write': wijzig gepersonaliseerde vaccinaties
+            'patient/procesinfo.write': wijzig procesinformatie
+            'user/lotnumbers.read': lees vaccinatie-batchnummers    
+  responses:
+    400:
+      description: |
+        Syntax incorrect or 
+        Parameters missing or invalid
+      content:
+        application/fhir+xml:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+          examples:
+            OperationOutcome:
+              $ref: '#/components/examples/OperationOutcome'
+    401:
+      description: Access token absent or invalid
+      headers:
+        authenticateHeader:
+          schema:
+            type: string 
+            format: 'WWW-Authenticate header'
+          required: false
+          examples:
+            OperationOutcome:
+              $ref: '#/components/examples/OperationOutcome'
+    403:
+      description: |
+        Request outside access token scope or
+        Voldoet niet aan beschikbaarheidscriterium
+      headers:
+        authenticateHeader:
+          schema:
+            type: string 
+            format: 'WWW-Authenticate header'
+          required: true
+          examples:
+            OperationOutcome:
+              $ref: '#/components/examples/OperationOutcome'
+      content:
+        application/fhir+xml:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+          examples:
+            OperationOutcome:
+              $ref: '#/components/examples/OperationOutcome'
+    404:
+      description: |
+        FHIR resourcetype niet ondersteund of
+        ZIB niet ondersteund
+      content:
+        application/fhir+xml:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+          examples:
+            OperationOutcome:
+              $ref: '#/components/examples/OperationOutcome'
+
+  examples:
+    RIVMNLVaccinationBundle:
+      summary: gepersonaliseerde vaccinatie
+      externalValue: 'https://simplifier.net/covidvaccinations/nl-vzvz-vaccination-example'
+      value: |
+        <?xml version="1.0" encoding="UTF-8"?>
+        <Bundle xmlns="http://hl7.org/fhir">
+            <id value="nl-vzvz-vaccination-example"/>
+            <meta>
+              <profile value="http://vzvz.nl/fhir/StructureDefinition/nl-vzvz-rivm-Vaccination-Bundle"/>
+            </meta>
+            <type value="transaction"/>
+            <timestamp value="2022-02-28T16:07:25+01:00"/>
+            <entry>
+                <resource>
+                    <Immunization>
+                        <meta>
+                            <profile value="http://vzvz.nl/fhir/StructureDefinition/nl-vzvz-rivm-Vaccination"/>
+                        </meta>
+                        <identifier>
+                            <!-- OID root die identifier in bron systeem aangeeft -->
+                            <system value="urn:oid:123.456"/>
+                            <!-- OID extension die identifier in bron systeem aangeeft -->
+                            <value value="567890"/> 
+                        </identifier>
+                        <!-- vaste waarde 'completed' -->
+                        <status value="completed"/>
+                        <vaccineCode>
+                            <!-- HPK van toegediend vaccin -->
+                            <coding>
+                                <system value="urn:oid:2.16.840.1.113883.2.4.4.7"/>
+                                <code value="2924528"/>
+                                <display value="COVID-19 VACCIN PFIZER INJVLST 0,3ML"/>
+                            </coding>
+                        </vaccineCode>
+                        <patient>
+                            <!-- Gevaccineerde patiënt/cliënt, referentie naar Patient in deze bundle -->
+                            <reference value="urn:uuid:local-patient"/>
+                            <type value="Patient"/>
+                        </patient>
+                        <!-- toediendatum: YYYY-MM-DD voorbeeld toegevoegd -->
+                        <occurrenceDateTime value="2021-12-17"/> 
+                        <!-- Vaccin batchnummer verplicht binnen deze context -->
+                        <lotNumber value="[batchnummer]"/>
+                        <performer>
+                            <!-- vaste waarde voor de functie -->
+                            <function>
+                                <coding>
+                                    <system value="http://terminology.hl7.org/CodeSystem/v2-0443"/>
+                                    <code value="AP"/>
+                                    <display value="Administering Provider"/>
+                                </coding>
+                            </function>
+                            <actor>
+                                <!-- Organisatie waar vaccinatie plaatsvindt, referentie naar Organisation in deze bundle -->
+                                <reference value="urn:uuid:local-organization"/>
+                                <type value="Organization"/>
+                            </actor>
+                        </performer>
+                        <!-- selectiecriterium -->
+                        <reasonCode>
+                            <coding>
+                                <system value="http://vzvz.nl/fhir/CodeSystem/nl-vzvz-rivm-selectionCriterion"/>
+                                <code value="1"/>
+                                <display value="Medisch"/>
+                            </coding>
+                        </reasonCode>
+                        <reasonCode>
+                            <coding>
+                                <system value="http://vzvz.nl/fhir/CodeSystem/nl-vzvz-rivm-administrationAttribute"/>
+                                <code value="BS01"/>
+                                <display value="eerste booster na basis serie"/>
+                            </coding>
+                        </reasonCode>
+                        <protocolApplied>
+                            <!-- vaccinatienummer -->
+                            <doseNumberString value="2"/>
+                        </protocolApplied>
+                    </Immunization>
+                </resource>
+                <request>
+                    <method value="PUT"/>
+                    <url value="Immunization"/>
+                </request>
+            </entry>
+            <entry>
+                <!-- interne referentie voor de patiënt in deze bundle -->
+                <fullUrl value="urn:uuid:local-patient"/>
+                <resource>
+                    <!-- Gevaccineerde persoon -->
+                    <Patient>
+                        <id value="local-patient"/>
+                        <meta>
+                            <profile value="http://vzvz.nl/fhir/StructureDefinition/nl-vzvz-rivm-Patient"/>
+                        </meta>
+                        <identifier>
+                            <!-- BSN -->
+                            <system value="urn:oid:2.16.840.1.113883.2.4.6.3"/>
+                            <value value="[BSN]"/>
+                            <!-- COA zorgnummer
+                            <system value="urn:oid:2.16.840.1.113883.2.4.3.111.6"/> 
+                            <value value="1234567890"/>
+                            -->
+                        </identifier>
+                        <name>
+                            <use value="official"/>
+                            <!-- achternaam in value volledig uitgeschreven -->
+                            <family value="[voorvoegsels + spatie][achternaam]">
+                                <!-- optioneel: voorvoegsels -->
+                                <extension
+                                    url="http://hl7.org/fhir/StructureDefinition/humanname-own-prefix">
+                                    <valueString value="[voorvoegsels]"/>
+                                </extension>
+                                <!-- achternaam/meisjesnaam -->
+                                <extension url="http://hl7.org/fhir/StructureDefinition/humanname-own-name">
+                                    <valueString value="[achternaam]"/>
+                                </extension>
+                            </family>
+                            <!-- TODO uitzoeken: alleen initialen? -->
+                            <!-- voornaam -->
+                            <given value="[voornaam]">
+                                <extension
+                                    url="http://hl7.org/fhir/StructureDefinition/iso21090-EN-qualifier">
+                                    <valueCode value="BR"/>
+                                </extension>
+                            </given>
+                            <!-- initialen -->
+                            <given value="[initialen]">
+                                <extension
+                                    url="http://hl7.org/fhir/StructureDefinition/iso21090-EN-qualifier">
+                                    <valueCode value="IN"/>
+                                </extension>
+                            </given>
+                        </name>
+                        <!-- geboortedatum  YYYY-MM-DD voorbeeld toegevoegd -->
+                        <birthDate value="1964-08-01"/>
+                        <address>
+                            <!-- huisnummer in value volledig uitgeschreven -->
+                            <line value="[huisnummer] [toevoeging]">
+                                <!-- huisnummer -->
+                                <extension
+                                    url="http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-houseNumber">
+                                    <valueString value="[huisnummer]"/>
+                                </extension>
+                                <!-- optioneel: huisnummer toevoeging -->
+                                <extension
+                                    url="http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-buildingNumberSuffix">
+                                    <valueString value="[huisnummer toevoeging]"/>
+                                </extension>
+                            </line>
+                            <!-- postcode -->
+                            <postalCode value="[postcode]"/>
+                            <!-- optioneel voor gepersonaliseerde informatie: landcode -->
+                            <country value="NL"/>
+                        </address>
+                    </Patient>
+                </resource>
+                <request>
+                    <method value="PUT"/>
+                    <url value="Patient"/>
+                </request>
+            </entry>
+            <entry>
+                <!-- interne referentie voor de organisatie in deze bundle -->
+                <fullUrl value="urn:uuid:local-organization"/>
+                <resource>
+                    <!-- Organisatie waar vaccinatie plaatsvindt -->
+                    <Organization>
+                        <id value="local-organization"/>
+                        <meta>
+                            <profile value="http://nictiz.nl/fhir/StructureDefinition/nl-core-HealthcareProvider-Organization"/>
+                        </meta>
+                        <identifier>
+                            <system value="http://fhir.nl/fhir/NamingSystem/ura"/>
+                            <!-- URA van de organisatie -->
+                            <value value="[URA]"/>
+                        </identifier>
+                        <!-- Naam van de organisatie. De naam moet overeenkomen met de naam die bij het identificatienummer (URA) hoort. -->
+                        <name value="[organisatie naam]"/>
+                        <!-- contactgegevens: of telefoonnummer of emailadres -->
+                        <telecom>
+                            <system value="phone" />
+                            <value value="[telefoon organisatie]" />
+                            <use value="work" />
+                        </telecom>
+                        <telecom>
+                            <system value="email" />
+                            <value value="[email adres organisatie]" />
+                            <use value="work" />
+                        </telecom>
+                    </Organization>
+                </resource>
+                <request>
+                    <method value="PUT"/>
+                    <url value="Organization"/>
+                </request>
+            </entry>
+        </Bundle>
+
+    RIVMNLVaccinationProcessBundle:
+      summary: procesinformatie
+      value: |
+        <?xml version="1.0" encoding="UTF-8"?>
+        <Bundle xmlns="http://hl7.org/fhir">
+          <id value="nl-vzvz-vaccination-anonymous-example"/>
+          <type value="transaction"/>
+          <timestamp value="2022-02-28T16:07:25+01:00"/>
+          <entry>
+            <resource>
+              <Immunization>
+                <meta>
+                  <profile value="http://vzvz.nl/fhir/nl-vzvz-rivm-Vaccination-anonymous"/>
+                </meta>
+                <identifier>
+                  <!-- OID root die identifier in bron systeem aangeeft -->
+                  <system value="urn:oid:123.456"/>
+                  <!-- OID extension die identifier in bron systeem aangeeft -->
+                  <value value="567890"/>
+                </identifier>
+                <!-- vaste waarde 'completed' -->
+                <status value="completed"/>
+                <vaccineCode>
+                  <!-- HPK van toegediend vaccin -->
+                  <coding>
+                    <system value="urn:oid:2.16.840.1.113883.2.4.4.7"/>
+                    <code value="2924528"/>
+                    <display value="COVID-19 VACCIN PFIZER INJVLST 0,3ML"/>
+                  </coding>
+                </vaccineCode>
+                <patient>
+                  <!-- Gevaccineerde patiënt/cliënt, referentie naar Patient in deze bundle -->
+                  <reference value="urn:uuid:local-patient"/>
+                  <type value="Patient"/>
+                </patient>
+                <occurrenceDateTime value="2021-12-17"/>
+                <!-- Vaccin batchnummer verplicht binnen deze context -->
+                <lotNumber value="[batchnummer]"/>
+                <protocolApplied>
+                  <!-- vaccinatienummer -->
+                  <doseNumberPositiveInt value="1"/>
+                </protocolApplied>
+              </Immunization>
+            </resource>
+            <request>
+              <method value="POST"/>
+              <url value="Immunization"/>
+            </request>
+          </entry>
+          <entry>
+            <!-- interne referentie voor de patiënt in deze bundle -->
+            <fullUrl value="urn:uuid:local-patient"/>
+            <resource>
+              <Patient>
+                <id value="local-patient"/>
+                <meta>
+                  <profile value="http://vzvz.nl/fhir/StructureDefinition/nl-vzvz-rivm-Patient-anonymous"/>
+                </meta>
+                <identifier>
+                  <!-- hashed identifier -->
+                  <system value="urn:oid:2.16.840.1.113883.2.4.3.111.4"/>
+                  <value value="hashed-id"/>
+                </identifier>
+                <extension url="http://vzvz.nl/fhir/StructureDefinition/ext-nl-vzvz-rivm-ageGroup">
+                  <valueCodeableConcept>
+                    <coding>
+                      <system value="http://vzvz.nl/fhir/CodeSystem/nl-vzvz-rivm-ageGroup"/>
+                      <code value="1"/>
+                      <display value="leeftijd &lt; 40"/>
+                    </coding>
+                  </valueCodeableConcept>
+                </extension>
+                <address>
+                  <!-- codes voor de 7 landen van herkomst -->
+                  <country value="NL"/>
+                </address>
+              </Patient>
+            </resource>
+            <request>
+              <method value="POST"/>
+              <url value="Patient"/>
+            </request>
+          </entry>
+        </Bundle>
+    RIVMNLVaccinationBundleResponseOK:
+      summary: aangeboden bundle is correct verwerkt
+      value: |
+        <?xml version="1.0" encoding="UTF-8"?>
+        <Bundle xmlns="http://hl7.org/fhir">
+            <!-- bericht ID TODO uitzoeken welke -->
+            <id value="nl-vzvz-vaccination-example-response"/>
+            <type value="transaction-response"/>
+                <!-- datumtijd van bericht staat ook in HL7v3 wrapper -->
+
+            <timestamp value="2022-02-28T16:07:25+01:00"/>
+            <entry>
+                <fullUrl value="http://example.org/fhir/Immunization/123.456.567890"/>
+                <response>
+                    <status value="201 Created"/>
+                    <lastModified value="2022-05-09T12:25:27+02:00"/>
+                </response>
+            </entry>
+            <entry>
+                <fullUrl value="http://example.org/fhir/Patient/1234567"/>
+                <response>
+                    <!-- patiënt is al bekend, niet bijgewerkt -->
+                    <status value="200 OK"/>
+                </response>
+            </entry>
+            <entry>
+                <!-- interne referentie voor de organisatie in deze bundle -->
+                <fullUrl value="http://example.org/fhir/Organization/123456789"/>
+                <response>
+                    <!-- organisatie is al bekend, niet bijgewerkt -->
+                    <status value="200 OK"/>
+                </response>
+            </entry>
+        </Bundle>
+    RIVMNLVaccinationBundleResponseError:
+      summary: een of meerdere entries in de aangeboden bundle kunnen niet correct verwerkt worden
+      value: |
+        <?xml version="1.0" encoding="UTF-8"?>
+        <OperationOutcome xmlns="http://hl7.org/fhir">
+            <id value="nl-vzvz-vaccination-error-response-example"/>
+            <issue>
+                <severity value="error"/>
+                <code value="business-rule"/>
+                <diagnostics value="BSN en geboortedatum horen niet bij elkaar"/>
+                <expression value="Bundle.entry[1].Patient.identifier[0].value"/>
+            </issue>
+            <issue>
+                <severity value="error"/>
+                <code value="business-rule"/>
+                <diagnostics value="Ongeldig batchnummer"/>
+                <expression value="Bundle.entry[0].Immunization.lotNumber.value"/>
+            </issue>
+        </OperationOutcome>
+
+    RIVMLVaccinationProcessBundleResponseOK:
+      summary: geldige verwerking
+      value: |
+        <?xml version="1.0" encoding="UTF-8"?>
+        <Bundle xmlns="http://hl7.org/fhir">
+            <id value="nl-vzvz-vaccination-example-response"/>
+            <type value="transaction-response"/>
+                <!-- datumtijd van bericht staat ook in HL7v3 wrapper -->
+            <timestamp value="2022-02-28T16:07:25+01:00"/>
+            <entry>
+                <fullUrl value="http://example.org/fhir/Immunization/123.456.567890"/>
+                <response>
+                    <status value="201 Created"/>
+                    <lastModified value="2022-05-09T12:25:27+02:00"/>
+                </response>
+            </entry>
+            <entry>
+                <fullUrl value="http://example.org/fhir/Patient/1234567"/>
+                <response>
+                    <!-- patiënt is al bekend, niet bijgewerkt -->
+                    <status value="200 OK"/>
+                </response>
+            </entry>
+            <entry>
+                <!-- interne referentie voor de organisatie in deze bundle -->
+                <fullUrl value="http://example.org/fhir/Organization/123456789"/>
+                <response>
+                    <!-- organisatie is al bekend, niet bijgewerkt -->
+                    <status value="200 OK"/>
+                </response>
+            </entry>
+        </Bundle>
+
+    BundleLotNumber: 
+      summary: geldige bundle
+      value: |
+          <Bundle xmlns="http://hl7.org/fhir">
+            <id value="nl-vzvz-bundle-lotnumbers-example"/>
+            <type value="batch-response"/>
+            <entry>
+              <resource>
+                <Medication xmlns="http://hl7.org/fhir">
+                    <id value="nl-vzvz-lotnumber-example-01"/>
+                    <meta>
+                      <profile value="http://vzvz.nl/fhir/nl-vzvz-rivm-Lotnumber"/>
+                    </meta>
+                    <code>
+                      <!-- HPK van covid vaccin -->
+                      <coding>
+                        <system value="urn:oid:2.16.840.1.113883.2.4.4.7"/>
+                        <code value="2924528"/>
+                        <display value="COVID-19 VACCIN PFIZER INJVLST 0,3ML"/>
+                      </coding>
+                    </code>
+                    <batch>
+                        <lotNumber value="12345"/>
+                        <expirationDate value="2022-03-31"/>
+                    </batch>
+                </Medication>
+              </resource>
+              <response>
+                  <status value="200"/>
+              </response>
+            </entry>
+            <entry>
+              <Medication>
+                <!-- ... -->
+              </Medication>
+            </entry>
+          </Bundle> 
+
+    OperationOutcome:
+      summary: FHIR fouten
+      value: |
+        <OperationOutcome>
+          <issue>
+            <severity value="error"/>
+            <code value=""/>
+            <diagnostics value=""/>
+            <expression value=""/>
+          </issue>
+        </OperationOutcome>
+
