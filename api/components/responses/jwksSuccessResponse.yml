@@ -62,7 +62,7 @@ content:
           format: byte
           pattern: '^[A-Za-z0-9+]+$'
           maxLength: 5000
-    example: |-
+    example: |
       {
         "kty":"RSA",
         "alg":"RS256",

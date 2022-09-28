@@ -5,5 +5,4 @@ OperationOutcomeSTU3:
   externalDocs:
     description: FHIR STU3 OperationOutcome
     url: http://hl7.org/fhir/STU3/operationoutcome.html
-  type: object
-  
+  # $ref: https://hl7.org/fhir/STU3/fhir.schema.json#/definitions/OperationOutcome

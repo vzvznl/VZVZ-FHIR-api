@@ -1,5 +1,7 @@
-unauthorizedOperationOutcome:
-  summary: OperationOutcome bij een Unauthorized error
+unauthorizedOperationOutcomeXML:
+  summary: Unauthorized error
+  description: |
+    OperationOutcome bij een Unauthorized error
   value: |
     <OperationOutcome>
       <issue>
@@ -7,6 +9,19 @@ unauthorizedOperationOutcome:
         <code value="security"/>
       </issue>
     </OperationOutcome>
+
+unauthorizedOperationOutcome:
+  summary: Unauthorized error
+  description: |
+    OperationOutcome bij een Unauthorized error
+  value: |
+    <OperationOutcome>
+      <issue>
+        <severity value="error"/>
+        <code value="security"/>
+      </issue>
+    </OperationOutcome>
+
 notSupportedOperationOutcome:
   summary: OperationOutcome bij een Not Found error
   value: |
@@ -16,6 +31,7 @@ notSupportedOperationOutcome:
         <code value="not-supported"/>
       </issue>
     </OperationOutcome>
+
 badRequestOperationOutcomeXML:
   summary: OperationOutcome
   description: |
@@ -29,6 +45,7 @@ badRequestOperationOutcomeXML:
         <code value="invalid"/>
       </issue>
     </OperationOutcome>
+
 badRequestOperationOutcomeJSON:
   summary: OperationOutcome
   description: |

@@ -71,7 +71,7 @@ content:
           pattern: '[a-zA-Z0-9: .]+'
           maxLength: 1024
           example: 'search:Coverage:1.0:request search:Patient:1.0:request~aorta.contextcode.BGZOPV~normaal'
-    example: >
+    example: |
       {
         "access_token": "2YotnFZFEjr1zCsicMWpAA",
         "issued_token_type": "urn:ietf:params:oauth:token-type:jwt",
