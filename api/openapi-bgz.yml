@@ -25,12 +25,9 @@ paths:
   /:
     post:
       description: |
-        Aanleveren van Task (notified pull).
-
-        Client is BGZ-opleverend-systeem.
-        
+        Aanleveren van Task (notified pull). \
+        Client is BGZ-opleverend-systeem. \        
         Server is BGZ-opvragend-systeem.
-
       summary: Task aanleveren aan BGZ-opvragend-systeem
       tags:
         - Notified-Pull

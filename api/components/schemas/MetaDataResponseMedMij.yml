@@ -4,16 +4,19 @@ properties:
     type: string
     maxLength: 5000
     pattern: '^(https?:\/\/)?[a-zA-Z0-9._-]+\.[a-z]+(\/[a-zA-Z0-9_-]+\/?)*$'
+    format: url
     example: "https://server.example.com"
   authorization_endpoint:
     type: string
     maxLength: 5000
     pattern: '^(https?:\/\/)?[a-zA-Z0-9._-]+\.[a-z]+(\/[a-zA-Z0-9_-]+\/?)*$'
+    format: url
     example: "https://server.example.com/authorize"
   token_endpoint:
     type: string
     maxLength: 5000
     pattern: '^(https?:\/\/)?[a-zA-Z0-9._-]+\.[a-z]+(\/[a-zA-Z0-9_-]+\/?)*$'
+    format: url
     example: "https://server.example.com/token"
   jwks_uri:
     type: string

@@ -196,6 +196,7 @@ paths:
           in: query
           schema:
             type: string
+            maxLength: 100
             pattern: 'Patient:general-practitioner'
       responses:
         200:
@@ -346,6 +347,10 @@ paths:
           $ref: '#/components/responses/403'
         404:
           $ref: '#/components/responses/404'        
+        406:
+          $ref: '#/components/responses/406'        
+        429:
+          $ref: '#/components/responses/429'        
 
   /Composition:
     get:
@@ -359,6 +364,7 @@ paths:
           in: query
           schema:
             type: string
+            maxLength: 100
             pattern: http://loinc.org|67781-5
       responses:
         200:
@@ -444,6 +450,7 @@ paths:
           description: De scope waarvoor de status wordt bepaald
           schema:
             type: string
+            maxLength: 100
             pattern: 'http://fhir.nl/fhir/NamingSystem/medmij-scope|<scope>'
       responses:
         200:
@@ -462,7 +469,18 @@ paths:
                     <diagnostics value="http://fhir.nl/fhir/NamingSystem/medmij-scope|eenofanderezorgaanbieder~53"/>
                   </issue>
                 </OperationOutcome>      
-
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        406:
+          $ref: '#/components/responses/406'
+        429:
+          $ref: '#/components/responses/429'
   /DocumentReference:
     get:
       tags:
@@ -568,7 +586,11 @@ components:
       schema: 
         $ref: '#/components/schemas/AORTA-ID'
     AORTA-Version:
-      $ref: 'components/schemas/aorta-tokens.yml#/AORTA-Version'
+      name: AORTA-Version
+      in: header
+      required: true
+      schema:
+        $ref: 'components/schemas/aorta-tokens.yml#/AORTA-Version'
 
   schemas:
     AORTA-ID:
@@ -602,8 +624,8 @@ components:
       type: http
       scheme: bearer
       description: |
-        AORTAonFHIR accessToken
-        Meer uitleg over dit token is te vinden op [Confluence](https://confluence.vzvz.nl/display/UBEBVLEL/Token+specificaties+-+0.7.x#Tokenspecificaties0.7.x-InhoudenformaatvanhetSAMLAORTAconsent_token)
+        AORTAonFHIR accessToken \
+        Meer uitleg over dit token is te vinden op [Confluence](https://confluence.vzvz.nl/display/UBEBVLEL/Token+specificaties+-+0.7.x#Tokenspecificaties0.7.x-InhoudenformaatvanhetAORTAaccess_token)
 
   responses:
     200-FHIR-SearchResults:
