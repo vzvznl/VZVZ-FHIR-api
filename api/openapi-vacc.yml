@@ -1,13 +1,16 @@
 openapi: '3.0.3'
 info:
   title: VZVZ Vaccinaties
-  version: '0.3.0'
+  version: '0.3.1'
   description: |
     Beschrijving van de endpoints zoals benodigd voor de uitwisseling van vaccinatie
     registraties, zowel gepersonaliseerd als anoniem, tussen zorgverleners/toedieners en 
     RIVM.
     Deze endpoints zijn gebaseerd op de FHIR endpoints zoals beschreven op de
     [FHIR website](http://hl7.org/fhir/http.html).
+
+    Releasenotes 0.3.1:
+    - uitgebreidere beschrijving van de responses bij een request voor Batchnummers.
 
 servers:
   - url: https://test.server/fhir/R4/
@@ -19,6 +22,10 @@ tags:
     description: Opvragen van vaccinatie-batchnummers
   - name: infra
     description: Infrastructurele informatie
+
+security:
+  - aof_auth: []
+
 paths:
   /:
     post:
@@ -51,7 +58,6 @@ paths:
         - Vaccinaties
       parameters:
         - $ref: '#/components/parameters/AORTA-ID'
-        - $ref: '#/components/parameters/AORTA-Transactie'
       requestBody:
         description: |
           Bundle met daarin de objecten nodig om de volledige vaccinatie registratie
@@ -112,7 +118,6 @@ paths:
         - Vaccinaties
       parameters:
         - $ref: '#/components/parameters/AORTA-ID'
-        - $ref: '#/components/parameters/AORTA-Transactie'
       requestBody:
         description: |
           Bundle met daarin de objecten nodig om de volledige vaccinatie registratie
@@ -165,19 +170,11 @@ paths:
         - Batchnummers
       parameters:
         - $ref: '#/components/parameters/AORTA-ID'
-        - $ref: '#/components/parameters/AORTA-Transactie'
         - $ref: '#/components/parameters/profile'
         - $ref: '#/components/parameters/statusBatchnummer'
       responses:
         '200':
-          description: OK
-          content:
-            application/fhir+xml;fhirVersion=4.0:
-              schema:
-                $ref: '#/components/schemas/BundleLotNumber'
-              examples:
-                BundleLotNumber:
-                  $ref: '#/components/examples/BundleLotNumber'
+          $ref: '#/components/responses/200'
         400:
           $ref: '#/components/responses/400'
         401:
@@ -191,51 +188,25 @@ paths:
             - 'user/lotnumbers.read'
 
 components:
+  headers:
+    authenticateHeader:
+      schema:
+        type: string 
+        maxLength: 1024
+        pattern: 'string'
+        format: 'WWW-Authenticate header'
+        example: 'string'
+    AORTA-ID:
+      schema:
+        $ref: '#/components/schemas/AORTA-ID'
+  
   parameters:
-  # ##################################################
-  # globale headers
-  # ##################################################
     AORTA-ID:
       name: AORTA-ID
       in: header
-      description: |
-        Het initialRequestID attribuut bevat bevat het ID van het allereerste request in de hele keten van resource 
-        client tot resource server. 
-        Het initialRequestID attribuut bevat de waarde van het Request-ID dat werd ingestuurd 
-        door het XIS-systeem. Het initialRequestID dient te worden opgenomen in de logbestanden van alle partijen in de 
-        keten (Resource Client, Resource Broker, Transformatie Server en Resource Server), zodat bij foutopsporing de 
-        verschillende logbestanden aan elkaar kunnen worden gerelateerd.
-        
-        Het requestID is voor iedere request message uniek. In requests wordt deze gegenereerd door de client. Ook het 
-        requestID dient te worden opgenomen in de verschillende logbestanden, zodat altijd duidelijk is op welk 
-        bericht een log entry van toepassing is.
-
-        Weergave in header: `AORTA-ID: initialRequestID=2d455679-8c48-48ec-ac9b-667363139d09; requestID=6BFBA5B8-DFF3-11EC-A603-000D3AA8019F`
       required: true
-      schema:
-        type: object
-        properties:
-          initialRequestID:
-            type: string
-            format: uuid
-          requestID:
-            type: string
-            format: uuid
-      style: simple
-      explode: true
-
-    AORTA-Transactie:
-      name: AORTA-Transactie
-      in: header
-      description: |
-        AORTAonFHIR transactieToken
-        Meer uitleg over dit token is te vinden op [TODO](dummylink)
-      required: true
-      schema:
-        type: string
-        format: SAML-token
-        example: "{dummy token}"
-
+      schema: 
+        $ref: '#/components/schemas/AORTA-ID'
     profile:
       name: definition
       in: query
@@ -251,9 +222,14 @@ components:
         Alleen opvragen met status 'active'
       required: true
       schema:
+        additionalProperties: false
         type: string
+        pattern: "active"
         default: "active"
   schemas:
+    AORTA-ID:
+      $ref: 'components/schemas/aorta-tokens.yml#/AORTA-ID'
+
     RIVMNLVaccinationBundle:
       description: |
         FHIR Bundle die alle objecten bevat om 1 gepersonaliseerde 
@@ -300,56 +276,74 @@ components:
   securitySchemes:
     aof_auth:
       type: oauth2
+      description: |
+        AORTAonFHIR accessToken
+        Meer uitleg over dit token is te vinden op [Confluence](https://confluence.vzvz.nl/display/UBEBVLEL/Token+specificaties+-+0.7.x#Tokenspecificaties0.7.x-InhoudenformaatvanhetAORTAaccess_token)
       flows:
-        implicit:
-          authorizationUrl: 'https://api.server.test/v1/oauth/authorize'
+        authorizationCode: 
+          tokenUrl: https://example.com/api/oauth/token,
+          authorizationUrl: https://api.server.test/v1/oauth/authorize
           scopes:
             'patient/immunization.write': wijzig gepersonaliseerde vaccinaties
             'patient/procesinfo.write': wijzig procesinformatie
             'user/lotnumbers.read': lees vaccinatie-batchnummers    
   responses:
+    200:
+      description: OK
+      content:
+        application/fhir+xml;fhirVersion=4.0:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/BundleLotNumber'
+              - $ref: '#/components/schemas/OperationOutcome'
+          examples:
+            BundleLotNumber:
+              $ref: '#/components/examples/BundleLotNumber'
+            emptyBundle:
+              $ref: '#/components/examples/emptyBundleXML'
+            operationOutcome:
+              $ref: '#/components/examples/200-OperationOutcome'
+
     400:
       description: |
-        Syntax incorrect or 
-        Parameters missing or invalid
+        Bad request 
+
+        Syntactically incorrect parameter in search request
+      headers:
+        authenticateHeader:
+          $ref: '#/components/headers/authenticateHeader'
       content:
         application/fhir+xml:
           schema:
             $ref: '#/components/schemas/OperationOutcome'
           examples:
-            OperationOutcome:
-              $ref: '#/components/examples/OperationOutcome'
+            badRequest:
+              $ref: '#/components/examples/badRequestOperationOutcomeXML'
     401:
-      description: Access token absent or invalid
+      description: |
+        Access token absent or invalid
       headers:
         authenticateHeader:
+          $ref: '#/components/headers/authenticateHeader'
+      content:
+        application/fhir+xml:
           schema:
-            type: string 
-            format: 'WWW-Authenticate header'
-          required: false
-          examples:
-            OperationOutcome:
-              $ref: '#/components/examples/OperationOutcome'
+            $ref: '#/components/schemas/OperationOutcome'
+          example:
+            $ref: '#/components/examples/unauthorizedOperationOutcome'
     403:
-      description: |
+      description: >
         Request outside access token scope or
         Voldoet niet aan beschikbaarheidscriterium
       headers:
         authenticateHeader:
-          schema:
-            type: string 
-            format: 'WWW-Authenticate header'
-          required: true
-          examples:
-            OperationOutcome:
-              $ref: '#/components/examples/OperationOutcome'
+          $ref: '#/components/headers/authenticateHeader'
       content:
         application/fhir+xml:
           schema:
             $ref: '#/components/schemas/OperationOutcome'
-          examples:
-            OperationOutcome:
-              $ref: '#/components/examples/OperationOutcome'
+          example:
+            $ref: '#/components/examples/unauthorizedOperationOutcome'
     404:
       description: |
         FHIR resourcetype niet ondersteund of
@@ -358,9 +352,25 @@ components:
         application/fhir+xml:
           schema:
             $ref: '#/components/schemas/OperationOutcome'
-          examples:
-            OperationOutcome:
-              $ref: '#/components/examples/OperationOutcome'
+          example:
+            $ref: '#/components/examples/notSupportedOperationOutcome'
+
+    422:
+      description: |
+        Unprocessable Entity
+      content:
+        application/fhir+xml:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+          example:
+            $ref: '#/components/examples/invalidData'
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+          example:
+            $ref: '#/components/examples/invalidData'
+
+
 
   examples:
     RIVMNLVaccinationBundle:
@@ -769,16 +779,42 @@ components:
               </Medication>
             </entry>
           </Bundle> 
+  
+    unauthorizedOperationOutcome:
+      $ref: 'components/examples/FHIROperationOutcome.yml#/unauthorizedOperationOutcomeXML'
 
-    OperationOutcome:
-      summary: FHIR fouten
+    notSupportedOperationOutcome:
+      $ref: 'components/examples/FHIROperationOutcome.yml#/notSupportedOperationOutcome'
+
+    badRequestOperationOutcomeXML:
+      $ref: 'components/examples/FHIROperationOutcome.yml#/badRequestOperationOutcomeXML'
+
+    emptyBundleXML:
+      $ref: 'components/examples/emptyBundle.yml#/emptyBundleXML'
+      
+    searchResultsXML:
+      $ref: 'components/examples/FHIRsearchResults.yml#/searchResultsXML'
+    
+    200-OperationOutcome:
+      summary: OperationOutcome
+      description: |
+        OperationOutcome to indicate unsupported or
+        invalid search parameters
+      value: |
+        <OperationOutcome>
+          <issue>
+            <severity value="warning"/>
+            <code value="not-supported"/>
+          </issue>
+        </OperationOutcome>
+
+    invalidData:
+      summary: OperationOutcome bij invalid data
       value: |
         <OperationOutcome>
           <issue>
             <severity value="error"/>
-            <code value=""/>
-            <diagnostics value=""/>
-            <expression value=""/>
+            <code value="invalid"/>
           </issue>
         </OperationOutcome>
 
