@@ -58,6 +58,7 @@ paths:
         - Vaccinaties
       parameters:
         - $ref: '#/components/parameters/AORTA-ID'
+        - $ref: '#/components/parameters/AORTA-Transactie'
       requestBody:
         description: |
           Bundle met daarin de objecten nodig om de volledige vaccinatie registratie
@@ -118,6 +119,7 @@ paths:
         - Vaccinaties
       parameters:
         - $ref: '#/components/parameters/AORTA-ID'
+        - $ref: '#/components/parameters/AORTA-Transactie'
       requestBody:
         description: |
           Bundle met daarin de objecten nodig om de volledige vaccinatie registratie
@@ -170,6 +172,7 @@ paths:
         - Batchnummers
       parameters:
         - $ref: '#/components/parameters/AORTA-ID'
+        - $ref: '#/components/parameters/AORTA-Transactie'
         - $ref: '#/components/parameters/profile'
         - $ref: '#/components/parameters/statusBatchnummer'
       responses:
@@ -199,6 +202,9 @@ components:
     AORTA-ID:
       schema:
         $ref: '#/components/schemas/AORTA-ID'
+    AORTA-Transactie:
+      schema: 
+        $ref: '#/components/schemas/AORTA-Transactie'
   
   parameters:
     AORTA-ID:
@@ -207,6 +213,12 @@ components:
       required: true
       schema: 
         $ref: '#/components/schemas/AORTA-ID'
+    AORTA-Transactie:
+      name: AORTA-Transactie
+      in: header
+      required: true
+      schema:
+        $ref: '#/components/schemas/AORTA-Transactie'
     profile:
       name: definition
       in: query
@@ -229,6 +241,8 @@ components:
   schemas:
     AORTA-ID:
       $ref: 'components/schemas/aorta-tokens.yml#/AORTA-ID'
+    AORTA-Transactie:
+      $ref: 'components/schemas/aorta-tokens.yml#/AORTA-Transactie'
 
     RIVMNLVaccinationBundle:
       description: |
