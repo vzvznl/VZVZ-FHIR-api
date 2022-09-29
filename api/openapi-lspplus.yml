@@ -35,8 +35,8 @@ servers:
     description: MedMij Productie omgeving
  
 tags:
-  - name: oauth
-    description: endpoints gerelateerd aan de autorisatie
+  # - name: oauth
+  #   description: endpoints gerelateerd aan de autorisatie
   - name: MedMij-huisartsgegevens
     description: uitwisseling van huisartsgegevens met het PGO
   - name: MedMij-eAfspraken
