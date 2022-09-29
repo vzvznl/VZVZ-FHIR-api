@@ -10,6 +10,8 @@ info:
     Nadere informatie m.b.t. deze server is te vinden op 
     [Autorisatie Server Interfaces - 0.7.x](https://public.vzvz.nl/display/UBEBVLEL/Autorisatie+Server+Interfaces+-+0.7.x)
 
+        LET OP: deze versie kan nog fouten bevatten.
+
 servers:
   - url: https://as-za.server/
     description: Autorisatie Server ZorgAanbieder

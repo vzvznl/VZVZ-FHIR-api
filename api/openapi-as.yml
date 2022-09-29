@@ -2,7 +2,11 @@ openapi: '3.0.3'
 info:
   version: 0.0.3
   title: Adressering Server
-  description: Aorta Adressering Server API
+  description: |
+    Aorta Adressering Server API
+
+        LET OP: deze versie kan nog fouten bevatten.
+
 
 externalDocs:
   description: Project documentatie zie confluence

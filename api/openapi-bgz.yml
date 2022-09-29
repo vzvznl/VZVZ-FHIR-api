@@ -11,6 +11,8 @@ info:
     **Let op**: _deze Swagger beschrijving probeert de workflow weer te geven,
     dus de server kan verschillen bij de individuele paths._
 
+        LET OP: deze versie kan nog fouten bevatten.
+
 servers:
   - url: https://bron.server/fhir/R4/
     description: BGZ-opleverend-systeem
