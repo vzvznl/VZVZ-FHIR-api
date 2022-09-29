@@ -48,60 +48,60 @@ security:
   - accessToken: []
 
 paths:
-  /oauth2/authorize:
-    get:
-      tags:
-        - oauth
-      servers:
-        - url: https://ontmedmij-inlog.vzvz.nl/1.5.0
-          description: Ontwikkel omgeving
-        - url: https://tstmedmij-inlog.vzvz.nl/1.5.0
-          description: Test omgeving
-        - url: https://accmedmij-inlog.vzvz.nl/1.5.0
-          description: Acceptatie (MedMij zandbak)
-        - url: https://medmij-inlog.vzvz.nl/1.5.0
-          description: Productie omgeving
-      responses:
-        200:
-          description: ok
-        401:
-          description: todo
-        403:
-          description: todo
-        404:
-          description: todo
-        406:
-          description: todo
-        429:
-          description: todo
+  # /oauth2/authorize:
+  #   get:
+  #     tags:
+  #       - oauth
+  #     servers:
+  #       - url: https://ontmedmij-inlog.vzvz.nl/1.5.0
+  #         description: Ontwikkel omgeving
+  #       - url: https://tstmedmij-inlog.vzvz.nl/1.5.0
+  #         description: Test omgeving
+  #       - url: https://accmedmij-inlog.vzvz.nl/1.5.0
+  #         description: Acceptatie (MedMij zandbak)
+  #       - url: https://medmij-inlog.vzvz.nl/1.5.0
+  #         description: Productie omgeving
+  #     responses:
+  #       200:
+  #         description: ok
+  #       401:
+  #         description: todo
+  #       403:
+  #         description: todo
+  #       404:
+  #         description: todo
+  #       406:
+  #         description: todo
+  #       429:
+  #         description: todo
 
 
-  /oauth2/token:
-    get:
-      tags:
-        - oauth
-      servers:
-        - url: https://ontmedmij-pgo2.vzvz.nl/1.5.0
-          description: Ontwikkel omgeving
-        - url: https://tstmedmij-pgo2.vzvz.nl/1.5.0
-          description: Test omgeving
-        - url: https://accmedmij-pgo.vzvz.nl/1.5.0
-          description: Acceptatie (MedMij zandbak)
-        - url: https://medmij-pgo.vzvz.nl/1.5.0
-          description: Productie omgeving
-      responses:
-        200:
-          description: ok
-        401:
-          description: todo
-        403:
-          description: todo
-        404:
-          description: todo
-        406:
-          description: todo
-        429:
-          description: todo
+  # /oauth2/token:
+  #   get:
+  #     tags:
+  #       - oauth
+  #     servers:
+  #       - url: https://ontmedmij-pgo2.vzvz.nl/1.5.0
+  #         description: Ontwikkel omgeving
+  #       - url: https://tstmedmij-pgo2.vzvz.nl/1.5.0
+  #         description: Test omgeving
+  #       - url: https://accmedmij-pgo.vzvz.nl/1.5.0
+  #         description: Acceptatie (MedMij zandbak)
+  #       - url: https://medmij-pgo.vzvz.nl/1.5.0
+  #         description: Productie omgeving
+  #     responses:
+  #       200:
+  #         description: ok
+  #       401:
+  #         description: todo
+  #       403:
+  #         description: todo
+  #       404:
+  #         description: todo
+  #       406:
+  #         description: todo
+  #       429:
+  #         description: todo
 
   /:
     post:
