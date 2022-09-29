@@ -47,7 +47,20 @@ tags:
     description: uitwisseling van correspondentie met het PGO
 
 security:
-  - accessToken: []
+  - accessToken: 
+    - patient/Patient.read
+    - patient/EpisodeOfCare.read
+    - patient/MedicationRequest.read
+    - patient/AllergyIntolerance.read
+    - patient/Observation.read
+    - patient/Composition.read
+    - patient/Encounter.read
+    - patient/Appointment.read
+    - patient$is-allowed
+    - patient/DocumentManifest.read 
+    - patient/DocumentReference.read 
+    - patient/Binary.read
+    - patient/Observation.write 
 
 paths:
   # /oauth2/authorize:
