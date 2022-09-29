@@ -7,6 +7,8 @@ info:
     tussen zorgverleners en PGO via LSP+. \
     Deze endpoints zijn gebaseerd op de FHIR endpoints zoals beschreven op de
     - [Publieke omgeving AORTA on FHIR](https://public.vzvz.nl/display/UBEBVLEL/AORTA+on+FHIR+specificaties+-+0.7.17)
+      - [Leeswijzer AoF - 0.7.x](https://public.vzvz.nl/display/UBEBVLEL/Leeswijzer+AoF+-+0.7.x)
+      - [MedMij Flows - 0.7.x](https://public.vzvz.nl/display/UBEBVLEL/MedMij+Flows+-+0.7.x)
     - [MedMij implementatiestandaard Huisartsgegevens](https://informatiestandaarden.nictiz.nl/wiki/MedMij:V2020.01/FHIR_GP_Data)
     - [MedMij FHIR Implementation Guide](https://informatiestandaarden.nictiz.nl/wiki/MedMij:V2020.01/FHIR_IG)
 
