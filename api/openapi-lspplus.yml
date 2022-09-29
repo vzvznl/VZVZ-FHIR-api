@@ -575,11 +575,17 @@ components:
         format: 'WWW-Authenticate header'
         example: 'string'
     AORTA-ID:
+      required: true
       schema:
         $ref: '#/components/schemas/AORTA-ID'
     AORTA-Version:
+      required: true
       schema:
         $ref: '#/components/schemas/AORTA-Version'
+    AORTA-access-token:
+      required: true
+      schema:
+        $ref: '#/components/schemas/AORTA-access-token'
   
   parameters:
     AORTA-ID:
@@ -593,7 +599,13 @@ components:
       in: header
       required: true
       schema:
-        $ref: 'components/schemas/aorta-tokens.yml#/AORTA-Version'
+        $ref: '#/components/schemas/AORTA-Version'
+    AORTA-access-token:
+      name: AORTA-access-token
+      in: header
+      required: true
+      schema:
+        $ref: '#/components/schemas/AORTA-access-token'
 
   schemas:
     AORTA-ID:
@@ -601,6 +613,9 @@ components:
 
     AORTA-Version:
       $ref: 'components/schemas/aorta-tokens.yml#/AORTA-Version'
+
+    AORTA-access-token:
+      $ref: 'components/schemas/aorta-tokens.yml#/acces_token_AORTA'
 
     OperationOutcome:
       $ref: 'components/schemas/OperationOutcome.yml#/OperationOutcomeSTU3'
@@ -639,6 +654,8 @@ components:
           $ref: '#/components/headers/AORTA-ID'
         AORTA-Version:
           $ref: '#/components/headers/AORTA-Version'
+        AORTA-access-token:
+          $ref: '#/components/headers/AORTA-access-token'
         authenticateHeader:
           $ref: '#/components/headers/authenticateHeader'
       content:
@@ -683,6 +700,10 @@ components:
       headers:
         AORTA-ID:
           $ref: '#/components/headers/AORTA-ID'
+        AORTA-Version:
+          $ref: '#/components/headers/AORTA-Version'
+        AORTA-access-token:
+          $ref: '#/components/headers/AORTA-access-token'
       content:
         application/fhir+xml:
           schema:
@@ -703,6 +724,10 @@ components:
       headers:
         authenticateHeader:
           $ref: '#/components/headers/authenticateHeader'
+        AORTA-Version:
+          $ref: '#/components/headers/AORTA-Version'
+        AORTA-access-token:
+          $ref: '#/components/headers/AORTA-access-token'
       content:
         application/fhir+xml:
           schema:
@@ -723,6 +748,10 @@ components:
       headers:
         authenticateHeader:
           $ref: '#/components/headers/authenticateHeader'
+        AORTA-Version:
+          $ref: '#/components/headers/AORTA-Version'
+        AORTA-access-token:
+          $ref: '#/components/headers/AORTA-access-token'
       content:
         application/fhir+xml:
           schema:
@@ -741,6 +770,10 @@ components:
       headers:
         authenticateHeader:
           $ref: '#/components/headers/authenticateHeader'
+        AORTA-Version:
+          $ref: '#/components/headers/AORTA-Version'
+        AORTA-access-token:
+          $ref: '#/components/headers/AORTA-access-token'
       content:
         application/fhir+xml:
           schema:
@@ -756,6 +789,13 @@ components:
       description: |
         FHIR resourcetype niet ondersteund of
         ZIB niet ondersteund
+      headers:
+        authenticateHeader:
+          $ref: '#/components/headers/authenticateHeader'
+        AORTA-Version:
+          $ref: '#/components/headers/AORTA-Version'
+        AORTA-access-token:
+          $ref: '#/components/headers/AORTA-access-token'
       content:
         application/fhir+xml:
           schema:
@@ -768,7 +808,17 @@ components:
           example:
             $ref: '#/components/examples/notSupportedOperationOutcome'
     406:
-      description: Not acceptable
+      description: |
+        Not acceptable
+
+            LET OP: moet nog verder uitgewerkt worden
+      headers:
+        authenticateHeader:
+          $ref: '#/components/headers/authenticateHeader'
+        AORTA-Version:
+          $ref: '#/components/headers/AORTA-Version'
+        AORTA-access-token:
+          $ref: '#/components/headers/AORTA-access-token'
       content:
         application/fhir+xml:
           schema:
@@ -780,6 +830,15 @@ components:
     422:
       description: |
         Unprocessable Entity
+
+            LET OP: moet nog verder uitgewerkt worden
+      headers:
+        authenticateHeader:
+          $ref: '#/components/headers/authenticateHeader'
+        AORTA-Version:
+          $ref: '#/components/headers/AORTA-Version'
+        AORTA-access-token:
+          $ref: '#/components/headers/AORTA-access-token'
       content:
         application/fhir+xml:
           schema:
@@ -795,6 +854,16 @@ components:
     415:
       description: |
         Unsupported media type
+
+            LET OP: moet nog verder uitgewerkt worden
+      headers:
+        authenticateHeader:
+          $ref: '#/components/headers/authenticateHeader'
+        AORTA-Version:
+          $ref: '#/components/headers/AORTA-Version'
+        AORTA-access-token:
+          $ref: '#/components/headers/AORTA-access-token'
+  
       content:
         application/fhir+xml:
           schema:
@@ -806,6 +875,15 @@ components:
     429:
       description: |
         Too many requests
+
+            LET OP: moet nog verder uitgewerkt worden
+      headers:
+        authenticateHeader:
+          $ref: '#/components/headers/authenticateHeader'
+        AORTA-Version:
+          $ref: '#/components/headers/AORTA-Version'
+        AORTA-access-token:
+          $ref: '#/components/headers/AORTA-access-token'
       content:
         application/fhir+xml:
           schema:
