@@ -22,9 +22,14 @@ security:
   - OAuth2:
       - readOnly
 
+tags:
+  - name: ''
+
 paths:
   /getRoutingInfo:
     post:
+      tags:
+        - ''
       operationId: getRoutingInfo
       summary: Opleveren van informatie over welke applicaties een gewenste interactie ondersteunen en hoe deze geïnitieerd moeten worden
       description: Het doel van de Adressering Server is het opleveren van informatie over welke applicaties een gewenste interactie ondersteunen en over de wijze waarop die interactie vervolgens kan worden geïnitieerd. Hierbij wordt rekening gehouden met eventuele, voor de betreffende applicaties beschikbare, transformaties.
