@@ -1,0 +1,77 @@
+RoutingInfoResponse:
+  type: array
+  items:
+      type: object
+      additionalProperties: false
+      required:
+        - interactionId
+      properties:
+        interactionId:
+          description: |-
+            Interactie-id van het te adresseren bericht, of van de te adresseren berichten.
+
+            Wordt gevuld met de interactie waarmee de flow dient te worden vervolgd. Ook indien 
+            een transformatie is vereist.
+
+            Het versie-deel van het interactionId wordt gevuld met het versie-deel in het 
+            ontvangen interactionId uit het request, of met het aortaVersion attribuut, 
+            zoals ontvangen in het request.
+          type: string
+          pattern: '[a-zA-Z0-9:.]+'
+          maxLength: 1024
+        destinationInfo:
+          description: |
+            Slechts aanwezig indien tenminste één geschikte GBx-applicatie is gevonden.
+          type: array
+          maxItems: 500
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - destination
+              - fqdn
+            properties:
+              destination: 
+                description: |
+                  Beoogde bestemming van de interactie.
+                type: object
+                required:
+                  - code
+                  - codeSystem
+                additionalProperties: false
+                properties:
+                  code:
+                    description: |
+                      Beoogde bestemming van de interactie.
+
+                      Mogelijke waarden:
+                      - [appID]
+                    type: string
+                    pattern: '[0-9]{3,9}'
+                    maxLength: 1024
+                  codeSystem:
+                    description: |
+                      Het gehanteerde codesysteem.
+
+                      Mogelijke waarden: 
+                      - "urn:oid:2.16.840.1.113883.2.4.6.6" (appID)
+                    type: string
+                    enum: 
+                      - 'urn:oid:2.16.840.1.113883.2.4.6.6'
+              fqdn:
+                description: |
+                  FQDN van de GBx-applicatie.
+                type: string
+                pattern: '[a-zA-Z0-9.-]+'
+                maxLength: 1024
+              transformationId:
+                description: |
+                  Het ID van het uit te voeren transformatie algoritme.
+
+                  Slechts aanwezig indien de applicatie die het request moet beantwoorden, 
+                  vereist dat eerst een transformatie wordt uitgevoerd.
+
+                  Wordt nooit gevuld wanneer de interactie een FHIR-operation is.
+                type: string
+                pattern: '[a-zA-Z0-9]+'
+                maxLength: 1024
