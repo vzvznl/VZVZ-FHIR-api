@@ -1,6 +1,6 @@
 openapi: '3.0.3'
 info:
-  version: 0.0.3
+  version: 0.0.4
   title: Adressering Server
   description: |
     Aorta Adressering Server API
@@ -39,18 +39,16 @@ paths:
             schema:
               $ref: '#/components/schemas/getRoutingInfoReq'
             examples:
-              routingInfoReq:
-                $ref: '#/components/examples/routingInfoReq'
+              routingInfoReqMedMij:
+                $ref: '#/components/examples/routingInfoReqMedMij'
+              routingInfoReqAorta:
+                $ref: '#/components/examples/routingInfoReqAorta'
+              routingInfoReqAuthServer-ZA:
+                $ref: '#/components/examples/routingInfoReqAuthServer-ZA'
+              
       responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/getRoutingInfoRes'
-              examples:
-                ok-bericht:
-                  $ref: '#/components/examples/routingInfoRes'
+        200:
+          $ref: '#/components/responses/200'
         400:
           $ref: '#/components/responses/400'
         401:
@@ -63,69 +61,78 @@ paths:
           $ref: '#/components/responses/415'
         429:
           $ref: '#/components/responses/429'
+        500:
+          $ref: '#/components/responses/500'
         default:
           $ref: '#/components/responses/400'
 
 components:
   parameters:
-  # ##################################################
-  # globale headers
-  # ##################################################
     AORTA-ID:
-      name: AORTA-ID
-      in: header
-      description: |
-        Het initialRequestID attribuut bevat bevat het ID van het allereerste request in de hele keten van resource 
-        client tot resource server. 
-        Het initialRequestID attribuut bevat de waarde van het Request-ID dat werd ingestuurd 
-        door het XIS-systeem. Het initialRequestID dient te worden opgenomen in de logbestanden van alle partijen in de 
-        keten (Resource Client, Resource Broker, Transformatie Server en Resource Server), zodat bij foutopsporing de 
-        verschillende logbestanden aan elkaar kunnen worden gerelateerd.
-        
-        Het requestID is voor iedere request message uniek. In requests wordt deze gegenereerd door de client. Ook het 
-        requestID dient te worden opgenomen in de verschillende logbestanden, zodat altijd duidelijk is op welk 
-        bericht een log entry van toepassing is.
-      required: true
-      schema:
-        type: object
-        additionalProperties: false
-        properties:
-          initialRequestID:
-            type: string
-            pattern: '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'
-            format: uuid
-            description: |
-              Het initialRequestID attribuut bevat bevat het ID 
-              van het allereerste request in de hele keten van 
-              resource client tot resource server. 
-              Het initialRequestID attribuut bevat de waarde van het 
-              Request-ID dat werd ingestuurd door het XIS-systeem. 
-          requestID:
-            type: string
-            pattern: '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'
-            format: uuid
-            description: |
-              Het requestID is voor iedere request message uniek. 
-              In requests wordt deze gegenereerd door de client. 
-      example: 'AORTA-ID: initialRequestID=2d455679-8c48-48ec-ac9b-667363139d09; requestID=6BFBA5B8-DFF3-11EC-A603-000D3AA8019F'
+        $ref: 'components/parameters/aorta-tokens.yml#/AORTA-ID'
 
   schemas:
+    AORTA-ID:
+      $ref: 'components/schemas/aorta-tokens.yml#/AORTA-ID'
     getRoutingInfoReq:
-      description: |
-        Object met de beoogde bestemming van de interactie  
       type: object
       required:
         - interaction
       properties:
         destination:
-            $ref: '#/components/schemas/destination'
+          description: |
+            Beoogde bestemming van de interactie.
+
+            Vereist wanneer één van de ingestuurde interactions 
+            géén url attribuut bevat met daarin een appID.
+
+            Wordt genegeerd wanneer alle ingestuurde interactions 
+            een url attribuut bevatten met daarin een appID.
+            Wanneer één ingestuurde interaction een url attribuut bevat met een appID en 
+            een andere ingestuurde interaction wordt uitgedrukt middels een id attribuut, 
+            dan wordt de destination slechts gebruikt voor de interaction met het id attribuut. 
+            Voor de interaction met het url attribuut wordt dan de appID uit het url attribuut gebruikt.
+          type: object
+          required:
+            - code
+            - codeSystem
+          additionalProperties: false
+          properties:
+            code:
+              description: |
+                Beoogde bestemming van de interactie.
+                Mogelijke waarden:
+                - [appID]
+                - [URA]
+              type: string
+              pattern: '[0-9]{3,9}'
+              maxLength: 1024
+            codeSystem:
+              description: |
+                Het gehanteerde codesysteem. (URA of appID)
+
+                Mogelijke waarden: 
+                  - "urn:oid:2.16.840.1.113883.2.4.6.6" (appID)
+                  - "urn:oid:2.16.528.1.1007.3.3" (URA)
+              type: string
+              enum: 
+                - 'urn:oid:2.16.840.1.113883.2.4.6.6'
+                - 'urn:oid:2.16.528.1.1007.3.3'
         interaction:
+          description: |
+            Structuur waaruit het interactie-id van ieder te adresseren bericht kan worden bepaald.
+            Dient slechts te worden meegezonden indien interaction-id niet is gevuld.
+            
+            Een interactie dient op één van de volgende methoden te worden doorgegeven:
+            1. id (bijv. search:Observation:2.1:request)
+            2. method + url + aortaVersion (bijv. GET + Observation/127328348 + 2.1, nodig voor instance-level interacties)
           type: array
+          minItems: 1
+          maxItems: 500
           items:
             anyOf:
               - $ref: '#/components/schemas/interactionById'
               - $ref: '#/components/schemas/interactionByUrl'
-          maxItems: 100
     getRoutingInfoRes:
       type: array
       maxItems: 500
@@ -138,57 +145,96 @@ components:
           interactionId:
             description: |-
               Interactie-id van het te adresseren bericht, of van de te adresseren berichten.
+
+              Wordt gevuld met de interactie waarmee de flow dient te worden vervolgd. Ook indien 
+              een transformatie is vereist.
+
+              Het versie-deel van het interactionId wordt gevuld met het versie-deel in het 
+              ontvangen interactionId uit het request, of met het aortaVersion attribuut, 
+              zoals ontvangen in het request.
             type: string
             pattern: '[a-zA-Z0-9:.]+'
             maxLength: 1024
           destinationInfo:
+            description: |
+              Slechts aanwezig indien tenminste één geschikte GBx-applicatie is gevonden.
             type: array
             maxItems: 500
             items:
               type: object
               additionalProperties: false
+              required:
+                - destination
+                - fqdn
               properties:
                 destination: 
-                  $ref: '#/components/schemas/destination'
+                  description: |
+                    Beoogde bestemming van de interactie.
+                  type: object
+                  required:
+                    - code
+                    - codeSystem
+                  additionalProperties: false
+                  properties:
+                    code:
+                      description: |
+                        Beoogde bestemming van de interactie.
+
+                        Mogelijke waarden:
+                        - [appID]
+                      type: string
+                      pattern: '[0-9]{3,9}'
+                      maxLength: 1024
+                    codeSystem:
+                      description: |
+                        Het gehanteerde codesysteem.
+
+                        Mogelijke waarden: 
+                        - "urn:oid:2.16.840.1.113883.2.4.6.6" (appID)
+                      type: string
+                      enum: 
+                        - 'urn:oid:2.16.840.1.113883.2.4.6.6'
                 fqdn:
+                  description: |
+                    FQDN van de GBx-applicatie.
                   type: string
                   pattern: '[a-zA-Z0-9.-]+'
                   maxLength: 1024
                 transformationId:
+                  description: |
+                    Het ID van het uit te voeren transformatie algoritme.
+
+                    Slechts aanwezig indien de applicatie die het request moet beantwoorden, 
+                    vereist dat eerst een transformatie wordt uitgevoerd.
+
+                    Wordt nooit gevuld wanneer de interactie een FHIR-operation is.
                   type: string
                   pattern: '[a-zA-Z0-9]+'
                   maxLength: 1024
-    destination:
-      type: object
-      additionalProperties: false
-      properties:
-        code:
-          description: Beoogde bestemming van de interactie.
-          type: string
-          pattern: '[0-9]{3,9}'
-          maxLength: 1024
-        codeSystem:
-          description: Het gehanteerde codesysteem. (URA of appID)
-          type: string
-          enum: 
-            - 'urn:oid:2.16.840.1.113883.2.4.6.6'
-            - 'urn:oid:2.16.528.1.1007.3.3'
+
     interactionById:
       type: object
       additionalProperties: false
       properties:
         id:
           description: |-
-            Interactie-id van het te adresseren bericht, 
-            of van de te adresseren berichten.
+            Interactie-id van het te adresseren bericht, of van de te adresseren berichten.
+
+            Het versie-deel in het id attribuut wordt gespecificeerd conform semver, dus 
+            bijvoorbeeld "1.0.0" of "2.x". De Adressering Server houdt bij het zoeken naar 
+            applicaties slechts rekening met het major nummer, omdat compatibiliteit hierdoor 
+            afdoende is geborgd.
           type: string
           pattern: '[a-zA-Z0-9:.]+'
           maxLength: 1024
+          example: search:Observation:2.1:request
     interactionByUrl:
       type: object
       additionalProperties: false
       properties:
         method:
+          description: |
+            De gebruikte HTTP method.
           type: string
           enum:
             - GET
@@ -196,6 +242,8 @@ components:
             - POST
             - DELETE
         url:
+          description: |
+            De gebruikte URL, inclusief eventuele (zoek)parameters.
           type: string
           pattern: '^(\/[a-zA-Z0-9_-]+\/?)*$'
           maxLength: 1024
@@ -212,60 +260,68 @@ components:
           format: semver
           maxLength: 100
           example: '2.0'
+      example: |
+        {
+          "method": "GET",
+          "url": "Observation/127328348",
+          "aortaVersion": 2.1
+        }
 
   responses:
-    400:
-      description: Bad Request
+    200:
+      description: |
+        OK
+
+        Deze objecten worden geretourneerd in de volgorde waarin de betreffende 
+        interactions werden ontvangen in het getRoutingInfo request.
       content:
-        text/plain:
+        application/json; charset=utf-8:
           schema:
-            type: string
-            pattern: 'Bad Request'
-            maxLength: 100
+            $ref: '#/components/schemas/getRoutingInfoRes'
+          examples:
+            routingInfoResMedMij:
+              $ref: '#/components/examples/routingInfoResMedMij'
+            routingInfoResAorta:
+              $ref: '#/components/examples/routingInfoResAorta'
+            routingInfoResAuthServer-ZA:
+              $ref: '#/components/examples/routingInfoResAuthServer-ZA'
+
+    400:
+      description: |
+        Ongeldig verzoek (voldoet niet aan de interface specificatie), 
+        ook wanneer interactie-id niet kan worden bepaald
 
     401:
       description: Unauthorized
-      content:
-        text/plain:
-          schema:
-            type: string
-            pattern: 'Unauthorized'
-            maxLength: 100
     403:
-      description: Forbidden
-      content:
-        text/plain:
-          schema:
-            type: string
-            pattern: 'Forbidden'
-            maxLength: 100
+      description: |
+        Forbidden
+
+        Client beschikt niet over de juiste autorisatie
     406:
       description: Not Acceptable
-      content:
-        text/plain:
-          schema:
-            type: string
-            pattern: 'Not Acceptable'
-            maxLength: 100
     415:
       description: Unsupported Media Type
-      content:
-        text/plain:
-          schema:
-            type: string
-            pattern: 'Bad Request'
-            maxLength: 100
     429:
       description: Too Many Requests
-      content:
-        text/plain:
-          schema:
-            type: string
-            pattern: 'Too Many Requests'
-            maxLength: 100
+    500:
+      description: Fout in server
 
   examples:
-    routingInfoReq:
+    routingInfoReqMedMij:
+      summary: Interactie vanuit MedMij
+      value: |-
+        {
+          "destination": {
+            "code": "382",
+            "codeSystem": "urn:oid:2.16.528.1.1007.3.3"
+          },
+          "interaction": [{
+            "id": "create:Observation:1.0:request"
+          }]
+        }
+    routingInfoReqAorta:
+      summary: Initiatie vanuit GBx-client
       value: |-
         {
           "destination": {
@@ -284,9 +340,36 @@ components:
               "id": "search:Appointment:1.0:request"
           }]
         }
+    routingInfoReqAuthServer-ZA:
+      summary: Aanroep vanuit Autorisatie Server ZA
+      value: |-
+        {
+          "destination": {
+            "code": "3287",
+            "codeSystem": "urn:oid:2.16.840.1.113883.2.4.6.6"
+          },
+          "interaction": [{
+            "id": "search:MedicationRequest:1.0:request"
+          }]
+        }
 
-    routingInfoRes:
-      summary: Response voorbeeld
+    routingInfoResMedMij:
+      summary: Response aan MedMij
+      value: |-
+        [{
+          "interactionId": "create:Observation:1.0:request",
+          "destinationInfo": [{
+            "destination": {
+              "code": "5476",
+              "codeSystem": "urn:oid:2.16.840.1.113883.2.4.6.6"
+            },
+            "fqdn": "bron.zorgaanbieder.nl",
+            "transformationId": "1"
+          }]
+        }]
+
+    routingInfoResAorta:
+      summary: Response aan GBx-client
       value: |-
         [{
           "interactionId": "read:MedicationRequest:1.0:request",
@@ -308,6 +391,19 @@ components:
               },
               "fqdn": "bron-2.zorgaanbieder.nl",
               "transformationId": "3"
+          }]
+        }]
+    routingInfoResAuthServer-ZA:
+      summary: Response aan Autorisatie Server ZA
+      value: |-
+        [{
+          "interactionId": "search:MedicationRequest:1.0:request",
+          "destinationInfo": [{
+              "destination": {
+                "code": "3287",
+                "codeSystem": "urn:oid:2.16.840.1.113883.2.4.6.6"
+              },
+              "fqdn": "bron-1.zorgaanbieder.nl"
           }]
         }]
 

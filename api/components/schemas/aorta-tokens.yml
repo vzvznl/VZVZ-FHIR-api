@@ -10,22 +10,27 @@ AORTA-ID:
       type: string
       pattern: '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'
       maxLength: 100
-      format: uuid
+        format: uuid conform RFC4122
       description: |
         Het initialRequestID attribuut bevat bevat het ID 
         van het allereerste request in de hele keten van 
         resource client tot resource server. 
         Het initialRequestID attribuut bevat de waarde van het 
-        Request-ID dat werd ingestuurd door het XIS-systeem. 
+          Request-ID dat werd ingestuurd door de Resource Client. \
+          [UUID conform RFC4122](https://tools.ietf.org/html/rfc4122)
+        example: initialRequestID=2d455679-8c48-48ec-ac9b-667363139d09
     requestID:
       type: string
       pattern: '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'
       maxLength: 100
-      format: uuid
+        format: uuid conform RFC4122
       description: |
         Het requestID is voor iedere request message uniek. 
-        In requests wordt deze gegenereerd door de client. 
-  example: 'AORTA-ID: initialRequestID=2d455679-8c48-48ec-ac9b-667363139d09; requestID=6BFBA5B8-DFF3-11EC-A603-000D3AA8019F'
+          In requests wordt deze gegenereerd door de client. \
+          [UUID conform RFC4122](https://tools.ietf.org/html/rfc4122)
+        example: requestID=6BFBA5B8-DFF3-11EC-A603-000D3AA8019F
+    example: |
+      AORTA-ID: initialRequestID=2d455679-8c48-48ec-ac9b-667363139d09; requestID=6BFBA5B8-DFF3-11EC-A603-000D3AA8019F
 
 AORTA-Version:
   description: |
