@@ -1,0 +1,24 @@
+---
+    AORTA-ID:
+      name: AORTA-ID
+      in: header
+      required: true
+      description: |
+        Het __initialRequestID__ attribuut bevat bevat het ID van het allereerste request in de hele keten van resource 
+        client tot resource server. 
+        Het initialRequestID attribuut bevat de waarde van het Request-ID dat werd ingestuurd 
+        door de Resource Client. Het initialRequestID dient te worden opgenomen in de logbestanden van alle partijen in de 
+        keten (Resource Client, Resource Broker, Transformatie Server en Resource Server), zodat bij foutopsporing de 
+        verschillende logbestanden aan elkaar kunnen worden gerelateerd.
+        
+        Het __requestID__ is voor iedere request message uniek. In requests wordt deze gegenereerd door de client. Ook het 
+        requestID dient te worden opgenomen in de verschillende logbestanden, zodat altijd duidelijk is op welk 
+        bericht een log entry van toepassing is.
+
+        Het AORTA-ID moet in elke request en response meegegeven worden.
+
+        Zie onderaan dit document voor het schema.
+      style: simple
+      explode: true
+      schema:
+        $ref: '../schemas/aorta-tokens.yml#/AORTA-ID'
