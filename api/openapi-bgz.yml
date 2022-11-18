@@ -263,6 +263,42 @@ paths:
         - get_bgz:
           - 'patient/Coverage.read'
 
+  /Device:
+    get:
+      description: |
+        ophalen van de Device zib op basis van de query zoals beschreven in de Notified-Pull Task.
+
+        __Client__ is BGZ-opvragend-systeem. \
+        __Server__ is BGZ-opleverend-systeem. 
+
+      summary: Opvragen Device bij BGZ-opleverend-systeem
+      tags:
+        - BGZ
+      parameters:
+        - $ref: '#/components/parameters/AORTA-ID'
+        - $ref: '#/components/parameters/AORTA-Transactie'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/fhir+xml;fhirVersion=4.0:
+              schema:
+                $ref: '#/components/schemas/FHIRresource'
+              examples:
+                FHIRresource:
+                  $ref: '#/components/examples/FHIRresource'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+      security:
+        - get_bgz:
+          - 'patient/Device.read'
+
   /DeviceRequest:
     get:
       description: |
@@ -659,6 +695,42 @@ paths:
         - get_bgz:
           - 'patient/Observation.read'
 
+  /Organization:
+    get:
+      description: |
+        ophalen van de Organization zib op basis van de query zoals beschreven in de Notified-Pull Task.
+
+        __Client__ is BGZ-opvragend-systeem. \
+        __Server__ is BGZ-opleverend-systeem. 
+
+      summary: Opvragen Organization bij BGZ-opleverend-systeem
+      tags:
+        - BGZ
+      parameters:
+        - $ref: '#/components/parameters/AORTA-ID'
+        - $ref: '#/components/parameters/AORTA-Transactie'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/fhir+xml;fhirVersion=4.0:
+              schema:
+                $ref: '#/components/schemas/FHIRresource'
+              examples:
+                FHIRresource:
+                  $ref: '#/components/examples/FHIRresource'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+      security:
+        - get_bgz:
+          - 'patient/Organization.read'
+
   /Patient:
     get:
       description: |
@@ -694,6 +766,78 @@ paths:
       security:
         - get_bgz:
           - 'patient/Patient.read'
+
+  /Practitioner:
+    get:
+      description: |
+        ophalen van de Practitioner zib op basis van de query zoals beschreven in de Notified-Pull Task.
+
+        __Client__ is BGZ-opvragend-systeem. \
+        __Server__ is BGZ-opleverend-systeem. 
+
+      summary: Opvragen Practitioner bij BGZ-opleverend-systeem
+      tags:
+        - BGZ
+      parameters:
+        - $ref: '#/components/parameters/AORTA-ID'
+        - $ref: '#/components/parameters/AORTA-Transactie'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/fhir+xml;fhirVersion=4.0:
+              schema:
+                $ref: '#/components/schemas/FHIRresource'
+              examples:
+                FHIRresource:
+                  $ref: '#/components/examples/FHIRresource'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+      security:
+        - get_bgz:
+          - 'patient/Practitioner.read'  
+
+  /PractitionerRole:
+    get:
+      description: |
+        ophalen van de PractitionerRole zib op basis van de query zoals beschreven in de Notified-Pull Task.
+
+        __Client__ is BGZ-opvragend-systeem. \
+        __Server__ is BGZ-opleverend-systeem. 
+
+      summary: Opvragen PractitionerRole bij BGZ-opleverend-systeem
+      tags:
+        - BGZ
+      parameters:
+        - $ref: '#/components/parameters/AORTA-ID'
+        - $ref: '#/components/parameters/AORTA-Transactie'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/fhir+xml;fhirVersion=4.0:
+              schema:
+                $ref: '#/components/schemas/FHIRresource'
+              examples:
+                FHIRresource:
+                  $ref: '#/components/examples/FHIRresource'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+      security:
+        - get_bgz:
+          - 'patient/PractitionerRole.read'  
 
   /Procedure:
     get:
@@ -766,6 +910,42 @@ paths:
       security:
         - get_bgz:
           - 'patient/ProcedureRequest.read'
+
+  /Specimen:
+    get:
+      description: |
+        ophalen van de Specimen zib op basis van de query zoals beschreven in de Notified-Pull Task.
+
+        __Client__ is BGZ-opvragend-systeem. \
+        __Server__ is BGZ-opleverend-systeem. 
+
+      summary: Opvragen Specimen bij BGZ-opleverend-systeem
+      tags:
+        - BGZ
+      parameters:
+        - $ref: '#/components/parameters/AORTA-ID'
+        - $ref: '#/components/parameters/AORTA-Transactie'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/fhir+xml;fhirVersion=4.0:
+              schema:
+                $ref: '#/components/schemas/FHIRresource'
+              examples:
+                FHIRresource:
+                  $ref: '#/components/examples/FHIRresource'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+      security:
+        - get_bgz:
+          - 'patient/Specimen.read'  
 
   /Document:
     get:
@@ -880,18 +1060,22 @@ components:
             'patient/Condition.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
             'patient/Consent.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0 
             'patient/Coverage.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
-            'patient/DeviceUseStatement.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
+            'patient/Device.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
             'patient/DeviceRequest.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
+            'patient/DeviceUseStatement.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
             'patient/Encounter.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
             'patient/Flag.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
             'patient/Immunization.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
             'patient/ImmunizationRecommendation.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
-            'patient/MedicationStatement.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
-            'patient/MedicationRequest.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
             'patient/MedicationDispense.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
+            'patient/MedicationRequest.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
+            'patient/MedicationStatement.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
             'patient/NutritionOrder.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
             'patient/Observation.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
+            'patient/Organization.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
             'patient/Patient.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
+            'patient/Practitioner.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
+            'patient/PractitionerRole.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
             'patient/Procedure.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
             'patient/ProcedureRequest.read': Onderdeel van Verzamelen Basisgegevens zorg 3.0
             'patient/Document.read':  Onderdeel van PDF/A
