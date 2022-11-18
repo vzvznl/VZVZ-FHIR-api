@@ -276,7 +276,7 @@ components:
   examples:
     NotifiedPullTask:
       summary: Notified-Pull Task
-      externalValue: 'https://simplifier.net/VZVZ/nl-vzvz-notified-pull-bundle-example'
+      description: Zie ook [Simplifier voorbeeld](https://simplifier.net/VZVZ/nl-vzvz-notified-pull-example)
       value: |
         <?xml version="1.0" encoding="UTF-8"?>
         <Task xmlns="http://hl7.org/fhir">
