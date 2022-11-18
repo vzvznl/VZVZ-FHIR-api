@@ -20,16 +20,23 @@ servers:
     description: BGZ-opvragend-systeem
 tags:
   - name: Notified-Pull
-    description: Verstuur Task als notificatie
+    description: |
+      _Verstuur Task als notificatie_ \
+        __Client__ is BGZ-opleverend-systeem. \
+        __Server__ is BGZ-opvragend-systeem. 
   - name: BGZ
-    description: Opleveren van BGZ resources
+    description: |
+      _Opleveren van BGZ resources_ \
+      __Client__ is BGZ-opvragend-systeem. \
+      __Server__ is BGZ-opleverend-systeem. 
+
 paths:
-  /:
+  /Task:
     post:
       description: |
         Aanleveren van Task (notified pull). \
-        Client is BGZ-opleverend-systeem. \        
-        Server is BGZ-opvragend-systeem.
+        __Client__ is BGZ-opleverend-systeem. \
+        __Server__ is BGZ-opvragend-systeem.
       summary: Task aanleveren aan BGZ-opvragend-systeem
       tags:
         - Notified-Pull
@@ -38,25 +45,18 @@ paths:
         - $ref: '#/components/parameters/acces_token_AORTA'
       requestBody:
         description: |
-          Bundle met daarin de objecten nodig om de Task met alle referenties door te geven.
+          Task met alle gegevens om de ontvanger te informeren.
         required: true
         content:
           application/fhir+xml;fhirVersion=4.0:
             schema:
-              $ref: '#/components/schemas/NotifiedPullTaskBundle'
+              $ref: '#/components/schemas/NotifiedPullTask'
             examples:
-              NotifiedPullTaskBundle:
-                $ref: '#/components/examples/NotifiedPullTaskBundle'
+              NotifiedPullTask:
+                $ref: '#/components/examples/NotifiedPullTask'
       responses:
         '200':
           description: Task correct verwerkt
-          content:
-            application/fhir+xml:
-              schema:
-                $ref: '#/components/schemas/NotifiedPullTaskBundleResponse'
-              examples:
-                ok-bericht:
-                  $ref: '#/components/examples/NotifiedPullTaskBundleResponseOK'
         400:
           $ref: '#/components/responses/400'
         401:
@@ -70,10 +70,10 @@ paths:
           content:
             application/fhir+xml:
               schema:
-                $ref: '#/components/schemas/NotifiedPullTaskBundleResponse'
+                $ref: '#/components/schemas/NotifiedPullTaskResponse'
               examples:
                 transaction-error:
-                  $ref: '#/components/examples/NotifiedPullTaskBundleResponseError'
+                  $ref: '#/components/examples/NotifiedPullTaskResponseError'
       security:
         - create_task:
             - 'user/Task.write'
@@ -84,9 +84,9 @@ paths:
         ophalen van de gedefinieerde zib. 
         `fhirresource` moet hierbij vervangen worden door de individuele Resources zoals beschreven in de Notified-Pull Task.
 
-        Client is BGZ-opvragend-systeem.
-        
-        Server is BGZ-opleverend-systeem.
+        __Client__ is BGZ-opvragend-systeem. \
+        __Server__ is BGZ-opleverend-systeem. 
+
       summary: Opvragen individuele zibs bij BGZ-opleverend-systeem
       tags:
         - BGZ
@@ -135,11 +135,8 @@ paths:
 
 components:
   parameters:
-  # ##################################################
-  # globale headers
-  # ##################################################
     AORTA-ID:
-      $ref: 'components/schemas/aorta-tokens.yml#/AORTA-ID'
+      $ref: 'components/parameters/aorta-tokens.yml#/AORTA-ID'
 
     AORTA-ConsentToken:
       $ref: 'components/schemas/aorta-tokens.yml#/AORTA-ConsentToken'
@@ -150,17 +147,30 @@ components:
     AORTA-Transactie:
       $ref: 'components/schemas/aorta-tokens.yml#/AORTA-Transactie'
 
-  schemas:
-    NotifiedPullTaskBundle:
+  headers:
+    authenticateHeader:
       description: |
-        FHIR Bundle die alle objecten bevat om een Task te creëren.
+        Onderdeel van header parameters bij error 400
+      schema:
+        type: string 
+        maxLength: 1024
+        pattern: 'string'
+        format: 'WWW-Authenticate'
+        example: 'string'
+  
+  schemas:
+    AORTA-ID:
+      $ref: 'components/schemas/aorta-tokens.yml#/AORTA-ID'
+    NotifiedPullTask:
+      description: |
+        Een Task met alle gegevens.
         Het schema staat beschreven op [Simplifier](https://simplifier.net/VZVZ)
       type: object
       externalDocs:
         url: https://simplifier.net/VZVZ 
-    NotifiedPullTaskBundleResponse:
+    NotifiedPullTaskResponse:
       description: |
-        Antwoord op een Bundle van profile NotifiedPullTaskBundle.
+        Antwoord op een Task van profile NotifiedPullTask.
         Het schema staat beschreven op [Simplifier](https://simplifier.net/VZVZ)
       type: object
       externalDocs:
@@ -228,10 +238,11 @@ components:
       description: Access token absent or invalid
       headers:
         authenticateHeader:
+          $ref: '#/components/headers/authenticateHeader'
+      content:
+        application/fhir+xml:
           schema:
-            type: string 
-            format: 'WWW-Authenticate header'
-          required: false
+            $ref: '#/components/schemas/OperationOutcome'
           examples:
             OperationOutcome:
               $ref: '#/components/examples/OperationOutcome'
@@ -242,13 +253,7 @@ components:
         Voldoet niet aan beschikbaarheidscriterium
       headers:
         authenticateHeader:
-          schema:
-            type: string 
-            format: 'WWW-Authenticate header'
-          required: true
-          examples:
-            OperationOutcome:
-              $ref: '#/components/examples/OperationOutcome'
+          $ref: '#/components/headers/authenticateHeader'
       content:
         application/fhir+xml:
           schema:
@@ -269,73 +274,23 @@ components:
               $ref: '#/components/examples/OperationOutcome'
 
   examples:
-    NotifiedPullTaskBundle:
+    NotifiedPullTask:
       summary: Notified-Pull Task
       externalValue: 'https://simplifier.net/VZVZ/nl-vzvz-notified-pull-bundle-example'
       value: |
         <?xml version="1.0" encoding="UTF-8"?>
-        <Bundle xmlns="http://hl7.org/fhir">
-            <id value="nl-vzvz-notified-pull-bundle-example"/>
-            <type value="transaction"/>
-            <timestamp value="2022-02-28T16:07:25+01:00"/>
-            <entry>
-              <fullUrl value="Task/nl-vzvz-Task-notified-pull-request-example"/>
-              <resource>
-                <Task xmlns="http://hl7.org/fhir">
-                  <id value="nl-vzvz-Task-notified-pull-request-example"/>
-                  <meta>
-                    <profile value="http://vzvz.nl/fhir/StructureDefinition/nl-vzvz-Task-notified-pull"/>
-                  </meta>
+        <Task xmlns="http://hl7.org/fhir">
+          <id value="nl-vzvz-Task-notified-pull-request-example"/>
+          <meta>
+            <profile value="http://vzvz.nl/fhir/StructureDefinition/nl-vzvz-Task-notified-pull"/>
+          </meta>
           <!-- ..... -->
-                </Task>
-              </resource>
-              <request>
-                <method value="POST"/>
-                <url value="Task"/>
-              </request>
-            </entry>
-          <!-- ..... -->
-        </Bundle>
+        </Task>
 
-    NotifiedPullTaskBundleResponseOK:
-      summary: aangeboden bundle is correct verwerkt
+    NotifiedPullTaskResponseOK:
+      summary: aangeboden Task is correct verwerkt
       value: |
         <?xml version="1.0" encoding="UTF-8"?>
-        <Bundle xmlns="http://hl7.org/fhir">
-          <id value="urn:uuid:bundle-example-response"/>
-          <type value="transaction-response"/>
-          <timestamp value="2022-02-28T16:07:25+01:00"/>
-          <entry>
-            <fullUrl value="http://example.org/fhir/R4/Task/123.456.567890"/>
-            <response>
-              <status value="201 Created"/>
-              <lastModified value="2022-05-09T12:25:27+02:00"/>
-            </response>
-          </entry>
-          <entry>
-            <fullUrl value="http://example.org/fhir/
-          'Patient/1234567"/': Onderdeel van Verzamelen Basisgegevens zorg 3.0
-            <response>
-              <!-- patiënt is al bekend, niet bijgewerkt -->
-              <status value="200 OK"/>
-            </response>
-          </entry>
-          <entry>
-            <fullUrl value="http://example.org/fhir/Device/9000028"/>
-            <response>
-              <!-- device is al bekend, niet bijgewerkt -->
-              <status value="200 OK"/>
-            </response>
-          </entry>
-          <entry>
-            <!-- interne referentie voor de organisatie in deze bundle -->
-            <fullUrl value="http://example.org/fhir/Organization/123456789"/>
-            <response>
-              <!-- organisatie is al bekend, niet bijgewerkt -->
-              <status value="200 OK"/>
-            </response>
-          </entry>
-        </Bundle>
     
     FHIRresource:
       summary: verzameling van instanties van betreffende resource
@@ -347,17 +302,18 @@ components:
             <timestamp value="2022-02-28T16:07:25+01:00"/>
             <!-- .... -->
         </Bundle>
-    NotifiedPullTaskBundleResponseError:
-      summary: een of meerdere entries in de aangeboden bundle kunnen niet correct verwerkt worden
+    NotifiedPullTaskResponseError:
+      summary: niet correct te verwerken
+      description: een of meerdere entries in de aangeboden bundle kunnen niet correct verwerkt worden
       value: |
         <?xml version="1.0" encoding="UTF-8"?>
         <OperationOutcome xmlns="http://hl7.org/fhir">
-            <id value="nl-vzvz-notified-pull-bundle-error-response-example"/>
+            <id value="nl-vzvz-notified-pull-error-response-example"/>
             <issue>
                 <severity value="error"/>
                 <code value="business-rule"/>
-                <diagnostics value="BSN en geboortedatum horen niet bij elkaar"/>
-                <expression value="Bundle.entry[1].Patient.identifier[0].value"/>
+                <diagnostics value="BSN is niet geldig"/>
+                <expression value="Task.subject.identifier[0].value"/>
             </issue>
         </OperationOutcome>
     
