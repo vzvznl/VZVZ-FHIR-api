@@ -22,14 +22,14 @@ security:
       - write
 
 tags:
-  - name: Extern
-    description: API endpoints zichtbaar voor externe systemen
-  - name: Intern
-    description: API endpoints alleen zichtbaar voor interne systemen
   - name: AORTA
     description: AORTA gerelateerde interfaces
   - name: MedMij
     description: MedMij gerelateerde interfaces
+  - name: Extern
+    description: API endpoints zichtbaar voor externe systemen
+  - name: Intern
+    description: API endpoints alleen zichtbaar voor interne systemen
 paths:
   /.well-known/oauth-authorization-server/{path_extension}:
     get:
@@ -47,6 +47,19 @@ paths:
       responses:
         200:
           description: Request succesvol
+          headers:
+            Cache-Control:
+              description: |
+                zie schema onderaan document
+              schema:
+                $ref: "#/components/schemas/Cache-Control"
+            Pragma:
+              description: |
+                standaardwaarde: no-cache
+              schema:
+                type: string
+                default: no-cache
+
           content:
             application/json:
               schema:
@@ -208,7 +221,7 @@ paths:
 components:
   parameters:
     AORTA-ID:
-      $ref: 'components/schemas/aorta-tokens.yml#/AORTA-ID'
+        $ref: 'components/parameters/aorta-tokens.yml#/AORTA-ID'
 
     acces_token_AORTA:
       $ref: 'components/schemas/aorta-tokens.yml#/acces_token_AORTA'
@@ -225,7 +238,7 @@ components:
       example: 'some-extension'
     token_uri:
       name: token_uri
-      description: het pad zoals beschreven in [ASMetaDataResponseAorta]()
+      description: het pad zoals beschreven in [ASMetaDataResponseAorta](https://confluence.vzvz.nl/display/UBEBVLEL/Token+specificaties+-+0.8.x#Tokenspecificaties0.8.x-AORTAtokens)
       in: path
       required: true
       schema:
@@ -233,23 +246,41 @@ components:
       example: 'https://server.example.org/oauth/token'
   headers:
     authenticateHeader:
+      description: |
+        Onderdeel van header parameters bij error 400
       schema:
         type: string 
         maxLength: 1024
         pattern: 'string'
-        format: 'WWW-Authenticate header'
+        format: 'WWW-Authenticate'
         example: 'string'
 
   schemas:
+    AORTA-ID:
+      $ref: 'components/schemas/aorta-tokens.yml#/AORTA-ID'
     MetaDataResponseAorta:
       $ref: 'components/schemas/MetaDataResponseAorta.yml'
     MetaDataResponseMedMij:
       $ref: 'components/schemas/MetaDataResponseMedMij.yml'
     url:
       $ref: 'components/schemas/url.yml'
-    cache-control:
-      type: string
-      maxLength: 100
+    Cache-Control:
+      type: object
+      properties:
+        must-revalidate:
+          description: |
+            Is aanwezig zonder verdere waarde
+          type: boolean
+        max-age-metadata:
+          description: |
+            Een client mag verkregen metadata conform de Cache-Control header directives, 
+            zoals beschreven in RFC 7234, cachen. 
+            
+            De waarde van __max-age-metadata__ is configureerbaar in de autorisatie server. 
+            Initiële waarde is 14400 seconden (4 uur).
+
+          type: integer
+          default: 14400
 
   securitySchemes:
     OAuth2:
@@ -265,7 +296,7 @@ components:
     400:
       description: |
         - Syntax incorrect or 
-        - Parameters missing or invalid
+        - Parameters missing or invalid 
         - Ongeldig verzoek
       content:
         application/fhir+xml:
