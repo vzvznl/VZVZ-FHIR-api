@@ -85,7 +85,6 @@ paths:
                   maxLength: 2
                   pattern: OK
 
-
   /jwks/{jwks_uri}:
     get:
       description: |
@@ -299,24 +298,24 @@ components:
         - Parameters missing or invalid 
         - Ongeldig verzoek
       content:
-        application/fhir+xml:
+        text/plain:
           schema:
             type: string
-            pattern: 'outcome'
+            pattern: 'Ongeldig verzoek'
+            default: 'Ongeldig verzoek'
             maxLength: 1024
-          example: 'outcome'
     401:
       description: Access token absent or invalid
       headers:
         authenticateHeader:
           $ref: '#/components/headers/authenticateHeader'
       content:
-        application/fhir+xml:
+        text/plain:
           schema:
             type: string
-            pattern: 'outcome'
+            pattern: 'Ongeldig verzoek'
+            default: 'Ongeldig verzoek'
             maxLength: 1024
-          example: 'outcome'
     403:
       description: >
         Request outside access token scope or
@@ -325,52 +324,60 @@ components:
         authenticateHeader:
           $ref: '#/components/headers/authenticateHeader'
       content:
-        application/fhir+xml:
+        text/plain:
           schema:
             type: string
-            pattern: 'outcome'
+            pattern: 'Request outside access token scope'
+            default: 'Request outside access token scope'
             maxLength: 1024
-          example: 'outcome'
     404:
       description: |
-        FHIR resourcetype niet ondersteund of
-        ZIB niet ondersteund
+        FHIR resourcetype niet ondersteund of ZIB niet ondersteund
+      headers:
+        authenticateHeader:
+          $ref: '#/components/headers/authenticateHeader'
       content:
-        application/fhir+xml:
+        text/plain:
           schema:
             type: string
-            pattern: 'outcome'
+            pattern: 'FHIR resourcetype niet ondersteund of ZIB niet ondersteund'
+            default: 'FHIR resourcetype niet ondersteund of ZIB niet ondersteund'
             maxLength: 1024
-          example: 'outcome'
     406:
       description: Not acceptable
       content:
-        application/fhir+xml:
+        text/plain:
           schema:
             type: string
-            pattern: 'outcome'
+            pattern: 'Accept header is niet toegestaan'
+            default: 'Accept header is niet toegestaan'
             maxLength: 1024
-          example: 'outcome'
 
     415:
-      description: |
-        Unsupported media type
+      description: Unsupported Media Type
       content:
-        application/fhir+xml:
+        text/plain:
           schema:
             type: string
-            pattern: 'outcome'
+            pattern: 'Content-Type niet ondersteund'
+            default: 'Content-Type niet ondersteund'
             maxLength: 1024
-          example: 'outcome'
 
     429:
-      description: |
-        Too many requests
+      description: Too Many Requests
       content:
-        application/fhir+xml:
+        text/plain:
           schema:
             type: string
-            pattern: 'outcome'
+            pattern: 'Too many requests, please retry later'
+            default: 'Too many requests, please retry later'
             maxLength: 1024
-          example: 'outcome'
-
+    500:
+      description: Fout in server
+      content:
+        text/plain:
+          schema:
+            type: string
+            pattern: 'Fout in server'
+            default: 'Fout in server'
+            maxLength: 1024
