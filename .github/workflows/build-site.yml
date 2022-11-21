@@ -9,10 +9,6 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-env:
-  # description: "Path of the directory containing the static assets."
-  INPUT_PATH: "./docs"
-
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
@@ -41,7 +37,6 @@ jobs:
           chmod +x ./prepare-docs.sh
           ./prepare-docs.sh
         
-
       - name: Setup Pages
         uses: actions/configure-pages@v2
 
@@ -52,18 +47,22 @@ jobs:
           do
             echo "::warning::Added read permission to $f"
           done
+          mkdir -p ./tmp
           tar \
             --dereference --hard-dereference \
             --directory "$INPUT_PATH" \
-            -cvf "$RUNNER_TEMP/artifact.tar" \
+            -cvf "./tmp/artifact.tar" \
             --exclude=.git \
             --exclude=.github \
             .
-
+        env:
+          # description: "Path of the directory containing the static assets."
+          INPUT_PATH: "./docs"
+          
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          path: ${{ runner.temp }}/artifact.tar
+          path: ./tmp/artifact.tar
 
       - name: Deploy to GitHub Pages
         id: deployment
