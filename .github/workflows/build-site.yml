@@ -50,15 +50,12 @@ jobs:
           mkdir -p ./tmp
           tar \
             --dereference --hard-dereference \
-            --directory "$INPUT_PATH" \
+            --directory "./docs" \
             -cvf "./tmp/artifact.tar" \
             --exclude=.git \
             --exclude=.github \
             .
-        env:
-          # description: "Path of the directory containing the static assets."
-          INPUT_PATH: "./docs"
-          
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
