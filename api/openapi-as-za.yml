@@ -58,6 +58,7 @@ paths:
                 standaardwaarde: no-cache
               schema:
                 type: string
+                pattern: 'no-cache'
                 default: no-cache
 
           content:
@@ -116,6 +117,8 @@ paths:
           $ref: '#/components/responses/406'
         429:
           $ref: '#/components/responses/429'
+        500:
+          $ref: '#/components/responses/500'
         default:
           description: Unexpected error
           content:
@@ -172,6 +175,9 @@ paths:
           $ref: '#/components/responses/415'
         429:
           $ref: '#/components/responses/429'
+        500:
+          $ref: '#/components/responses/500'
+
         default:
           description: Unexpected error
           content:
@@ -208,6 +214,8 @@ paths:
           $ref: '#/components/responses/415'
         429:
           $ref: '#/components/responses/429'
+        500:
+          $ref: '#/components/responses/500'
         default:
           description: Unexpected error
           content:
@@ -258,13 +266,14 @@ components:
     AORTA-ID:
       $ref: 'components/schemas/aorta-tokens.yml#/AORTA-ID'
     MetaDataResponseAorta:
-      $ref: 'components/schemas/MetaDataResponseAorta.yml'
+      $ref: 'components/schemas/MetaDataResponseAorta.yml#/MetaDataResponseAorta'
     MetaDataResponseMedMij:
-      $ref: 'components/schemas/MetaDataResponseMedMij.yml'
+      $ref: 'components/schemas/MetaDataResponseMedMij.yml#/MetaDataResponseMedMij'
     url:
       $ref: 'components/schemas/url.yml'
     Cache-Control:
       type: object
+      additionalProperties: false
       properties:
         must-revalidate:
           description: |
