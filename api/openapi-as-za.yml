@@ -268,7 +268,7 @@ components:
     AORTA-ID:
       $ref: 'components/schemas/aorta-tokens.yml#/AORTA-ID'
     MetaDataResponseAorta:
-      $ref: 'components/schemas/MetaDataResponseAorta.yml#/MetaDataResponseAorta'
+      $ref: 'components/schemas/MetaDataResponseAORTA.yml#/MetaDataResponseAorta'
     MetaDataResponseMedMij:
       $ref: 'components/schemas/MetaDataResponseMedMij.yml#/MetaDataResponseMedMij'
     url:

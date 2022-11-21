@@ -40,22 +40,6 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v2
 
-      - name: Archive artifact to resolve links
-        if: runner.os == 'Linux'
-        run: |
-          for f in $(chmod -c -R +r . | awk '{print substr($3, 2, length($3)-2)}')
-          do
-            echo "::warning::Added read permission to $f"
-          done
-          mkdir -p ./tmp
-          tar \
-            --dereference --hard-dereference \
-            --directory "./docs" \
-            -cvf "./tmp/artifact.tar" \
-            --exclude=.git \
-            --exclude=.github \
-            .
-
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
