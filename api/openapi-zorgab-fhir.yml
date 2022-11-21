@@ -1,0 +1,687 @@
+openapi: '3.0.3'
+info:
+  title: Zorg-AB FHIR (STU3) endpoints
+  version: '0.0.1'
+  description: |
+    Beschrijving van de endpoints zoals benodigd voor de bevraging van Zorg-AB via FHIR. \
+    Deze endpoints zijn gebaseerd op de FHIR endpoints zoals beschreven op de
+    - [Publieke omgeving AORTA on FHIR](https://public.vzvz.nl/display/UBEBVLEL/AORTA+on+FHIR+specificaties+-+0.7.17)
+      - [Leeswijzer AoF - 0.7.x](https://public.vzvz.nl/display/UBEBVLEL/Leeswijzer+AoF+-+0.7.x)
+      - [MedMij Flows - 0.7.x](https://public.vzvz.nl/display/UBEBVLEL/MedMij+Flows+-+0.7.x)
+    - [MedMij implementatiestandaard Huisartsgegevens](https://informatiestandaarden.nictiz.nl/wiki/MedMij:V2020.01/FHIR_GP_Data)
+    - [MedMij FHIR Implementation Guide](https://informatiestandaarden.nictiz.nl/wiki/MedMij:V2020.01/FHIR_IG)
+
+    **Let op**: alle voorbeelden in dit document zijn indicatief. Voor volledige voorbeelden
+    en uitgebreidere specificaties, wordt verwezen naar bovenstaande links.
+  
+        LET OP: deze versie kan nog fouten bevatten.
+  
+  contact:
+    email: info@vzvz.nl
+
+servers:
+  - url: https://zab.test.aorta-zorg.nl/zab-ro/fhir
+    description: Zorg-AB Test omgeving
+ 
+tags:
+  # - name: oauth
+  #   description: endpoints gerelateerd aan de autorisatie
+
+security:
+  - accessToken: 
+    - patient/Patient.read
+    - patient$is-allowed
+
+paths:
+  # /oauth2/authorize:
+  #   get:
+  #     tags:
+  #       - oauth
+  #     servers:
+  #       - url: https://ontmedmij-inlog.vzvz.nl/1.5.0
+  #         description: Ontwikkel omgeving
+  #       - url: https://tstmedmij-inlog.vzvz.nl/1.5.0
+  #         description: Test omgeving
+  #       - url: https://accmedmij-inlog.vzvz.nl/1.5.0
+  #         description: Acceptatie (MedMij zandbak)
+  #       - url: https://medmij-inlog.vzvz.nl/1.5.0
+  #         description: Productie omgeving
+  #     responses:
+  #       200:
+  #         description: ok
+  #       401:
+  #         description: todo
+  #       403:
+  #         description: todo
+  #       404:
+  #         description: todo
+  #       406:
+  #         description: todo
+  #       429:
+  #         description: todo
+
+
+  # /oauth2/token:
+  #   get:
+  #     tags:
+  #       - oauth
+  #     servers:
+  #       - url: https://ontmedmij-pgo2.vzvz.nl/1.5.0
+  #         description: Ontwikkel omgeving
+  #       - url: https://tstmedmij-pgo2.vzvz.nl/1.5.0
+  #         description: Test omgeving
+  #       - url: https://accmedmij-pgo.vzvz.nl/1.5.0
+  #         description: Acceptatie (MedMij zandbak)
+  #       - url: https://medmij-pgo.vzvz.nl/1.5.0
+  #         description: Productie omgeving
+  #     responses:
+  #       200:
+  #         description: ok
+  #       401:
+  #         description: todo
+  #       403:
+  #         description: todo
+  #       404:
+  #         description: todo
+  #       406:
+  #         description: todo
+  #       429:
+  #         description: todo
+
+
+  /metadata:
+    get:
+      description: |
+        opleveren van CapabilityStatement zoals beschreven in 
+        [Simplifier.net](https://simplifier.net/nictizstu3-zib2017/dutchgeneralpractitionerpatientdataserver2017)
+
+      responses:
+        200:
+          description: |
+            succes \
+            Zie: [Nictiz-STU3-Zib2017](https://github.com/Nictiz/Nictiz-STU3-Zib2017/blob/stable-2.x/Capabilitystatements/capabilitystatement-client-gp-patientdata.xml)
+            voor een voorbeeld
+
+          content:
+            application/fhir+xml:
+              schema:
+                description: |
+                  Beschrijving van het CapabilityStatement \
+                  Zie ook: https://simplifier.net/nictizstu3-zib2017/dutchgeneralpractitionerpatientdataserver2017
+                type: object
+                xml:
+                  name: CapabilityStatement
+                  namespace: http://hl7.org/fhir
+        401:
+          description: todo
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          description: todo
+        406:
+          description: todo
+        429:
+          description: todo
+
+
+  /Organization:
+    get:
+      description: |
+        opleveren van Patient resource zie [MedMij implementatiestandaard](https://informatiestandaarden.nictiz.nl/wiki/MedMij:V2020.01/FHIR_GP_Data)
+      parameters:
+        - $ref: '#/components/parameters/AORTA-ID'
+        - $ref: '#/components/parameters/AORTA-Version'
+        - name: _include
+          description: |
+            parameter om aan te geven welke elementen mee opgeleverd moeten worden.
+          in: query
+          schema:
+            type: string
+            maxLength: 100
+            pattern: 'Patient:general-practitioner'
+      responses:
+        200:
+          $ref: '#/components/responses/200-FHIR-SearchResults'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        406:
+          $ref: '#/components/responses/406'
+        429:
+          $ref: '#/components/responses/429'
+      security:
+        - accessToken: []
+
+  /Practitioner:
+    get:
+      description: |
+        opleveren van EpisodeOfCare (Episode) resource, zie 
+        [MedMij implementatiestandaard](https://informatiestandaarden.nictiz.nl/wiki/MedMij:V2020.01/FHIR_GP_Data)
+      parameters:
+        - $ref: '#/components/parameters/AORTA-ID'
+        - $ref: '#/components/parameters/AORTA-Version'
+      responses:
+        200:
+          $ref: '#/components/responses/200-FHIR-SearchResults'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        406:
+          $ref: '#/components/responses/406'
+        429:
+          $ref: '#/components/responses/429'
+
+  /$is-allowed:
+    get:
+      tags:
+        - MedMij-zelfmetingen
+      description: |
+        controle of server zelfmetingen kan ontvangen.
+        Zie: [AORTA FHIR $is-allowed](https://public.vzvz.nl/pages/viewpage.action?pageId=24543626#ResourceServerInterfaces(versie0.6.11definitief)-AORTAFHIR$is-allowed)
+      parameters:
+        - name: scope
+          in: query
+          description: De scope waarvoor de status wordt bepaald
+          schema:
+            type: string
+            maxLength: 100
+            pattern: 'http://fhir.nl/fhir/NamingSystem/medmij-scope|<scope>'
+      responses:
+        200:
+          description: Succes
+          content:
+            application/fhir+xml:
+              schema:
+                $ref: '#/components/schemas/OperationOutcome'
+              example: |
+                <?xml version="1.0" encoding="UTF-8"?>
+                <OperationOutcome xmlns="http://hl7.org/fhir">
+                  <id value="0e855422-b8ef-4247-9443-f3747e78747e"/>
+                  <issue>
+                    <severity value="information"/>
+                    <code value="informational"/>
+                    <diagnostics value="http://fhir.nl/fhir/NamingSystem/medmij-scope|eenofanderezorgaanbieder~53"/>
+                  </issue>
+                </OperationOutcome>      
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        406:
+          $ref: '#/components/responses/406'
+        429:
+          $ref: '#/components/responses/429'
+  
+components:
+  headers:
+    authenticateHeader:
+      schema:
+        type: string 
+        maxLength: 1024
+        pattern: 'string'
+        format: 'WWW-Authenticate header'
+        example: 'string'
+    AORTA-ID:
+      required: true
+      schema:
+        $ref: '#/components/schemas/AORTA-ID'
+    AORTA-Version:
+      required: true
+      schema:
+        $ref: '#/components/schemas/AORTA-Version'
+    AORTA-access-token:
+      required: true
+      schema:
+        $ref: '#/components/schemas/AORTA-access-token'
+  
+  parameters:
+    AORTA-ID:
+      name: AORTA-ID
+      in: header
+      required: true
+      schema: 
+        $ref: '#/components/schemas/AORTA-ID'
+    AORTA-Version:
+      name: AORTA-Version
+      in: header
+      required: true
+      schema:
+        $ref: '#/components/schemas/AORTA-Version'
+    AORTA-access-token:
+      name: AORTA-access-token
+      in: header
+      required: true
+      schema:
+        $ref: '#/components/schemas/AORTA-access-token'
+
+  schemas:
+    AORTA-ID:
+      $ref: 'components/schemas/aorta-tokens.yml#/AORTA-ID'
+
+    AORTA-Version:
+      $ref: 'components/schemas/aorta-tokens.yml#/AORTA-Version'
+
+    AORTA-access-token:
+      $ref: 'components/schemas/aorta-tokens.yml#/acces_token_AORTA'
+
+    OperationOutcome:
+      $ref: 'components/schemas/OperationOutcome.yml#/OperationOutcomeSTU3'
+
+    searchsetResultBundle:
+      description: |-
+        Bundle met de zoekresultaten \
+        Zie ook: [Uitleg over Bundles](https://informatiestandaarden.nictiz.nl/wiki/MedMij:V2020.01/FHIR_IG#Search_results)
+      type: object
+      externalDocs:
+        description: Uitleg over Bundles
+        url: https://informatiestandaarden.nictiz.nl/wiki/MedMij:V2020.01/FHIR_IG#Search_results
+
+    vitalSignsBundle:
+      description: |
+        Bundle met de zelfmetingen \
+        Zie ook: [Nadere uitleg over de bundle met resultaten](https://informatiestandaarden.nictiz.nl/wiki/MedMij:V2020.01/FHIR_VitalSigns#XIS:_response_message_2)
+      externalDocs:
+        description: Nadere uitleg over de bundle met resultaten
+        url: https://informatiestandaarden.nictiz.nl/wiki/MedMij:V2020.01/FHIR_VitalSigns#XIS:_response_message_2
+
+  securitySchemes:
+    accessToken:
+      type: http
+      scheme: bearer
+      description: |
+        AORTAonFHIR accessToken \
+        Meer uitleg over dit token is te vinden op [Confluence](https://confluence.vzvz.nl/display/UBEBVLEL/Token+specificaties+-+0.7.x#Tokenspecificaties0.7.x-InhoudenformaatvanhetAORTAaccess_token)
+
+  responses:
+    200-FHIR-SearchResults:
+      description: |
+        Resultaat van de betreffende search query
+      headers:
+        AORTA-ID:
+          $ref: '#/components/headers/AORTA-ID'
+        AORTA-Version:
+          $ref: '#/components/headers/AORTA-Version'
+        AORTA-access-token:
+          $ref: '#/components/headers/AORTA-access-token'
+        authenticateHeader:
+          $ref: '#/components/headers/authenticateHeader'
+      content:
+        application/fhir+xml:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/searchsetResultBundle'
+              - $ref: '#/components/schemas/OperationOutcome'
+          examples:
+            emptyBundle:
+              $ref: '#/components/examples/emptyBundleXML'
+            searchResults:
+              $ref: '#/components/examples/searchResultsXML'
+            exampleSearchResults:
+              description: Voorbeelden van zoekresultaten
+              externalValue: https://github.com/Nictiz/Nictiz-STU3-Zib2017/tree/stable-2.x/Examples
+
+            operationOutcomeInBundle:
+              $ref: '#/components/examples/operationOutcomeInBundle'
+            operationOutcome:
+              $ref: '#/components/examples/200-OperationOutcome'
+
+        application/fhir+json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/searchsetResultBundle'
+              - $ref: '#/components/schemas/OperationOutcome'
+          examples:
+            emptyBundle:
+              $ref: '#/components/examples/emptyBundleJSON'
+            searchResults:
+              $ref: '#/components/examples/searchResultsJSON'
+            operationOutcomeInBundle:
+              $ref: '#/components/examples/operationOutcomeInBundle'
+            operationOutcome:
+              $ref: '#/components/examples/200-OperationOutcome'
+
+    200-vitalSigns-success:
+      description: |
+        Result bundle after processing the Vital Signs Request:
+        Zie [XIS: response message](https://informatiestandaarden.nictiz.nl/wiki/MedMij:V2020.01/FHIR_VitalSigns#XIS:_response_message_2)
+      headers:
+        AORTA-ID:
+          $ref: '#/components/headers/AORTA-ID'
+        AORTA-Version:
+          $ref: '#/components/headers/AORTA-Version'
+        AORTA-access-token:
+          $ref: '#/components/headers/AORTA-access-token'
+      content:
+        application/fhir+xml:
+          schema:
+            $ref: '#/components/schemas/vitalSignsBundle'
+          example:
+            $ref: '#/components/examples/vitalSignsBundle'
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/vitalSignsBundle'
+          example:
+            $ref: '#/components/examples/vitalSignsBundle'
+
+    400:
+      description: |
+        Bad request 
+
+        Syntactically incorrect parameter in search request
+      headers:
+        authenticateHeader:
+          $ref: '#/components/headers/authenticateHeader'
+        AORTA-Version:
+          $ref: '#/components/headers/AORTA-Version'
+        AORTA-access-token:
+          $ref: '#/components/headers/AORTA-access-token'
+      content:
+        application/fhir+xml:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+          examples:
+            badRequest:
+              $ref: '#/components/examples/badRequestOperationOutcomeXML'
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+          examples:
+            badRequest:
+              $ref: '#/components/examples/badRequestOperationOutcomeJSON'
+    401:
+      description: |
+        Access token absent or invalid
+        Zie: [MedMij Handling errors](https://informatiestandaarden.nictiz.nl/wiki/MedMij:V2020.01/FHIR_IG#Handling_errors)
+      headers:
+        authenticateHeader:
+          $ref: '#/components/headers/authenticateHeader'
+        AORTA-Version:
+          $ref: '#/components/headers/AORTA-Version'
+        AORTA-access-token:
+          $ref: '#/components/headers/AORTA-access-token'
+      content:
+        application/fhir+xml:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+          example:
+            $ref: '#/components/examples/unauthorizedOperationOutcome'
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+          example:
+            $ref: '#/components/examples/unauthorizedOperationOutcome'
+    403:
+      description: >
+        Request outside access token scope or
+        Voldoet niet aan beschikbaarheidscriterium
+      headers:
+        authenticateHeader:
+          $ref: '#/components/headers/authenticateHeader'
+        AORTA-Version:
+          $ref: '#/components/headers/AORTA-Version'
+        AORTA-access-token:
+          $ref: '#/components/headers/AORTA-access-token'
+      content:
+        application/fhir+xml:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+          example:
+            $ref: '#/components/examples/unauthorizedOperationOutcome'
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+          example:
+            $ref: '#/components/examples/unauthorizedOperationOutcome'
+    404:
+      description: |
+        FHIR resourcetype niet ondersteund of
+        ZIB niet ondersteund
+      headers:
+        authenticateHeader:
+          $ref: '#/components/headers/authenticateHeader'
+        AORTA-Version:
+          $ref: '#/components/headers/AORTA-Version'
+        AORTA-access-token:
+          $ref: '#/components/headers/AORTA-access-token'
+      content:
+        application/fhir+xml:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+          example:
+            $ref: '#/components/examples/notSupportedOperationOutcome'
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+          example:
+            $ref: '#/components/examples/notSupportedOperationOutcome'
+    406:
+      description: |
+        Not acceptable
+
+            LET OP: moet nog verder uitgewerkt worden
+      headers:
+        authenticateHeader:
+          $ref: '#/components/headers/authenticateHeader'
+        AORTA-Version:
+          $ref: '#/components/headers/AORTA-Version'
+        AORTA-access-token:
+          $ref: '#/components/headers/AORTA-access-token'
+      content:
+        application/fhir+xml:
+          schema:
+            type: string
+            pattern: 'outcome'
+            maxLength: 1024
+          example: 'outcome'
+
+    422:
+      description: |
+        Unprocessable Entity
+
+            LET OP: moet nog verder uitgewerkt worden
+      headers:
+        authenticateHeader:
+          $ref: '#/components/headers/authenticateHeader'
+        AORTA-Version:
+          $ref: '#/components/headers/AORTA-Version'
+        AORTA-access-token:
+          $ref: '#/components/headers/AORTA-access-token'
+      content:
+        application/fhir+xml:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+          example:
+            $ref: '#/components/examples/invalidData'
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+          example:
+            $ref: '#/components/examples/invalidData'
+
+    415:
+      description: |
+        Unsupported media type
+
+            LET OP: moet nog verder uitgewerkt worden
+      headers:
+        authenticateHeader:
+          $ref: '#/components/headers/authenticateHeader'
+        AORTA-Version:
+          $ref: '#/components/headers/AORTA-Version'
+        AORTA-access-token:
+          $ref: '#/components/headers/AORTA-access-token'
+  
+      content:
+        application/fhir+xml:
+          schema:
+            type: string
+            pattern: 'outcome'
+            maxLength: 1024
+          example: 'outcome'
+
+    429:
+      description: |
+        Too many requests
+
+            LET OP: moet nog verder uitgewerkt worden
+      headers:
+        authenticateHeader:
+          $ref: '#/components/headers/authenticateHeader'
+        AORTA-Version:
+          $ref: '#/components/headers/AORTA-Version'
+        AORTA-access-token:
+          $ref: '#/components/headers/AORTA-access-token'
+      content:
+        application/fhir+xml:
+          schema:
+            type: string
+            pattern: 'outcome'
+            maxLength: 1024
+          example: 'outcome'
+
+  examples:
+    unauthorizedOperationOutcome:
+      $ref: 'components/examples/FHIROperationOutcome.yml#/unauthorizedOperationOutcome'
+
+    notSupportedOperationOutcome:
+      $ref: 'components/examples/FHIROperationOutcome.yml#/notSupportedOperationOutcome'
+
+    badRequestOperationOutcomeXML:
+      $ref: 'components/examples/FHIROperationOutcome.yml#/badRequestOperationOutcomeXML'
+
+    badRequestOperationOutcomeJSON:
+      $ref: 'components/examples/FHIROperationOutcome.yml#/badRequestOperationOutcomeJSON'
+
+    emptyBundleXML:
+      $ref: 'components/examples/emptyBundle.yml#/emptyBundleXML'
+      
+    emptyBundleJSON:
+      $ref: 'components/examples/emptyBundle.yml#/emptyBundleJSON'
+
+    searchResultsXML:
+      $ref: 'components/examples/FHIRsearchResults.yml#/searchResultsXML'
+    
+    searchResultsJSON:
+      $ref: 'components/examples/FHIRsearchResults.yml#/searchResultsJSON'
+
+    operationOutcomeInBundle:
+      summary: bundle with OperationOutcome
+      description: |
+        OperationOutcome in a Bundle to indicate unsupported or
+        invalid search parameters
+      value: |
+        <?xml version="1.0" encoding="UTF-8"?>
+        <Bundle>
+          <type value="searchset"/>
+          <entry>
+            <search>
+              <mode value="outcome"/>
+            </search>
+            <response>
+              <outcome>
+                <OperationOutcome>
+                  <issue>
+                    <severity value="error"/>
+                    <code value="not-supported"/>
+                  </issue>
+                </OperationOutcome>
+              </outcome>
+            </response>
+          </entry>
+        </Bundle>
+    200-OperationOutcome:
+      summary: OperationOutcome
+      description: |
+        OperationOutcome to indicate unsupported or
+        invalid search parameters
+      value: |
+        <OperationOutcome>
+          <issue>
+            <severity value="warning"/>
+            <code value="not-supported"/>
+          </issue>
+        </OperationOutcome>
+    invalidData:
+      summary: OperationOutcome bij invalid data
+      value: |
+        <OperationOutcome>
+          <issue>
+            <severity value="error"/>
+            <code value="invalid"/>
+          </issue>
+        </OperationOutcome>
+    vitalSignsBundle:
+      summary: voorbeeld van een Bundle met zelfmetingen
+      value: |
+        <Bundle xmlns="http://hl7.org/fhir">
+          <id value="vital-signs-example"/>
+          <type value="batch"/>
+          <entry>
+            <fullUrl value="urn:oid:2.16.840.1.113883.2.4.3.11.9999.2"/>
+            <resource>
+              <Observation>
+                <meta>
+                  <profile
+                    value="http://nictiz.nl/fhir/StructureDefinition/vitalsign-bloodglucose"/>
+                </meta>
+                <extension url="http://hl7.org/fhir/StructureDefinition/observation-eventTiming">
+                  <extension url="code">
+                    <valueCodeableConcept>
+                      <coding>
+                        <system value="http://hl7.org/fhir/v3/TimingEvent"/>
+                        <code value="ACV"/>
+                        <display value="ACV"/>
+                      </coding>
+                    </valueCodeableConcept>
+                </extension>
+                <status value="final"/>
+                <category>
+                  <coding>
+                    <system value="http://snomed.info/sct"/>
+                    <code value="49581000146104"/>
+                    <display value="Laboratory test finding (finding)"/>
+                  </coding>
+                </category>
+                <code>
+                  <coding>
+                    <system value="http://loinc.org"/>
+                    <code value="14770-2"/>
+                  </coding>
+                </code>
+                <subject>
+                  <reference value="urn:oid:2.16.840.1.113883.2.4.3.11.9999.1"/>
+                  <display value="Marieke XXX_Bergzoon"/>
+                </subject>
+                <effectiveDateTime value="2021-08-09T17:20:00+02:00"/>
+                <performer>
+                  <reference value="urn:oid:2.16.840.1.113883.2.4.3.11.9999.1"/>
+                  <display value="Marieke XXX_Bergzoon"/>
+                </performer>
+                <valueQuantity>
+                  <value value="6.6"/>
+                  <unit value="mmol/l"/>
+                  <system value="http://unitsofmeasure.org"/>
+                  <code value="mmol/L"/>
+                </valueQuantity>
+              </Observation>
+            </resource>
+            <request>
+              <method value="POST"/>
+              <url value="Observation"/>
+            </request>
+          </entry>
+        </Bundle>
