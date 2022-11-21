@@ -1,7 +1,7 @@
 openapi: '3.0.3'
 info:
   title: Autorisatie Server ZA
-  version: '0.1.0'
+  version: '0.2.0'
   description: |
     Beschrijving van de endpoints zoals benodigd voor de aanroep 
     van de Autorisatie Server.
@@ -77,6 +77,8 @@ paths:
           $ref: '#/components/responses/406'
         429:
           $ref: '#/components/responses/429'
+        500:
+          $ref: '#/components/responses/500'  
         default:
           description: Default
           content:
