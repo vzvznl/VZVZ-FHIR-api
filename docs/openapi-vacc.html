@@ -8,15 +8,15 @@
       content="SwaggerUI"
     />
     <title>SwaggerUI</title>
-    <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@4.14.0/swagger-ui.css" />
     <link rel="stylesheet" media="all" href="./css/style.css" />
     <link rel="stylesheet" media="all"
       href="https://fonts.googleapis.com/css2?family=Chivo:wght@700&amp;family=Lato:wght@400;700&amp;display=swap" />
-  </head>
+      <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@4.15.5/swagger-ui.css" />
+    </head>
   <body>
   <div id="swagger-ui"></div>
-  <script src="https://unpkg.com/swagger-ui-dist@4.14.0/swagger-ui-bundle.js" crossorigin></script>
-  <script src="https://unpkg.com/swagger-ui-dist@4.14.0/swagger-ui-standalone-preset.js" crossorigin></script>
+  <script src="https://unpkg.com/swagger-ui-dist@4.15.5/swagger-ui-bundle.js" crossorigin></script>
+  <script src="https://unpkg.com/swagger-ui-dist@4.15.5/swagger-ui-standalone-preset.js" crossorigin></script>
   <script>
     window.onload = () => {
       window.ui = SwaggerUIBundle({
@@ -34,7 +34,11 @@
 
     <div class="footer__top">
       <div class="footer__column footer__column--nav">
-
+        <ul>
+          <li>
+            <a href="index.html">Index</a>
+          </li>
+        </ul>
       </div>
 
     </div>
@@ -46,19 +50,18 @@
         </a>
       </div>
       <div class="footer__links small">
-
         <ul>
           <li>
-            <a href="index.html">Index</a>
+            <a href="https://aorta-lsp.nl/">Aorta-LSP</a>
           </li>
         </ul>
-        <span>© 2022 VZVZ</span>
       </div>
     </div>
   </div>
   </footer>
   <footer class="copyright small" role="contentinfo">
     <div class="wrapper--fluid">
+      <span>© 2022 VZVZ</span>
     </div>
   </footer>
   </div>
