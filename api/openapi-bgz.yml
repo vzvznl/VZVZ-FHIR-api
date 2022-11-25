@@ -60,7 +60,7 @@ paths:
               NotifiedPullTask:
                 $ref: '#/components/examples/NotifiedPullTask'
       responses:
-        '200':
+        '201':
           description: Task correct verwerkt
         400:
           $ref: '#/components/responses/400'
