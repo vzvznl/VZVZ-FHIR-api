@@ -1,5 +1,7 @@
 RoutingInfoResponse:
   type: array
+  minItems: 1
+  maxItems: 500
   items:
       type: object
       additionalProperties: false
@@ -17,12 +19,12 @@ RoutingInfoResponse:
             ontvangen interactionId uit het request, of met het aortaVersion attribuut, 
             zoals ontvangen in het request.
           type: string
-          pattern: '[a-zA-Z0-9:.]+'
-          maxLength: 1024
+          maxLength: 100
         destinationInfo:
           description: |
             Slechts aanwezig indien tenminste één geschikte GBx-applicatie is gevonden.
           type: array
+          minItems: 0
           maxItems: 500
           items:
             type: object
@@ -47,8 +49,7 @@ RoutingInfoResponse:
                       Mogelijke waarden:
                       - [appID]
                     type: string
-                    pattern: '[0-9]{3,9}'
-                    maxLength: 1024
+                    maxLength: 50
                   codeSystem:
                     description: |
                       Het gehanteerde codesysteem.
@@ -56,14 +57,14 @@ RoutingInfoResponse:
                       Mogelijke waarden: 
                       - "urn:oid:2.16.840.1.113883.2.4.6.6" (appID)
                     type: string
+                    maxLength: 50
                     enum: 
                       - 'urn:oid:2.16.840.1.113883.2.4.6.6'
               fqdn:
                 description: |
                   FQDN van de GBx-applicatie.
                 type: string
-                pattern: '[a-zA-Z0-9.-]+'
-                maxLength: 1024
+                maxLength: 50
               transformationId:
                 description: |
                   Het ID van het uit te voeren transformatie algoritme.
@@ -73,5 +74,4 @@ RoutingInfoResponse:
 
                   Wordt nooit gevuld wanneer de interactie een FHIR-operation is.
                 type: string
-                pattern: '[a-zA-Z0-9]+'
-                maxLength: 1024
+                maxLength: 50

@@ -30,8 +30,7 @@ RoutingInfoRequest:
             - [appID]
             - [URA]
           type: string
-          pattern: '[0-9]{3,9}'
-          maxLength: 1024
+          maxLength: 50
         codeSystem:
           description: |
             Het gehanteerde codesysteem. (URA of appID)
@@ -40,6 +39,7 @@ RoutingInfoRequest:
               - "urn:oid:2.16.840.1.113883.2.4.6.6" (appID)
               - "urn:oid:2.16.528.1.1007.3.3" (URA)
           type: string
+          maxLength: 50
           enum: 
             - 'urn:oid:2.16.840.1.113883.2.4.6.6'
             - 'urn:oid:2.16.528.1.1007.3.3'
@@ -72,8 +72,7 @@ interactionById:
         applicaties slechts rekening met het major nummer, omdat compatibiliteit hierdoor 
         afdoende is geborgd.
       type: string
-      pattern: '[a-zA-Z0-9:.]+'
-      maxLength: 1024
+      maxLength: 100
       example: search:Observation:2.1:request
 interactionByUrl:
   type: object
@@ -83,6 +82,7 @@ interactionByUrl:
       description: |
         De gebruikte HTTP method.
       type: string
+      maxLength: 50
       enum:
         - GET
         - PUT
@@ -93,7 +93,7 @@ interactionByUrl:
         De gebruikte URL, inclusief eventuele (zoek)parameters.
       type: string
       pattern: '^([a-zA-Z0-9_-]+\/?)*$'
-      maxLength: 1024
+      maxLength: 2048
     aortaVersion:
       description: |-
         De gebruikte versie van de interactie.
@@ -103,9 +103,8 @@ interactionByUrl:
         zoeken naar applicaties slechts rekening met het major nummer, 
         omdat compatibiliteit hierdoor afdoende is geborgd.
       type: string
-      pattern: '^([0-9]+)\.([0-9]+)(\.([0-9]+)(?:([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?)?$'
       format: semver
-      maxLength: 100
+      maxLength: 50
   example: |-
     {
       "method": "GET",

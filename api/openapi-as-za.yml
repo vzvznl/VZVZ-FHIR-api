@@ -13,7 +13,7 @@ info:
         LET OP: deze versie kan nog fouten bevatten.
 
 servers:
-  - url: https://as-za.server/
+  - url: https://as-za.server/v1/
     description: Autorisatie Server ZorgAanbieder
   
 security:
@@ -24,8 +24,6 @@ security:
 tags:
   - name: AORTA
     description: AORTA gerelateerde interfaces
-  - name: MedMij
-    description: MedMij gerelateerde interfaces
   - name: Extern
     description: API endpoints zichtbaar voor externe systemen
   - name: Intern
@@ -40,7 +38,6 @@ paths:
       tags:
         - Extern
         - AORTA
-        - MedMij
       parameters:
         - $ref: '#/components/parameters/path_extension'
         - $ref: '#/components/parameters/AORTA-ID'
@@ -88,7 +85,7 @@ paths:
                   maxLength: 2
                   pattern: OK
 
-  /jwks/{jwks_uri}:
+  /{jwks_uri}:
     get:
       description: |
         Ophalen van de public key zodat de handtekening in een JWK gecontroleerd kan worden.
@@ -129,7 +126,7 @@ paths:
                 type: string
                 pattern: 'Unexpected error'
                 maxLength: 1024
-  /token/{token_uri}:
+  /token/v2/:
     post:
       description: |-
         Access token ophalen

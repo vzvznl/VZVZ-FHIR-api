@@ -55,20 +55,14 @@ paths:
           $ref: '#/components/responses/200'
         400:
           $ref: '#/components/responses/400'
-        401:
-          $ref: '#/components/responses/401'
-        403:
-          $ref: '#/components/responses/403'
         406:
           $ref: '#/components/responses/406'
         415:
           $ref: '#/components/responses/415'
         429:
           $ref: '#/components/responses/429'
-        500:
-          $ref: '#/components/responses/500'
-        default:
-          $ref: '#/components/responses/400'
+        5XX:
+          $ref: '#/components/responses/5XX'
 
 components:
   parameters:
@@ -108,70 +102,28 @@ components:
       description: |
         Ongeldig verzoek (voldoet niet aan de interface specificatie), 
         ook wanneer interactie-id niet kan worden bepaald
-      content:
-        text/plain:
-          schema:
-            type: string
-            pattern: 'Ongeldig verzoek'
-            default: 'Ongeldig verzoek'
-            maxLength: 1024
-    401:
-      description: Unauthorized
-      content:
-        text/plain:
-          schema:
-            type: string
-            pattern: 'Ongeldig verzoek'
-            default: 'Ongeldig verzoek'
-            maxLength: 1024
-    403:
-      description: |
-        Forbidden
+  
+    # 401:
+    #   description: Unauthorized
+  
+    # 403:
+    #   description: |
+    #     Forbidden
 
-        Client beschikt niet over de juiste autorisatie
-      content:
-        text/plain:
-          schema:
-            type: string
-            pattern: 'Client beschikt niet over de juiste autorisatie'
-            default: 'Client beschikt niet over de juiste autorisatie'
-            maxLength: 1024
+    #     Client beschikt niet over de juiste autorisatie
+  
     406:
       description: Not Acceptable
-      content:
-        text/plain:
-          schema:
-            type: string
-            pattern: 'Accept header is niet toegestaan'
-            default: 'Accept header is niet toegestaan'
-            maxLength: 1024
+  
     415:
       description: Unsupported Media Type
-      content:
-        text/plain:
-          schema:
-            type: string
-            pattern: 'Content-Type niet ondersteund'
-            default: 'Content-Type niet ondersteund'
-            maxLength: 1024
+  
     429:
       description: Too Many Requests
-      content:
-        text/plain:
-          schema:
-            type: string
-            pattern: 'Too many requests, please retry later'
-            default: 'Too many requests, please retry later'
-            maxLength: 1024
-    500:
-      description: Fout in server
-      content:
-        text/plain:
-          schema:
-            type: string
-            pattern: 'Fout in server'
-            default: 'Fout in server'
-            maxLength: 1024
+  
+    5XX:
+      description: 5XX server errors
+  
 
   examples:
     routingInfoReqMedMij:
