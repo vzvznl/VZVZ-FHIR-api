@@ -58,8 +58,7 @@ RoutingInfoResponse:
                       - "urn:oid:2.16.840.1.113883.2.4.6.6" (appID)
                     type: string
                     maxLength: 50
-                    enum: 
-                      - 'urn:oid:2.16.840.1.113883.2.4.6.6'
+                    default: 'urn:oid:2.16.840.1.113883.2.4.6.6'
               fqdn:
                 description: |
                   FQDN van de GBx-applicatie.

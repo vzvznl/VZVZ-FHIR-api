@@ -82,7 +82,6 @@ interactionByUrl:
       description: |
         De gebruikte HTTP method.
       type: string
-      maxLength: 50
       enum:
         - GET
         - PUT

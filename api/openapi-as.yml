@@ -61,7 +61,7 @@ paths:
           $ref: '#/components/responses/415'
         429:
           $ref: '#/components/responses/429'
-        5XX:
+        default:
           $ref: '#/components/responses/5XX'
 
 components:
