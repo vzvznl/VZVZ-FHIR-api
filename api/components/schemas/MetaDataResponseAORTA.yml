@@ -1,36 +1,33 @@
 MetaDataResponseAorta:
   type: object
+  additionalProperties: false
   properties:
     issuer: 
       type: string
       maxLength: 5000
-      pattern: '^(https?:\/\/)?[a-zA-Z0-9._-]+\.[a-z]+(\/[a-zA-Z0-9_-]+\/?)*$'
       format: url
       example: "https://server.example.com"
     token_endpoint:
       type: string
       maxLength: 5000
-      pattern: '^(https?:\/\/)?[a-zA-Z0-9._-]+\.[a-z]+(\/[a-zA-Z0-9_-]+\/?)*$'
       format: url
       example: "https://server.example.com/token"
     jwks_uri:
       type: string
       maxLength: 5000
-      pattern: '^(https?:\/\/)?[a-zA-Z0-9._-]+\.[a-z]+(\/[a-zA-Z0-9._-]+\/?)*$'
       format: url
-      example: "https://server.example.com/jwks.json"
+      example: "https://server.example.com/jwt/jwks.json"
     response_types_supported:
       type: array
       maxItems: 5
       items:
         type: string
         maxLength: 1024
-        pattern: '(code|code-token)'
       example: 
-        - "code"
-        - "code-token"
+        - "urn:ietf:params:oauth:grant-type:token-exchange"
     signed_metadata:
       type: string
       maxLength: 1024
       format: byte
-      pattern: '^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$'
+      example: "eyJhbGciOiJSUzI1NiIsInR5cCI6ImFvcnRhLWF0Iiwia2lkIjoiZHZ6YS50ZXN0LmNzYy5ubCJ9.eyJpc3N1ZXIiOiJodHRwczovL2xzcHhzZ2F6dTM0MS5tZ3QtbHNwLmxvY2FsIiwidG9rZW5fZW5kcG9pbnQiOiJodHRwczovL2xzcHhzZ2F6dTM0MS5tZ3QtbHNwLmxvY2FsL3Rva2VuIiwiandrc191cmkiOiJodHRwczovL2xzcHhzZ2F6dTM0MS5tZ3QtbHNwLmxvY2FsOjg0NDMvand0Ly53ZWxsLWtub3duL2p3a3MuanNvbiIsInJlc3BvbnNlX3R5cGVzX3N1cHBvcnRlZCI6ImNvZGUifQ.tQ7XaVSH1t66k2Z0ZN9DlRiHjsYdaH7oEF5Kx6KcdYY"
+

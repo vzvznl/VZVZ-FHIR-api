@@ -12,13 +12,11 @@ headers:
     schema:
       type: string
       maxLength: 1024
-      pattern: 'no-store'
       example: no-store
   Pragma:
     schema:
       type: string
       maxLength: 1024
-      pattern: 'no-cache'
       example: no-cache
 content:
   application/json:

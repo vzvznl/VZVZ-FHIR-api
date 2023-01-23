@@ -13,7 +13,7 @@ info:
         LET OP: deze versie kan nog fouten bevatten.
 
 servers:
-  - url: https://as-za.server/v1/
+  - url: https://as-za.server/
     description: Autorisatie Server ZorgAanbieder
   
 security:
@@ -22,12 +22,9 @@ security:
       - write
 
 tags:
-  - name: AORTA
-    description: AORTA gerelateerde interfaces
   - name: Extern
     description: API endpoints zichtbaar voor externe systemen
-  - name: Intern
-    description: API endpoints alleen zichtbaar voor interne systemen
+
 paths:
   /.well-known/oauth-authorization-server/{path_extension}:
     get:
@@ -37,10 +34,8 @@ paths:
       summary: Opvragen van metadata voor een endpoint
       tags:
         - Extern
-        - AORTA
       parameters:
         - $ref: '#/components/parameters/path_extension'
-        - $ref: '#/components/parameters/AORTA-ID'
       responses:
         200:
           description: Request succesvol
@@ -55,35 +50,17 @@ paths:
                 standaardwaarde: no-cache
               schema:
                 type: string
-                pattern: 'no-cache'
                 default: no-cache
 
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/MetaDataResponseAorta'
-                  - $ref: '#/components/schemas/MetaDataResponseMedMij'
-        401:
-          $ref: '#/components/responses/401'
-        403:
-          $ref: '#/components/responses/403'
+                  $ref: '#/components/schemas/MetaDataResponseAorta'
+
         404:
           $ref: '#/components/responses/404'
-        406:
-          $ref: '#/components/responses/406'
-        429:
-          $ref: '#/components/responses/429'
-        500:
-          $ref: '#/components/responses/500'  
         default:
-          description: Default
-          content:
-              application/json:
-                schema:
-                  type: string
-                  maxLength: 2
-                  pattern: OK
+          $ref: '#/components/responses/500'        
 
   /{jwks_uri}:
     get:
@@ -92,7 +69,6 @@ paths:
       summary: Ophalen public key ter controle van de JWK handtekening
       tags:
         - Extern
-        - AORTA
       parameters:
         - name: jwks_uri
           description: het pad zoals beschreven in het [MetaData Object](components/schemas/MetaDataResponseAorta.yml)
@@ -104,66 +80,33 @@ paths:
       responses:
         200:
           $ref: 'components/responses/jwksSuccessResponse.yml'
-        400:
-          $ref: '#/components/responses/400'
-        401:
-          $ref: '#/components/responses/401'
-        403:
-          $ref: '#/components/responses/403'
         404:
           $ref: '#/components/responses/404'
-        406:
-          $ref: '#/components/responses/406'
-        429:
-          $ref: '#/components/responses/429'
-        500:
-          $ref: '#/components/responses/500'
         default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                type: string
-                pattern: 'Unexpected error'
-                maxLength: 1024
-  /token/v2/:
+          $ref: '#/components/responses/500'
+
+  /token/v1/:
     post:
       description: |-
         Access token ophalen
       summary: Acces token ophalen
       tags:
         - Extern
-        - AORTA
       parameters:
         - $ref: '#/components/parameters/AORTA-ID'
-        - $ref: '#/components/parameters/token_uri'
       requestBody:
         content:
           application/x-www-form-urlencoded:
             schema:
-              type: string
-              pattern: '[a-zA-Z0-9&=% :.~]+'
-              maxLength: 5000
-            example: |-
-              grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Atoken-exchange
-              &audience=urn%3Aoid%3A2.16.840.1.113883.2.4.6.6.352
-              &requested_token_type=urn%3Aietf%3Aparams%3Aoauth%3Atoken-type%3Ajwt
-              &subject_token=<base64url-encoded SAML Assertion>
-              &subject_token_type=urn%3Aietf%3Aparams%3Aoauth%3Atoken-type%3Asaml2
-              &actor_token=<base64url-encoded SAML Assertion>
-              &actor_token_type=urn%3Aietf%3Aparams%3Aoauth%3Atoken-type%3Asaml2
-              &registration_token=<base64url-encoded SAML Assertion>
-              &registration_token_type=urn%3Aietf%3Aparams%3Aoauth%3Atoken-type%3Asaml2
-              &consent_token=<base64url-encoded SAML Assertion>
-              &consent_token_type=urn%3Aietf%3Aparams%3Aoauth%3Atoken-type%3Asaml2
-              &scope=search:Coverage:1.0:request search:Patient:1.0:request~aorta.contextcode.BGZOPV~normaal
+              $ref: "#/components/schemas/tokenExchange"
+            example: 
+              $ref: "#/components/examples/tokenExchange"
+              
       responses:
         200:
           $ref: 'components/responses/AortaAccessTokenSuccessResponse.yml'
         400:
           $ref: 'components/responses/OAuth2TokenErrorResponse.yml'
-        401:
-          $ref: '#/components/responses/401'
         403:
           $ref: '#/components/responses/403'
         404:
@@ -179,50 +122,7 @@ paths:
 
         default:
           description: Unexpected error
-          content:
-            application/json:
-              schema:
-                type: string
-                pattern: 'Unexpected error'
-                maxLength: 1024
-  /log:
-    get:
-      description: logging ophalen
-      summary: logging ophalen
-      tags:
-        - Intern
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: string
-                maxLength: 5000
-        400:
-            $ref: 'components/responses/OAuth2TokenErrorResponse.yml'
-        401:
-          $ref: '#/components/responses/401'
-        403:
-          $ref: '#/components/responses/403'
-        404:
-          $ref: '#/components/responses/404'
-        406:
-          $ref: '#/components/responses/406'
-        415:
-          $ref: '#/components/responses/415'
-        429:
-          $ref: '#/components/responses/429'
-        500:
-          $ref: '#/components/responses/500'
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                type: string
-                pattern: 'Unexpected error'
-                maxLength: 1024
+
 
 components:
   parameters:
@@ -239,17 +139,8 @@ components:
       schema:
         type: string
         maxLength: 1024
-        pattern: '^(\/?[a-zA-Z0-9_-]+\/?)+'
         format: uri
-      example: 'some-extension'
-    token_uri:
-      name: token_uri
-      description: het pad zoals beschreven in [ASMetaDataResponseAorta](https://confluence.vzvz.nl/display/UBEBVLEL/Token+specificaties+-+0.8.x#Tokenspecificaties0.8.x-AORTAtokens)
-      in: path
-      required: true
-      schema:
-        $ref: '#/components/schemas/url'
-      example: 'https://server.example.org/oauth/token'
+      example: 'jwt'
   headers:
     authenticateHeader:
       description: |
@@ -257,7 +148,6 @@ components:
       schema:
         type: string 
         maxLength: 1024
-        pattern: 'string'
         format: 'WWW-Authenticate'
         example: 'string'
 
@@ -266,8 +156,6 @@ components:
       $ref: 'components/schemas/aorta-tokens.yml#/AORTA-ID'
     MetaDataResponseAorta:
       $ref: 'components/schemas/MetaDataResponseAORTA.yml#/MetaDataResponseAorta'
-    MetaDataResponseMedMij:
-      $ref: 'components/schemas/MetaDataResponseMedMij.yml#/MetaDataResponseMedMij'
     url:
       $ref: 'components/schemas/url.yml'
     Cache-Control:
@@ -288,6 +176,155 @@ components:
 
           type: integer
           default: 14400
+    tokenExchange:
+      type: object
+      additionalProperties: false
+      required:
+        - grant_type
+        # - audience
+        # - requested_token_type
+        # - subject_token
+        # - scope
+      properties:
+        grant_type:
+          description: |
+            Vaste waarde "urn:ietf:params:oauth:grant-type:token-exchange"
+          type: string
+          maxLength: 50
+          default: "urn:ietf:params:oauth:grant-type:token-exchange"
+          example: "urn:ietf:params:oauth:grant-type:token-exchange"
+        client_id:
+          description: |
+            Het appID van de client die een FHIR-interactie wil initiëren. 
+            Hoeft slechts te worden meegezonden, wanneer het niet is opgenomen in het actor_token. 
+            Vooralsnog daarom slechts van toepassing voor interacties vanuit een GBP. 
+
+            Formaat: "urn:oid:2.16.840.1.113883.2.4.6.6.<applicatie-id>".
+          type: string 
+          maxLength: 50
+          example: "urn:oid:2.16.840.1.113883.2.4.6.6.<applicatie-id>"
+        audience: 
+          description: |-
+            __Bij geadresseerde interacties tussen GBZ'en__: \
+            Waarde is "\<appID van GBZ-applicatie>". 
+
+            Wanneer de client een FHIR-update of een FHIR-read interactie wil uitvoeren, 
+            dan is het juiste appID opgenomen in de base-URL van de betreffende resource instance, 
+            zoals eerder ontvangen. Instance-level interacties, zoals een read en een update 
+            dienen altijd te worden gericht aan één GBZ-applicatie, en nooit aan een URA. 
+
+            Wanneer de client een ander soortige FHIR-interactie wil uitvoeren, 
+            dan zijn er een aantal mogelijkheden:
+            1. De client bepaalt zelf, m.b.v. de systeemrollen en conformances, zoals gevonden in ZORG-AB, en m.b.v. de transformatie server metadata, welk(e) GBZ-applicatie(s), eventueel na translatie, de betreffende interactie kan/kunnen ontvangen.
+            2. De client vraagt de Adressering Server, welk(e) GBZ-applicatie(s), eventueel na translatie, de betreffende interactie kan/kunnen ontvangen.
+
+            __Bij interacties tussen een GBZ-applicatie en een Resource Broker component__:
+            Waarde is "\<role van betreffende Resource Broker component>".
+
+            Formaat van een appID: "urn:oid:2.16.840.1.113883.2.4.6.6.<applicatie-id>". \
+            Formaat van een URA: "urn:oid:2.16.528.1.1007.3.3.\<URA>". \
+            Formaat van een role: "urn:oid:2.16.840.1.113883.2.4.3.111.8.<role-id>"
+          type: string
+          maxLength: 50
+          example: "urn:oid:2.16.840.1.113883.2.4.6.6.<applicatie-id>"
+        requested_token_type:
+          description: Vaste waarde "urn:ietf:params:oauth:token-type:jwt".
+          type: string
+          maxLength: 50
+          example: "urn:ietf:params:oauth:token-type:jwt"
+        subject_token:
+          description: |
+            _A security token that represents the identity of the party on behalf of 
+            whom the request is being made. Typically, the subject of this token will be the 
+            subject of the security token issued in response to the request._
+
+            Wanneer geen actor_token aanwezig is, dan is het subject_token een [AORTA SAML 
+            transactietoken](https://public.vzvz.nl/display/UBEBVLEL/Token+specificaties+-+0.7.x#Tokenspecificaties0.7.x-ATT-SAML), 
+            een [SAML PKIo Authenticatietoken](https://public.vzvz.nl/display/UBEBVLEL/Token+specificaties+-+0.7.x#Tokenspecificaties0.7.x-PKIo-SAML), 
+            een [SAML DigiD token](https://public.vzvz.nl/display/UBEBVLEL/Token+specificaties+-+0.7.x#Tokenspecificaties0.7.x-DigiD-SAML).
+
+            Wanneer wel een actor_token aanwezig is, dan is het subject token 
+            een [AORTA SAML mandaattoken](https://public.vzvz.nl/display/UBEBVLEL/Token+specificaties+-+0.7.x#Tokenspecificaties0.7.x-AMT-SAML).
+          type: string
+          maxLength: 50
+          example: "<base64url-encoded SAML Assertion>"
+        subject_token_type:
+          description: | 
+            Type aanduiding van het subject_token. 
+            Vaste waarde "urn:ietf:params:oauth:token-type:saml2". 
+            Geeft aan dat het token een base64url-encoded SAML 2.0 Assertion is.
+          type: string
+          maxLength: 50
+          example: "urn:ietf:params:oauth:token-type:saml2"
+        actor_token:
+          description: |
+            _A security token that represents the identity of the acting party. 
+            Typically, this will be the party that is authorized to use the 
+            requested security token and act on behalf of the subject._
+
+            Een actor_token is slechts aanwezig wanneer de acting party een andere is dan het subject.
+
+            Een actor_token is altijd een [AORTA SAML 
+            transactietoken](https://public.vzvz.nl/display/UBEBVLEL/Token+specificaties+-+0.7.x#Tokenspecificaties0.7.x-ATT-SAML).
+            Het subject token is in dat geval dan 
+            een [AORTA SAML mandaattoken](https://public.vzvz.nl/display/UBEBVLEL/Token+specificaties+-+0.7.x#Tokenspecificaties0.7.x-AMT-SAML).
+          type: string
+          maxLength: 50
+          example: "<base64url-encoded SAML Assertion>"
+        actor_token_type:
+          description: | 
+            Type aanduiding van het actor_token. 
+            Vaste waarde "urn:ietf:params:oauth:token-type:saml2". 
+            Geeft aan dat het token een base64url-encoded SAML 2.0 Assertion is.
+          type: string
+          maxLength: 50
+          example: "urn:ietf:params:oauth:token-type:saml2"
+        registration_token:
+          description: |
+            Het registration_token is een 
+            [AORTA SAML inschrijftoken](https://public.vzvz.nl/display/UBEBVLEL/Token+specificaties+-+0.7.x#Tokenspecificaties0.7.x-AIT-SAML).
+          type: string
+          maxLength: 50
+          example: "<base64url-encoded SAML Assertion>"
+        registration_token_type:  
+          description: | 
+            Type aanduiding van het registration_token. 
+            Vaste waarde "urn:ietf:params:oauth:token-type:saml2". 
+            Geeft aan dat het token een base64url-encoded SAML 2.0 Assertion is.
+          type: string
+          maxLength: 50
+          example: "urn:ietf:params:oauth:token-type:saml2"
+        consent_token:
+          description: |
+            Het consent_token is een [AORTA SAML consent_token](https://public.vzvz.nl/display/UBEBVLEL/Token+specificaties+-+0.7.x#Tokenspecificaties0.7.x-ACT-SAML).
+          type: string
+          example: "<base64url-encoded SAML Assertion>"
+        consent_token_type:  
+          description: | 
+            Type aanduiding van het consent_token. 
+            Vaste waarde "urn:ietf:params:oauth:token-type:saml2". 
+            Geeft aan dat het token een base64url-encoded SAML 2.0 Assertion is.
+          type: string
+          maxLength: 50
+          example: "urn:ietf:params:oauth:token-type:saml2"
+        scope:
+          description: |
+            Een string met daarin de gevraagde scope van autorisatie, 
+            die bestaat uit de volgende opeenvolgende delen, van elkaar gescheiden door een "~":
+
+            - Een door spaties van elkaar gescheiden set van AORTA interaction-id's, bijvoorbeeld "search:Appointment:1.0:request";
+            - De contextCode, waarbinnen de interacties plaatsvinden, bijvoorbeeld "aorta.contextcode.BGZOPV";
+            - Een aanduiding van de situatie waarin de interactie plaatsvindt, "normaal" of "nood". Vooralsnog is deze parameter gevuld met vaste waarde "normaal".
+
+            Voorbeelden scope:
+
+            - Opvragen van specifieke resources bij een GBZ-applicatie: "_search:Coverage:1.0:request search:Patient:1.0:request~aorta.contextcode.BGZOPV~normaal_".
+            - Opvragen van loggegevens bij RB VnC: "_search:AuditEvent:1.0:request~aorta.contextcode.LOGOPV~normaal_".
+            - Aanmelden/bijwerken ACT/VWI: "_update:DocumentManifest:1.1:request~aorta.contextcode.VWIREG~normaal_".
+            - Aanvragen ACT/VWI-sync: "_create:Task:2.0:request~aorta.contextcode.ACTSYNC~normaal_".
+          type: string
+          maxLength: 100
+          example: "search:Coverage:1.0:request search:Patient:1.0:request~aorta.contextcode.BGZOPV~normaal"
 
   securitySchemes:
     OAuth2:
@@ -309,7 +346,7 @@ components:
         text/plain:
           schema:
             type: string
-            pattern: 'Ongeldig verzoek'
+  
             default: 'Ongeldig verzoek'
             maxLength: 1024
     401:
@@ -321,7 +358,7 @@ components:
         text/plain:
           schema:
             type: string
-            pattern: 'Ongeldig verzoek'
+  
             default: 'Ongeldig verzoek'
             maxLength: 1024
     403:
@@ -335,57 +372,37 @@ components:
         text/plain:
           schema:
             type: string
-            pattern: 'Request outside access token scope'
+  
             default: 'Request outside access token scope'
             maxLength: 1024
     404:
       description: |
-        FHIR resourcetype niet ondersteund of ZIB niet ondersteund
-      headers:
-        authenticateHeader:
-          $ref: '#/components/headers/authenticateHeader'
-      content:
-        text/plain:
-          schema:
-            type: string
-            pattern: 'FHIR resourcetype niet ondersteund of ZIB niet ondersteund'
-            default: 'FHIR resourcetype niet ondersteund of ZIB niet ondersteund'
-            maxLength: 1024
+        Niet gevonden
     406:
-      description: Not acceptable
-      content:
-        text/plain:
-          schema:
-            type: string
-            pattern: 'Accept header is niet toegestaan'
-            default: 'Accept header is niet toegestaan'
-            maxLength: 1024
-
+      description: Not Acceptable
+  
     415:
       description: Unsupported Media Type
-      content:
-        text/plain:
-          schema:
-            type: string
-            pattern: 'Content-Type niet ondersteund'
-            default: 'Content-Type niet ondersteund'
-            maxLength: 1024
 
     429:
       description: Too Many Requests
-      content:
-        text/plain:
-          schema:
-            type: string
-            pattern: 'Too many requests, please retry later'
-            default: 'Too many requests, please retry later'
-            maxLength: 1024
+  
     500:
-      description: Fout in server
-      content:
-        text/plain:
-          schema:
-            type: string
-            pattern: 'Fout in server'
-            default: 'Fout in server'
-            maxLength: 1024
+      description: 5XX server errors
+
+  examples:
+    tokenExchange:
+      description: Example of tokenExchange body
+      value: |-
+        grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Atoken-exchange
+        &audience=urn%3Aoid%3A2.16.840.1.113883.2.4.6.6.352
+        &requested_token_type=urn%3Aietf%3Aparams%3Aoauth%3Atoken-type%3Ajwt
+        &subject_token=<base64url-encoded SAML Assertion>
+        &subject_token_type=urn%3Aietf%3Aparams%3Aoauth%3Atoken-type%3Asaml2
+        &actor_token=<base64url-encoded SAML Assertion>
+        &actor_token_type=urn%3Aietf%3Aparams%3Aoauth%3Atoken-type%3Asaml2
+        &registration_token=<base64url-encoded SAML Assertion>
+        &registration_token_type=urn%3Aietf%3Aparams%3Aoauth%3Atoken-type%3Asaml2
+        &consent_token=<base64url-encoded SAML Assertion>
+        &consent_token_type=urn%3Aietf%3Aparams%3Aoauth%3Atoken-type%3Asaml2
+        &scope=search:Coverage:1.0:request search:Patient:1.0:request~aorta.contextcode.BGZOPV~normaal
