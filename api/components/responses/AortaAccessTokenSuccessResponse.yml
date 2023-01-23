@@ -5,19 +5,6 @@ description: |-
   [The OAuth2.0 Authorization Framework - 5.1. Successful Response](https://tools.ietf.org/html/rfc6749#section-5.1)
 
   The authorization server issues an access token and optional refresh token, and constructs the response by adding the following parameters to the entity-body of the HTTP response with a 200 (OK) status code.
-headers:
-  Cache-Control:
-    schema:
-      type: string
-      maxLength: 100
-      pattern: 'no-store'
-    example: no-store
-  Pragma:
-    schema:
-      type: string
-      enum:
-        - 'no-cache'
-      example: no-cache
 content:
   application/json:
     schema:
@@ -33,6 +20,9 @@ content:
       required:
         - access_token
         - token_type
+        - issued_token_type
+        - expires_in
+        - scope
       properties:
         access_token:
           description: |-
@@ -40,7 +30,6 @@ content:
             Er wordt één token uitgegeven met een audience element voor ieder te bevragen xIS van deze zorgaanbieder, die om kan gaan met het requested_token_type.
           type: string
           format: byte
-          pattern: '^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$'
           maxLength: 5000
           example: '2YotnFZFEjr1zCsicMWpAA='
         issued_token_type:
@@ -49,12 +38,10 @@ content:
             Vaste waarde "urn:ietf:params:oauth:token-type:jwt".
           type: string
           maxLength: 36
-          pattern: 'urn:ietf:params:oauth:token-type:jwt'
         token_type:
           description: |-
             Vaste waarde "Bearer".
           type: string
-          pattern: 'Bearer'
           maxLength: 5000
           example: Bearer
         expires_in:
@@ -68,7 +55,6 @@ content:
             Dezelfde string, zoals ontvangen in het token exchange response, maar met daarin slechts de onderdelen die daadwerkelijk zijn toegekend.
             Wanneer een transformatie is vereist voor een interactie, dan wordt dit in de geretourneerde scope aangegeven door het interactie-id uit te breiden met "/<transformation-id>".
           type: string
-          pattern: '[a-zA-Z0-9: .]+'
           maxLength: 1024
           example: 'search:Coverage:1.0:request search:Patient:1.0:request~aorta.contextcode.BGZOPV~normaal'
     example: |
