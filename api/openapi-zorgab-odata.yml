@@ -1,0 +1,4064 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "",
+    "version" : "2.9.0",
+    "title" : "ZORG-AB",
+    "contact" : { }
+  },
+  "host" : "zab.test.lsp.aorta-zorg.nl",
+  "basePath" : "/zab",
+  "schemes" : [ "https" ],
+  "paths" : {
+    "/applicationId/{applicationId}" : {
+      "get" : {
+        "tags" : [ "Organization" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "$select",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "include-inactive",
+          "in" : "query",
+          "required" : false,
+          "type" : "boolean"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/Organization"
+            }
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "applicationId",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/applicationId-v2/{applicationId}" : {
+      "get" : {
+        "tags" : [ "Organization" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "$select",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "include-inactive",
+          "in" : "query",
+          "required" : false,
+          "type" : "boolean"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Organization"
+              }
+            }
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "applicationId",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/applications/{applicationId}" : {
+      "get" : {
+        "tags" : [ "LSP Application" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "$select",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "include-inactive",
+          "in" : "query",
+          "required" : false,
+          "type" : "boolean"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/LSPApplication"
+            }
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "applicationId",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/identifications/{id}" : {
+      "get" : {
+        "tags" : [ "Organization", "Practitioner" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "$select",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "include-inactive",
+          "in" : "query",
+          "required" : false,
+          "type" : "boolean"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/OrganizationOrIndividual"
+            }
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/individuals" : {
+      "get" : {
+        "tags" : [ "Practitioner" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "$filter",
+          "in" : "query",
+          "required" : false,
+          "type" : "string",
+          "x-example" : "speciality eq 'Apotheker' and city eq 'Utrecht'"
+        }, {
+          "name" : "$search",
+          "in" : "query",
+          "required" : false,
+          "type" : "string",
+          "x-example" : "apotheker utrecht\napotheker (rotterdam or den haag)\napotheker jan* utrecht"
+        }, {
+          "name" : "$select",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Individual"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Practitioner" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/IndividualInput"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Status 201",
+            "schema" : {
+              "$ref" : "#/definitions/Individual"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          }
+        }
+      }
+    },
+    "/individuals/{id}" : {
+      "get" : {
+        "tags" : [ "Practitioner" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "$select",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/Individual"
+            }
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Practitioner" ],
+        "parameters" : [ ],
+        "responses" : {
+          "204" : {
+            "description" : "Status 204"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "Practitioner" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/IndividualInput"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "description" : "Status 202",
+            "schema" : {
+              "$ref" : "#/definitions/Individual"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/individuals/{id}/addresses" : {
+      "post" : {
+        "tags" : [ "Practitioner" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/AddressInput"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Status 201",
+            "schema" : {
+              "$ref" : "#/definitions/Address"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/individuals/{id}/addresses/{index}" : {
+      "delete" : {
+        "tags" : [ "Practitioner" ],
+        "parameters" : [ ],
+        "responses" : {
+          "204" : {
+            "description" : "Status 204"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "Practitioner" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/AddressInput"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "description" : "Status 202",
+            "schema" : {
+              "$ref" : "#/definitions/Address"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      }, {
+        "name" : "index",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/individuals/{id}/attachments" : {
+      "post" : {
+        "tags" : [ "Practitioner" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/AttachmentInput"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Status 201",
+            "schema" : {
+              "$ref" : "#/definitions/Attachment"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/individuals/{id}/attachments/{index}" : {
+      "delete" : {
+        "tags" : [ "Practitioner" ],
+        "parameters" : [ ],
+        "responses" : {
+          "204" : {
+            "description" : "Status 204"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "Practitioner" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/AttachmentInput"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "description" : "Status 202",
+            "schema" : {
+              "$ref" : "#/definitions/Attachment"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      }, {
+        "name" : "index",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/individuals/{id}/credentials" : {
+      "post" : {
+        "tags" : [ "Practitioner" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/CredentialInput"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Status 201",
+            "schema" : {
+              "$ref" : "#/definitions/Credential"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/individuals/{id}/credentials/{index}" : {
+      "delete" : {
+        "tags" : [ "Practitioner" ],
+        "parameters" : [ ],
+        "responses" : {
+          "204" : {
+            "description" : "Status 204"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "Practitioner" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/CredentialInput"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "description" : "Status 202",
+            "schema" : {
+              "$ref" : "#/definitions/Credential"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      }, {
+        "name" : "index",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/individuals/{id}/identifications" : {
+      "post" : {
+        "tags" : [ "Practitioner" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/IdentificationInput"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Status 201",
+            "schema" : {
+              "$ref" : "#/definitions/Identification"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/individuals/{id}/identifications/{index}" : {
+      "delete" : {
+        "tags" : [ "Practitioner" ],
+        "parameters" : [ ],
+        "responses" : {
+          "204" : {
+            "description" : "Status 204"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "Practitioner" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/IdentificationInput"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "description" : "Status 202",
+            "schema" : {
+              "$ref" : "#/definitions/Identification"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      }, {
+        "name" : "index",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/individuals/{id}/names" : {
+      "post" : {
+        "tags" : [ "Practitioner" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/IndividualNameInput"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Status 201",
+            "schema" : {
+              "$ref" : "#/definitions/IndividualName"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/individuals/{id}/names/{index}" : {
+      "delete" : {
+        "tags" : [ "Practitioner" ],
+        "parameters" : [ ],
+        "responses" : {
+          "204" : {
+            "description" : "Status 204"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "Practitioner" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/IndividualNameInput"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "description" : "Status 202",
+            "schema" : {
+              "$ref" : "#/definitions/IndividualName"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      }, {
+        "name" : "index",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/individuals/{id}/organizations" : {
+      "get" : {
+        "tags" : [ "Practitioner" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "$select",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Organization"
+              }
+            }
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/individuals/{id}/relations" : {
+      "get" : {
+        "tags" : [ "Practitioner" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "$select",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/WorksAt"
+              }
+            }
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/individuals/{id}/services" : {
+      "post" : {
+        "tags" : [ "Practitioner" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ElectronicServiceInput"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Status 201",
+            "schema" : {
+              "$ref" : "#/definitions/ElectronicService"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/individuals/{id}/services/{index}" : {
+      "delete" : {
+        "tags" : [ "Practitioner" ],
+        "parameters" : [ ],
+        "responses" : {
+          "204" : {
+            "description" : "Status 204"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "Practitioner" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ElectronicServiceInput"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "description" : "Status 202",
+            "schema" : {
+              "$ref" : "#/definitions/ElectronicService"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      }, {
+        "name" : "index",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/individuals/{id}/telecoms" : {
+      "post" : {
+        "tags" : [ "Practitioner" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/TelecomInput"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Status 201",
+            "schema" : {
+              "$ref" : "#/definitions/Telecom"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/individuals/{id}/telecoms/{index}" : {
+      "delete" : {
+        "tags" : [ "Practitioner" ],
+        "parameters" : [ ],
+        "responses" : {
+          "204" : {
+            "description" : "Status 204"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "Practitioner" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/TelecomInput"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "description" : "Status 202",
+            "schema" : {
+              "$ref" : "#/definitions/Telecom"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      }, {
+        "name" : "index",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/individuals/{id}/types" : {
+      "post" : {
+        "tags" : [ "Practitioner" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/TypeInput"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Status 201",
+            "schema" : {
+              "$ref" : "#/definitions/Type"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/individuals/{id}/types/{index}" : {
+      "delete" : {
+        "tags" : [ "Practitioner" ],
+        "parameters" : [ ],
+        "responses" : {
+          "204" : {
+            "description" : "Status 204"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "Practitioner" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/TypeInput"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "description" : "Status 202",
+            "schema" : {
+              "$ref" : "#/definitions/Type"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      }, {
+        "name" : "index",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/lspOrganizations" : {
+      "get" : {
+        "tags" : [ "LSP Organization" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "$filter",
+          "in" : "query",
+          "required" : false,
+          "type" : "string",
+          "x-example" : "type eq 'NICTIZ:J8' or type eq 'NICTIZ:K3'"
+        }, {
+          "name" : "$search",
+          "in" : "query",
+          "required" : true,
+          "type" : "string",
+          "x-example" : "apotheek janssen utrecht"
+        }, {
+          "name" : "$select",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "include-inactive",
+          "in" : "query",
+          "required" : false,
+          "type" : "boolean"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Organization"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      }
+    },
+    "/organizations" : {
+      "get" : {
+        "tags" : [ "Organization" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "$filter",
+          "in" : "query",
+          "required" : false,
+          "type" : "string",
+          "x-example" : "name eq 'Apotheek Janssen' and city eq 'Utrecht'"
+        }, {
+          "name" : "$search",
+          "in" : "query",
+          "required" : false,
+          "type" : "string",
+          "x-example" : "janssen utrecht\n(janssen or pieterssen) utrecht\njan* utrecht"
+        }, {
+          "name" : "$select",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "include-inactive",
+          "in" : "query",
+          "required" : false,
+          "type" : "boolean"
+        }, {
+          "name" : "include-suborg",
+          "in" : "query",
+          "required" : false,
+          "type" : "boolean",
+          "description" : "Only valid in combination with $filter=identification_type eq 'MedMij'"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Organization"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Organization" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/OrganizationInput"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Status 201",
+            "schema" : {
+              "$ref" : "#/definitions/Organization"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          }
+        }
+      }
+    },
+    "/organizations/_summary" : {
+      "get" : {
+        "tags" : [ "Organization" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "$filter",
+          "in" : "query",
+          "required" : true,
+          "type" : "string",
+          "x-example" : "name eq 'Apotheek Janssen B.V.' and city eq 'Utrecht'"
+        }, {
+          "name" : "$select",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "include-inactive",
+          "in" : "query",
+          "required" : false,
+          "type" : "boolean"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/OrganizationSummary"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      }
+    },
+    "/organizations/{id}" : {
+      "get" : {
+        "tags" : [ "Organization" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "$select",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "include-inactive",
+          "in" : "query",
+          "required" : false,
+          "type" : "boolean"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/Organization"
+            }
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Organization" ],
+        "parameters" : [ ],
+        "responses" : {
+          "204" : {
+            "description" : "Status 204"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "Organization" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/OrganizationInput"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "description" : "Status 202",
+            "schema" : {
+              "$ref" : "#/definitions/Organization"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/organizations/{id}/_summary" : {
+      "get" : {
+        "tags" : [ "Organization" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "$select",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "include-inactive",
+          "in" : "query",
+          "required" : false,
+          "type" : "boolean"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/OrganizationSummary"
+            }
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/organizations/{id}/addresses" : {
+      "post" : {
+        "tags" : [ "Organization" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/AddressInput"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Status 201",
+            "schema" : {
+              "$ref" : "#/definitions/Address"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/organizations/{id}/addresses/{index}" : {
+      "delete" : {
+        "tags" : [ "Organization" ],
+        "parameters" : [ ],
+        "responses" : {
+          "204" : {
+            "description" : "Status 204"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "Organization" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/AddressInput"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "description" : "Status 202",
+            "schema" : {
+              "$ref" : "#/definitions/Address"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      }, {
+        "name" : "index",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/organizations/{id}/attachments" : {
+      "post" : {
+        "tags" : [ "Organization" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/AttachmentInput"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Status 201",
+            "schema" : {
+              "$ref" : "#/definitions/Attachment"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/organizations/{id}/attachments/{index}" : {
+      "delete" : {
+        "tags" : [ "Organization" ],
+        "parameters" : [ ],
+        "responses" : {
+          "204" : {
+            "description" : "Status 204"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "Organization" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/AttachmentInput"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "description" : "Status 202",
+            "schema" : {
+              "$ref" : "#/definitions/Attachment"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      }, {
+        "name" : "index",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/organizations/{id}/credentials" : {
+      "post" : {
+        "tags" : [ "Organization" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/CredentialInput"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Status 201",
+            "schema" : {
+              "$ref" : "#/definitions/Credential"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/organizations/{id}/credentials/{index}" : {
+      "delete" : {
+        "tags" : [ "Organization" ],
+        "parameters" : [ ],
+        "responses" : {
+          "204" : {
+            "description" : "Status 204"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "Organization" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/CredentialInput"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "description" : "Status 202",
+            "schema" : {
+              "$ref" : "#/definitions/Credential"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      }, {
+        "name" : "index",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/organizations/{id}/identifications" : {
+      "post" : {
+        "tags" : [ "Organization" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/IdentificationInput"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Status 201",
+            "schema" : {
+              "$ref" : "#/definitions/Identification"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/organizations/{id}/identifications/{index}" : {
+      "delete" : {
+        "tags" : [ "Organization" ],
+        "parameters" : [ ],
+        "responses" : {
+          "204" : {
+            "description" : "Status 204"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "Organization" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/IdentificationInput"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "description" : "Status 202",
+            "schema" : {
+              "$ref" : "#/definitions/Identification"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      }, {
+        "name" : "index",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/organizations/{id}/individuals" : {
+      "get" : {
+        "tags" : [ "Organization" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "$select",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Individual"
+              }
+            }
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/organizations/{id}/mainOrganization" : {
+      "get" : {
+        "tags" : [ "Organization" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "$select",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "include-inactive",
+          "in" : "query",
+          "required" : false,
+          "type" : "boolean"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Organization"
+              }
+            }
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/organizations/{id}/names" : {
+      "post" : {
+        "tags" : [ "Organization" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/OrganizationNameInput"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Status 201",
+            "schema" : {
+              "$ref" : "#/definitions/OrganizationName"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/organizations/{id}/names/{index}" : {
+      "delete" : {
+        "tags" : [ "Organization" ],
+        "parameters" : [ ],
+        "responses" : {
+          "204" : {
+            "description" : "Status 204"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "Organization" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/OrganizationNameInput"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "description" : "Status 202",
+            "schema" : {
+              "$ref" : "#/definitions/OrganizationName"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      }, {
+        "name" : "index",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/organizations/{id}/relations" : {
+      "get" : {
+        "tags" : [ "Organization" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "$select",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Relation"
+              }
+            }
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/organizations/{id}/services" : {
+      "post" : {
+        "tags" : [ "Organization" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ElectronicServiceInput"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Status 201",
+            "schema" : {
+              "$ref" : "#/definitions/ElectronicService"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/organizations/{id}/services/{index}" : {
+      "delete" : {
+        "tags" : [ "Organization" ],
+        "parameters" : [ ],
+        "responses" : {
+          "204" : {
+            "description" : "Status 204"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "Organization" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ElectronicServiceInput"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "description" : "Status 202",
+            "schema" : {
+              "$ref" : "#/definitions/ElectronicService"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      }, {
+        "name" : "index",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/organizations/{id}/subOrganizations" : {
+      "get" : {
+        "tags" : [ "Organization" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "$select",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "include-inactive",
+          "in" : "query",
+          "required" : false,
+          "type" : "boolean"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Organization"
+              }
+            }
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/organizations/{id}/telecoms" : {
+      "post" : {
+        "tags" : [ "Organization" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/TelecomInput"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Status 201",
+            "schema" : {
+              "$ref" : "#/definitions/Telecom"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/organizations/{id}/telecoms/{index}" : {
+      "delete" : {
+        "tags" : [ "Organization" ],
+        "parameters" : [ ],
+        "responses" : {
+          "204" : {
+            "description" : "Status 204"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "Organization" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/TelecomInput"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "description" : "Status 202",
+            "schema" : {
+              "$ref" : "#/definitions/Telecom"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      }, {
+        "name" : "index",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/organizations/{id}/types" : {
+      "post" : {
+        "tags" : [ "Organization" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/TypeInput"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Status 201",
+            "schema" : {
+              "$ref" : "#/definitions/Type"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/organizations/{id}/types/{index}" : {
+      "delete" : {
+        "tags" : [ "Organization" ],
+        "parameters" : [ ],
+        "responses" : {
+          "204" : {
+            "description" : "Status 204"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "Organization" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/TypeInput"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "description" : "Status 202",
+            "schema" : {
+              "$ref" : "#/definitions/Type"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      }, {
+        "name" : "index",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/subOrganization" : {
+      "post" : {
+        "tags" : [ "SubOrganization Relation" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "mainOrganizationId",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "subOrganizationId",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/SubOrganizationInput"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Status 201",
+            "schema" : {
+              "$ref" : "#/definitions/SubOrganization"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "SubOrganization Relation" ],
+        "parameters" : [ ],
+        "responses" : {
+          "204" : {
+            "description" : "Status 204"
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "SubOrganization Relation" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/SubOrganizationInput"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "description" : "Status 202",
+            "schema" : {
+              "$ref" : "#/definitions/SubOrganization"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      }
+    },
+    "/subOrganization/{id}" : {
+      "get" : {
+        "tags" : [ "SubOrganization Relation" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "$select",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/SubOrganization"
+            }
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "SubOrganization Relation" ],
+        "parameters" : [ ],
+        "responses" : {
+          "204" : {
+            "description" : "Status 204"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "SubOrganization Relation" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/SubOrganizationInput"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/SubOrganization"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/agb/{agbCode}" : {
+      "get" : {
+        "description" : "Searches for AGB_Onderneming/AGB_Vestiging",
+        "tags" : [ "Organization" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "$select",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "include-inactive",
+          "in" : "query",
+          "required" : false,
+          "type" : "boolean"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/Organization"
+            }
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "agbCode",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/ura/{uraNumber}" : {
+      "get" : {
+        "tags" : [ "Organization" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "$select",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "include-inactive",
+          "in" : "query",
+          "required" : false,
+          "type" : "boolean"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/Organization"
+            }
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "uraNumber",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/uzi/{uziNumber}" : {
+      "get" : {
+        "tags" : [ "Practitioner" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "$select",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/Individual"
+            }
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "uziNumber",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/worksAt" : {
+      "post" : {
+        "tags" : [ "WorksAt Relation" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "organizationId",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "individualId",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/WorksAtInput"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Status 201",
+            "schema" : {
+              "$ref" : "#/definitions/WorksAt"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "WorksAt Relation" ],
+        "parameters" : [ ],
+        "responses" : {
+          "204" : {
+            "description" : "Status 204"
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "WorksAt Relation" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/WorksAtInput"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "description" : "Status 202",
+            "schema" : {
+              "$ref" : "#/definitions/WorksAt"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      }
+    },
+    "/worksAt/{id}" : {
+      "get" : {
+        "tags" : [ "WorksAt Relation" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "$select",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status 200",
+            "schema" : {
+              "$ref" : "#/definitions/WorksAt"
+            }
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "WorksAt Relation" ],
+        "parameters" : [ ],
+        "responses" : {
+          "204" : {
+            "description" : "Status 204"
+          },
+          "401" : {
+            "description" : "Status 401"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "WorksAt Relation" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/WorksAtInput"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "description" : "Status 202",
+            "schema" : {
+              "$ref" : "#/definitions/WorksAt"
+            }
+          },
+          "400" : {
+            "description" : "Status 400"
+          },
+          "404" : {
+            "description" : "Status 404"
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "required" : true,
+        "type" : "string"
+      } ]
+    }
+  },
+  "definitions" : {
+    "Organization" : {
+      "type" : "object",
+      "properties" : {
+        "_self" : {
+          "type" : "string"
+        },
+        "_className" : {
+          "type" : "string"
+        },
+        "_id" : {
+          "type" : "string"
+        },
+        "active" : {
+          "type" : "boolean",
+          "default" : true
+        },
+        "author" : {
+          "type" : "string"
+        },
+        "addresses" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Address"
+          }
+        },
+        "telecoms" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Telecom"
+          }
+        },
+        "identifications" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Identification"
+          }
+        },
+        "credentials" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Credential"
+          }
+        },
+        "electronicServices" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ElectronicService"
+          }
+        },
+        "attachments" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Attachment"
+          }
+        },
+        "speciality" : {
+          "type" : "string"
+        },
+        "comment" : {
+          "type" : "string"
+        },
+        "types" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Type"
+          }
+        },
+        "timestamp" : {
+          "type" : "string"
+        },
+        "names" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/OrganizationName"
+          }
+        },
+        "type" : {
+          "type" : "array",
+          "description" : "Deprecated. Supported until 31-12-2020",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "applicationIds" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "ura" : {
+          "type" : "string"
+        },
+        "displayName" : {
+          "type" : "string"
+        },
+        "medMijZorgaanbiedernaam" : {
+          "type" : "string"
+        }
+      }
+    },
+    "OrganizationSummary" : {
+      "type" : "object",
+      "properties" : {
+        "_self" : {
+          "type" : "string"
+        },
+        "_id" : {
+          "type" : "string"
+        },
+        "ura" : {
+          "type" : "string"
+        },
+        "displayName" : {
+          "type" : "string"
+        },
+        "applicationIds" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "type" : {
+          "type" : "array",
+          "description" : "Deprecated. Supported until 31-12-2020",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "types" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Type"
+          }
+        }
+      }
+    },
+    "Individual" : {
+      "type" : "object",
+      "properties" : {
+        "_self" : {
+          "type" : "string"
+        },
+        "_className" : {
+          "type" : "string"
+        },
+        "_id" : {
+          "type" : "string"
+        },
+        "active" : {
+          "type" : "boolean",
+          "default" : true
+        },
+        "author" : {
+          "type" : "string"
+        },
+        "addresses" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Address"
+          }
+        },
+        "telecoms" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Telecom"
+          }
+        },
+        "identifications" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Identification"
+          }
+        },
+        "credentials" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Credential"
+          }
+        },
+        "electronicServices" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ElectronicService"
+          }
+        },
+        "attachments" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Attachment"
+          }
+        },
+        "speciality" : {
+          "type" : "string",
+          "example" : "1.000"
+        },
+        "comment" : {
+          "type" : "string"
+        },
+        "types" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Type"
+          }
+        },
+        "timestamp" : {
+          "type" : "string"
+        },
+        "names" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/IndividualName"
+          }
+        },
+        "gender" : {
+          "type" : "string",
+          "enum" : [ "male", "female", "other", "unknown" ]
+        },
+        "doB" : {
+          "type" : "string"
+        },
+        "languages" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "enum" : [ "ar", "bn", "cs", "da", "de", "de-AT", "de-CH", "de-DE", "el", "en", "en-AU", "en-CA", "en-GB", "en-IN", "en-NZ", "en-SG", "en-US", "es", "es-AR", "es-ES", "es-UY", "fi", "fr", "fr-BE", "fr-CH", "fr-FR", "fy", "fy-NL", "hi", "hr", "it", "it-CH", "it-IT", "ja", "ko", "nl", "nl-BE", "nl-NL", "no", "no-NO", "pa", "pt", "pt-BR", "ru", "ru-RU", "sr", "sr-SP", "sv", "sv-SE", "te", "zh", "zh-CN", "zh-HK", "zh-SG", "zh-TW" ]
+          }
+        },
+        "uzi" : {
+          "type" : "string"
+        },
+        "displayName" : {
+          "type" : "string"
+        }
+      }
+    },
+    "OrganizationOrIndividual" : {
+      "type" : "object",
+      "properties" : {
+        "_self" : {
+          "type" : "string"
+        },
+        "_className" : {
+          "type" : "string"
+        },
+        "_id" : {
+          "type" : "string"
+        },
+        "active" : {
+          "type" : "boolean",
+          "default" : true
+        },
+        "author" : {
+          "type" : "string"
+        },
+        "addresses" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Address"
+          }
+        },
+        "telecoms" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Telecom"
+          }
+        },
+        "identifications" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Identification"
+          }
+        },
+        "credentials" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Credential"
+          }
+        },
+        "electronicServices" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ElectronicService"
+          }
+        },
+        "attachments" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Attachment"
+          }
+        },
+        "speciality" : {
+          "type" : "string"
+        },
+        "comment" : {
+          "type" : "string"
+        },
+        "types" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Type"
+          }
+        },
+        "timestamp" : {
+          "type" : "string"
+        },
+        "names" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/OrganizationNameOrIndividualName"
+          }
+        },
+        "type" : {
+          "type" : "array",
+          "description" : "Deprecated. Supported until 31-12-2020",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "applicationIds" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "ura" : {
+          "type" : "string"
+        },
+        "displayName" : {
+          "type" : "string"
+        },
+        "gender" : {
+          "type" : "string"
+        },
+        "doB" : {
+          "type" : "string"
+        },
+        "languages" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "uzi" : {
+          "type" : "string"
+        }
+      }
+    },
+    "OrganizationName" : {
+      "type" : "object",
+      "properties" : {
+        "author" : {
+          "type" : "string"
+        },
+        "fullName" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string",
+          "example" : "Display"
+        },
+        "preferred" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "active" : {
+          "type" : "boolean",
+          "default" : true
+        },
+        "index" : {
+          "type" : "string"
+        },
+        "timestamp" : {
+          "type" : "string"
+        }
+      }
+    },
+    "IndividualName" : {
+      "type" : "object",
+      "properties" : {
+        "author" : {
+          "type" : "string"
+        },
+        "active" : {
+          "type" : "boolean",
+          "default" : true
+        },
+        "familyName" : {
+          "type" : "string"
+        },
+        "firstName" : {
+          "type" : "string"
+        },
+        "fullName" : {
+          "type" : "string"
+        },
+        "preferred" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "prefix" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string",
+          "example" : "Display"
+        },
+        "index" : {
+          "type" : "string"
+        },
+        "timestamp" : {
+          "type" : "string"
+        }
+      }
+    },
+    "OrganizationNameOrIndividualName" : {
+      "type" : "object",
+      "properties" : {
+        "author" : {
+          "type" : "string"
+        },
+        "fullName" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string"
+        },
+        "preferred" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "active" : {
+          "type" : "boolean",
+          "default" : true
+        },
+        "familyName" : {
+          "type" : "string"
+        },
+        "firstName" : {
+          "type" : "string"
+        },
+        "prefix" : {
+          "type" : "string"
+        },
+        "index" : {
+          "type" : "string"
+        },
+        "timestamp" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Address" : {
+      "type" : "object",
+      "properties" : {
+        "author" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string",
+          "example" : "Practice"
+        },
+        "active" : {
+          "type" : "boolean",
+          "default" : true
+        },
+        "firstLine" : {
+          "type" : "string"
+        },
+        "address" : {
+          "type" : "string"
+        },
+        "streetName" : {
+          "type" : "string"
+        },
+        "streetNumber" : {
+          "type" : "string"
+        },
+        "postalCode" : {
+          "type" : "string"
+        },
+        "city" : {
+          "type" : "string"
+        },
+        "state" : {
+          "type" : "string"
+        },
+        "country" : {
+          "type" : "string"
+        },
+        "geolocation" : {
+          "type" : "string"
+        },
+        "index" : {
+          "type" : "string"
+        },
+        "timestamp" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Telecom" : {
+      "type" : "object",
+      "properties" : {
+        "author" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string",
+          "example" : "Phone"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "value" : {
+          "type" : "string"
+        },
+        "active" : {
+          "type" : "boolean",
+          "default" : true
+        },
+        "preferred" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "index" : {
+          "type" : "string"
+        },
+        "timestamp" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Identification" : {
+      "type" : "object",
+      "properties" : {
+        "author" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string"
+        },
+        "value" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "active" : {
+          "type" : "boolean",
+          "default" : true
+        },
+        "index" : {
+          "type" : "string"
+        },
+        "timestamp" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Credential" : {
+      "type" : "object",
+      "properties" : {
+        "author" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string"
+        },
+        "active" : {
+          "type" : "boolean",
+          "default" : true
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "index" : {
+          "type" : "string"
+        },
+        "timestamp" : {
+          "type" : "string"
+        }
+      }
+    },
+    "ElectronicService" : {
+      "type" : "object",
+      "properties" : {
+        "_className" : {
+          "type" : "string"
+        },
+        "author" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string"
+        },
+        "index" : {
+          "type" : "string"
+        },
+        "active" : {
+          "type" : "boolean",
+          "description" : "Deprecated for objects of type LSP Application. Supported for objects of type LSP Application until 31-12-2021",
+          "default" : true
+        },
+        "value" : {
+          "type" : "string"
+        },
+        "address" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "timestamp" : {
+          "type" : "string"
+        },
+        "applicationId" : {
+          "type" : "string"
+        },
+        "systemRoles" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "conformances" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Conformance"
+          }
+        },
+        "status" : {
+          "type" : "string",
+          "example" : "active"
+        },
+        "gegevensdienstId" : {
+          "type" : "string"
+        },
+        "weergavenaam" : {
+          "type" : "string"
+        },
+        "interfaceversies" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Interfaceversie"
+          }
+        },
+        "authorizationEndpoint" : {
+          "$ref" : "#/definitions/AuthorizationEndpoint"
+        },
+        "tokenEndpoint" : {
+          "$ref" : "#/definitions/TokenEndpoint"
+        },
+        "abonneren" : {
+          "$ref" : "#/definitions/Abonneren"
+        },
+        "systeemrollen" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Systeemrol"
+          }
+        }
+      }
+    },
+    "LSPApplication" : {
+      "type" : "object",
+      "properties" : {
+        "_self" : {
+          "type" : "string"
+        },
+        "_className" : {
+          "type" : "string"
+        },
+        "author" : {
+          "type" : "string"
+        },
+        "active" : {
+          "type" : "boolean",
+          "description" : "Deprecated. Supported until 31-12-2021",
+          "default" : true
+        },
+        "address" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "applicationId" : {
+          "type" : "string"
+        },
+        "systemRoles" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "conformances" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Conformance"
+          }
+        },
+        "status" : {
+          "type" : "string",
+          "example" : "active"
+        },
+        "timestamp" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Conformance" : {
+      "type" : "object",
+      "properties" : {
+        "interactionId" : {
+          "type" : "string"
+        },
+        "send" : {
+          "type" : "boolean",
+          "default" : true
+        },
+        "receive" : {
+          "type" : "boolean",
+          "default" : true
+        }
+      }
+    },
+    "Interfaceversie" : {
+      "type" : "object",
+      "properties" : {
+        "interfaceversieId" : {
+          "type" : "string"
+        }
+      }
+    },
+    "AuthorizationEndpoint" : {
+      "type" : "object",
+      "properties" : {
+        "authorizationEndpointuri" : {
+          "type" : "string"
+        }
+      }
+    },
+    "TokenEndpoint" : {
+      "type" : "object",
+      "properties" : {
+        "tokenEndpointuri" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Abonneren" : {
+      "type" : "object",
+      "properties" : {
+        "maximaleDuur" : {
+          "type" : "string"
+        },
+        "subscriptionEndpointuri" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Systeemrol" : {
+      "type" : "object",
+      "properties" : {
+        "systeemrolcode" : {
+          "type" : "string"
+        },
+        "resourceEndpoint" : {
+          "$ref" : "#/definitions/ResourceEndpoint"
+        }
+      }
+    },
+    "ResourceEndpoint" : {
+      "type" : "object",
+      "properties" : {
+        "resourceEndpointuri" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Attachment" : {
+      "type" : "object",
+      "properties" : {
+        "author" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "mimeType" : {
+          "type" : "string"
+        },
+        "data" : {
+          "type" : "string"
+        },
+        "index" : {
+          "type" : "string"
+        },
+        "timestamp" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Type" : {
+      "type" : "object",
+      "properties" : {
+        "author" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string"
+        },
+        "code" : {
+          "type" : "string"
+        },
+        "displayName" : {
+          "type" : "string"
+        },
+        "active" : {
+          "type" : "boolean",
+          "default" : true
+        },
+        "index" : {
+          "type" : "string"
+        },
+        "timestamp" : {
+          "type" : "string"
+        }
+      }
+    },
+    "SubOrganization" : {
+      "type" : "object",
+      "properties" : {
+        "_self" : {
+          "type" : "string"
+        },
+        "_className" : {
+          "type" : "string"
+        },
+        "_id" : {
+          "type" : "string"
+        },
+        "author" : {
+          "type" : "string"
+        },
+        "mainOrganizationId" : {
+          "type" : "string"
+        },
+        "subOrganizationId" : {
+          "type" : "string"
+        },
+        "timestamp" : {
+          "type" : "string"
+        }
+      }
+    },
+    "WorksAt" : {
+      "type" : "object",
+      "properties" : {
+        "_self" : {
+          "type" : "string"
+        },
+        "_className" : {
+          "type" : "string"
+        },
+        "_id" : {
+          "type" : "string"
+        },
+        "author" : {
+          "type" : "string"
+        },
+        "organizationId" : {
+          "type" : "string"
+        },
+        "individualId" : {
+          "type" : "string"
+        },
+        "availability" : {
+          "type" : "string"
+        },
+        "telecoms" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Telecom"
+          }
+        },
+        "speciality" : {
+          "type" : "string",
+          "example" : "1.000"
+        },
+        "timestamp" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Relation" : {
+      "type" : "object",
+      "properties" : {
+        "_self" : {
+          "type" : "string"
+        },
+        "_className" : {
+          "type" : "string"
+        },
+        "_id" : {
+          "type" : "string"
+        },
+        "author" : {
+          "type" : "string"
+        },
+        "mainOrganizationId" : {
+          "type" : "string"
+        },
+        "subOrganizationId" : {
+          "type" : "string"
+        },
+        "organizationId" : {
+          "type" : "string"
+        },
+        "individualId" : {
+          "type" : "string"
+        },
+        "availability" : {
+          "type" : "string"
+        },
+        "telecoms" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Telecom"
+          }
+        },
+        "speciality" : {
+          "type" : "string",
+          "example" : "1.000"
+        },
+        "timestamp" : {
+          "type" : "string"
+        }
+      }
+    },
+    "OrganizationInput" : {
+      "type" : "object",
+      "properties" : {
+        "addresses" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/AddressInput"
+          }
+        },
+        "telecoms" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/TelecomInput"
+          }
+        },
+        "identifications" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/IdentificationInput"
+          }
+        },
+        "credentials" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/CredentialInput"
+          }
+        },
+        "electronicServices" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ElectronicServiceInput"
+          }
+        },
+        "attachments" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/AttachmentInput"
+          }
+        },
+        "speciality" : {
+          "type" : "string"
+        },
+        "comment" : {
+          "type" : "string"
+        },
+        "types" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/TypeInput"
+          }
+        },
+        "names" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/OrganizationNameInput"
+          }
+        },
+        "type" : {
+          "type" : "array",
+          "description" : "Deprecated. Supported until 31-12-2020",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "IndividualInput" : {
+      "type" : "object",
+      "properties" : {
+        "addresses" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/AddressInput"
+          }
+        },
+        "telecoms" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/TelecomInput"
+          }
+        },
+        "identifications" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/IdentificationInput"
+          }
+        },
+        "credentials" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/CredentialInput"
+          }
+        },
+        "electronicServices" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ElectronicServiceInput"
+          }
+        },
+        "attachments" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/AttachmentInput"
+          }
+        },
+        "speciality" : {
+          "type" : "string",
+          "example" : "1.000"
+        },
+        "comment" : {
+          "type" : "string"
+        },
+        "types" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/TypeInput"
+          }
+        },
+        "names" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/IndividualNameInput"
+          }
+        },
+        "gender" : {
+          "type" : "string",
+          "enum" : [ "male", "female", "other", "unknown" ]
+        },
+        "doB" : {
+          "type" : "string"
+        },
+        "languages" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "enum" : [ "ar", "bn", "cs", "da", "de", "de-AT", "de-CH", "de-DE", "el", "en", "en-AU", "en-CA", "en-GB", "en-IN", "en-NZ", "en-SG", "en-US", "es", "es-AR", "es-ES", "es-UY", "fi", "fr", "fr-BE", "fr-CH", "fr-FR", "fy", "fy-NL", "hi", "hr", "it", "it-CH", "it-IT", "ja", "ko", "nl", "nl-BE", "nl-NL", "no", "no-NO", "pa", "pt", "pt-BR", "ru", "ru-RU", "sr", "sr-SP", "sv", "sv-SE", "te", "zh", "zh-CN", "zh-HK", "zh-SG", "zh-TW" ]
+          }
+        }
+      }
+    },
+    "OrganizationNameInput" : {
+      "type" : "object",
+      "properties" : {
+        "fullName" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string",
+          "example" : "Display"
+        },
+        "preferred" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "active" : {
+          "type" : "boolean",
+          "default" : true
+        }
+      }
+    },
+    "IndividualNameInput" : {
+      "type" : "object",
+      "properties" : {
+        "active" : {
+          "type" : "boolean",
+          "default" : true
+        },
+        "familyName" : {
+          "type" : "string"
+        },
+        "firstName" : {
+          "type" : "string"
+        },
+        "fullName" : {
+          "type" : "string"
+        },
+        "preferred" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "prefix" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string",
+          "example" : "Display"
+        }
+      }
+    },
+    "AddressInput" : {
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string",
+          "example" : "Practice"
+        },
+        "active" : {
+          "type" : "boolean",
+          "default" : true
+        },
+        "firstLine" : {
+          "type" : "string"
+        },
+        "address" : {
+          "type" : "string"
+        },
+        "streetName" : {
+          "type" : "string"
+        },
+        "streetNumber" : {
+          "type" : "string"
+        },
+        "postalCode" : {
+          "type" : "string"
+        },
+        "city" : {
+          "type" : "string"
+        },
+        "state" : {
+          "type" : "string"
+        },
+        "country" : {
+          "type" : "string"
+        },
+        "geolocation" : {
+          "type" : "string"
+        }
+      }
+    },
+    "TelecomInput" : {
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string",
+          "example" : "Phone"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "value" : {
+          "type" : "string"
+        },
+        "active" : {
+          "type" : "boolean",
+          "default" : true
+        },
+        "preferred" : {
+          "type" : "boolean",
+          "default" : false
+        }
+      }
+    },
+    "IdentificationInput" : {
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string"
+        },
+        "value" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "active" : {
+          "type" : "boolean",
+          "default" : true
+        }
+      }
+    },
+    "CredentialInput" : {
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string"
+        },
+        "active" : {
+          "type" : "boolean",
+          "default" : true
+        },
+        "description" : {
+          "type" : "string"
+        }
+      }
+    },
+    "ElectronicServiceInput" : {
+      "type" : "object",
+      "properties" : {
+        "_className" : {
+          "type" : "string",
+          "example" : "CSC.HPD.IHE.ElectronicService"
+        },
+        "type" : {
+          "type" : "string"
+        },
+        "active" : {
+          "type" : "boolean",
+          "default" : true
+        },
+        "value" : {
+          "type" : "string"
+        },
+        "address" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "gegevensdienstId" : {
+          "type" : "string"
+        },
+        "weergavenaam" : {
+          "type" : "string"
+        },
+        "interfaceversies" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Interfaceversie"
+          }
+        },
+        "authorizationEndpoint" : {
+          "$ref" : "#/definitions/AuthorizationEndpoint"
+        },
+        "tokenEndpoint" : {
+          "$ref" : "#/definitions/TokenEndpoint"
+        },
+        "abonneren" : {
+          "$ref" : "#/definitions/Abonneren"
+        },
+        "systeemrollen" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Systeemrol"
+          }
+        }
+      }
+    },
+    "AttachmentInput" : {
+      "type" : "object",
+      "properties" : {
+        "description" : {
+          "type" : "string"
+        },
+        "mimeType" : {
+          "type" : "string"
+        },
+        "data" : {
+          "type" : "string"
+        }
+      }
+    },
+    "TypeInput" : {
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string"
+        },
+        "code" : {
+          "type" : "string"
+        },
+        "displayName" : {
+          "type" : "string"
+        },
+        "active" : {
+          "type" : "boolean",
+          "default" : true
+        }
+      }
+    },
+    "SubOrganizationInput" : {
+      "type" : "object",
+      "required" : [ "mainOrganizationId", "subOrganizationId" ],
+      "properties" : {
+        "mainOrganizationId" : {
+          "type" : "string"
+        },
+        "subOrganizationId" : {
+          "type" : "string"
+        }
+      }
+    },
+    "WorksAtInput" : {
+      "type" : "object",
+      "required" : [ "individualId", "organizationId" ],
+      "properties" : {
+        "organizationId" : {
+          "type" : "string"
+        },
+        "individualId" : {
+          "type" : "string"
+        },
+        "availability" : {
+          "type" : "string"
+        },
+        "telecoms" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Telecom"
+          }
+        },
+        "speciality" : {
+          "type" : "string",
+          "example" : "1.000"
+        }
+      }
+    }
+  }
+}
