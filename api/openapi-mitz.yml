@@ -1,29 +1,32 @@
 openapi: '3.0.3'
 info:
-  title: Zorg-AB FHIR (STU3) endpoints
+  title: Mitz
   version: '0.0.1'
   description: |
-    Beschrijving van de endpoints zoals benodigd voor de bevraging van Zorg-AB via FHIR. \
-    Deze endpoints zijn gebaseerd op de FHIR endpoints zoals beschreven op de
-    - [Publieke omgeving AORTA on FHIR](https://public.vzvz.nl/display/UBEBVLEL/AORTA+on+FHIR+specificaties+-+0.7.17)
-      - [Leeswijzer AoF - 0.7.x](https://public.vzvz.nl/display/UBEBVLEL/Leeswijzer+AoF+-+0.7.x)
-      - [MedMij Flows - 0.7.x](https://public.vzvz.nl/display/UBEBVLEL/MedMij+Flows+-+0.7.x)
-    - [MedMij implementatiestandaard Huisartsgegevens](https://informatiestandaarden.nictiz.nl/wiki/MedMij:V2020.01/FHIR_GP_Data)
-    - [MedMij FHIR Implementation Guide](https://informatiestandaarden.nictiz.nl/wiki/MedMij:V2020.01/FHIR_IG)
+    Beschrijving van de endpoints zoals benodigd voor de bevraging van Mitz. \
+    Deze endpoints zijn gebaseerd op de endpoints van Topicus en VECOZO zoals beschreven in:
+    - [Actueel overzicht Mitz-omgevingen](https://vzvz.atlassian.net/wiki/spaces/MITZ/pages/66944445/Actueel+overzicht+Mitz-omgevingen)
 
     **Let op**: alle voorbeelden in dit document zijn indicatief. Voor volledige voorbeelden
-    en uitgebreidere specificaties, wordt verwezen naar bovenstaande links.
+    en uitgebreidere specificaties, wordt verwezen naar [Mitz Service en Beheer](https://vzvz.atlassian.net/wiki/spaces/MITZ/overview?homepageId=66846726).
   
-        LET OP: deze versie kan nog fouten bevatten.
+        LET OP: Deze versie is nog verre van compleet en kan nog fouten bevatten.
   
   contact:
     email: info@vzvz.nl
 
 servers:
-  - url: https://zab.test.aorta-zorg.nl/zab-ro/fhir
-    description: Zorg-AB Test omgeving
+- url: https://mijnmitz.nl
+  description: Frontend (Topicus)
+- url: https://mijnmitz.nl/oti/mitz/
+  description: Backend (VECOZO)
+- url: https://mijnmitz.nl/reg/
+  description: Test Koppelvlak
+- url: https://ts.zorginfrastructuur.nl/
+  description: Autorisatie Server
+
  
-tags:
+# tags:
   # - name: oauth
   #   description: endpoints gerelateerd aan de autorisatie
 
@@ -89,43 +92,102 @@ paths:
   #         description: todo
 
 
-  /metadata:
-    get:
-      description: |
-        opleveren van CapabilityStatement zoals beschreven in 
-        [Simplifier.net](https://simplifier.net/nictizstu3-zib2017/dutchgeneralpractitionerpatientdataserver2017)
+#  /metadata:
+#    get:
+#      description: |
+#        opleveren van CapabilityStatement zoals beschreven in 
+#        [Simplifier.net](https://simplifier.net/nictizstu3-zib2017/dutchgeneralpractitionerpatientdataserver2017)#
+#
+#      responses:
+#        200:
+#          description: |
+#            succes \
+#            Zie: [Nictiz-STU3-Zib2017](https://github.com/Nictiz/Nictiz-STU3-Zib2017/blob/stable-2.x/Capabilitystatements/capabilitystatement-client-gp-patientdata.xml)
+#            voor een voorbeeld
+#
+#          content:
+#            application/fhir+xml:
+#              schema:
+#                description: |
+#                  Beschrijving van het CapabilityStatement \
+#                  Zie ook: https://simplifier.net/nictizstu3-zib2017/dutchgeneralpractitionerpatientdataserver2017
+#                type: object
+#                xml:
+#                  name: CapabilityStatement
+#                  namespace: http://hl7.org/fhir
+#        401:
+#          description: todo
+#        403:
+#          $ref: '#/components/responses/403'
+#        404:
+#          description: todo
+#        406:
+#          description: todo
+#        429:
+#          description: todo
 
+  /Subscription:
+    post:
+      tags: 
+        - Mitz
+      summary: blablabla
+      description: blablabla omschrijving
+      requestBody:
+        description: abc
+        content:
+          'application/json':
+            schema:  
+              $ref: '#/components/schemas/Subscription'  
+            examples:
+              jsonExample:
+                $ref: '#/components/schemas/Subscription'
       responses:
         200:
-          description: |
-            succes \
-            Zie: [Nictiz-STU3-Zib2017](https://github.com/Nictiz/Nictiz-STU3-Zib2017/blob/stable-2.x/Capabilitystatements/capabilitystatement-client-gp-patientdata.xml)
-            voor een voorbeeld
+          $ref: '#/components/responses/200'
+      security:
+        - accessToken: []
+      servers:
+        - url: https://mijnmitz.nl
+          description: Test server
 
-          content:
-            application/fhir+xml:
-              schema:
-                description: |
-                  Beschrijving van het CapabilityStatement \
-                  Zie ook: https://simplifier.net/nictizstu3-zib2017/dutchgeneralpractitionerpatientdataserver2017
-                type: object
-                xml:
-                  name: CapabilityStatement
-                  namespace: http://hl7.org/fhir
+    get:
+      tags:
+        - Mitz
+      description: |
+        opleveren van Patient resource zie [MedMij implementatiestandaard](https://informatiestandaarden.nictiz.nl/wiki/MedMij:V2020.01/FHIR_GP_Data)
+      parameters:
+        - $ref: '#/components/parameters/AORTA-ID'
+        - $ref: '#/components/parameters/AORTA-Version'
+        - name: _include
+          description: |
+            parameter om aan te geven welke elementen mee opgeleverd moeten worden.
+          in: query
+          schema:
+            type: string
+            maxLength: 100
+            pattern: 'Patient:general-practitioner'
+      responses:
+        200:
+          $ref: '#/components/responses/200-FHIR-SearchResults'
+        400:
+          $ref: '#/components/responses/400'
         401:
-          description: todo
+          $ref: '#/components/responses/401'
         403:
           $ref: '#/components/responses/403'
         404:
-          description: todo
+          $ref: '#/components/responses/404'
         406:
-          description: todo
+          $ref: '#/components/responses/406'
         429:
-          description: todo
-
+          $ref: '#/components/responses/429'
+      security:
+        - accessToken: []
 
   /Organization:
     get:
+      tags:
+        - Mitz
       description: |
         opleveren van Patient resource zie [MedMij implementatiestandaard](https://informatiestandaarden.nictiz.nl/wiki/MedMij:V2020.01/FHIR_GP_Data)
       parameters:
@@ -159,6 +221,8 @@ paths:
 
   /Practitioner:
     get:
+      tags:
+        - Mitz
       description: |
         opleveren van EpisodeOfCare (Episode) resource, zie 
         [MedMij implementatiestandaard](https://informatiestandaarden.nictiz.nl/wiki/MedMij:V2020.01/FHIR_GP_Data)
@@ -298,6 +362,13 @@ components:
         description: Nadere uitleg over de bundle met resultaten
         url: https://informatiestandaarden.nictiz.nl/wiki/MedMij:V2020.01/FHIR_VitalSigns#XIS:_response_message_2
 
+    Subscription:
+      description: JSON Abonnement
+      type: object
+      externalDocs:
+        description: JSON Abonnmenet voorbeelden
+        url: https://simplifier.net/VZVZ/examples-mitz-nl-vzvz-mitz-subscription/~json
+
   securitySchemes:
     accessToken:
       type: http
@@ -307,6 +378,8 @@ components:
         Meer uitleg over dit token is te vinden op [Confluence](https://confluence.vzvz.nl/display/UBEBVLEL/Token+specificaties+-+0.7.x#Tokenspecificaties0.7.x-InhoudenformaatvanhetAORTAaccess_token)
 
   responses:
+    200:
+      description: Succesvolle HTTP request
     200-FHIR-SearchResults:
       description: |
         Resultaat van de betreffende search query
