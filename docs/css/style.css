@@ -170,7 +170,7 @@ body.keyboard-user *:focus {
 }
 
 body.toolbar-horizontal {
-    padding-top: calc(6rem + 4rem + 39px) !important
+    padding-top: calc(4rem + 39px) !important
 }
 
 @media(max-width:1023px),
@@ -185,7 +185,7 @@ body.toolbar-horizontal .header {
 }
 
 body.toolbar-horizontal.toolbar-tray-open {
-    padding-top: calc(6rem + 4rem + 79px) !important
+    padding-top: calc(4rem + 79px) !important
 }
 
 @media(max-width:1023px),
@@ -1190,7 +1190,7 @@ html {
 }
 
 body {
-    padding-top: calc(6rem + 4rem)
+    padding-top: calc(4rem)
 }
 
 @media(max-width:1023px),
@@ -1723,7 +1723,7 @@ video {
 }
 
 body.toolbar-horizontal {
-    padding-top: calc(6rem + 4rem + 39px) !important
+    padding-top: calc(4rem + 39px) !important
 }
 
 @media(max-width:1023px),
@@ -1739,7 +1739,7 @@ body.toolbar-horizontal .header {
 
 
 body.toolbar-horizontal.toolbar-tray-open {
-    padding-top: calc(6rem + 4rem + 79px) !important
+    padding-top: calc(4rem + 79px) !important
 }
 
 @media(max-width:1023px),
