@@ -1178,7 +1178,7 @@ svg.ext {
 }
 
 .paragraph .opgemaakte-tekst a.ext:not(.button, .link) {
-    background-image: url(/themes/custom/aorta_lsp/images/icons/external.svg);
+    background-image: url(https://www.aorta-lsp.nl/themes/custom/aorta_lsp/images/icons/external.svg);
     background-size: 1em;
     background-position: bottom right;
     background-repeat: no-repeat;
