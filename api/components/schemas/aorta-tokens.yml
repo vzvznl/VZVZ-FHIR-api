@@ -54,7 +54,7 @@ AORTA-ConsentToken:
   in: header
   description: |
     AORTAonFHIR consentToken
-    Meer uitleg over dit token is te vinden op [Confluence](https://confluence.vzvz.nl/display/UBEBVLEL/Token+specificaties+-+0.7.x#Tokenspecificaties0.7.x-InhoudenformaatvanhetSAMLAORTAconsent_token)
+    Meer uitleg over dit token is te vinden op [Confluence](https://aorta-on-fhir.scrollhelp.site/aorta-on-fhir-specificaties-versie-07x/latest/token-specificaties-0-7-x)
   required: true
   schema:
     title: SAML-token
@@ -67,7 +67,7 @@ acces_token_AORTA:
   in: header
   description: |
     AORTAonFHIR accessToken \
-    Meer uitleg over dit token is te vinden op [Confluence](https://public.vzvz.nl/display/UBEBVLEL/Token+specificaties+-+0.7.x#Tokenspecificaties0.7.x-InhoudenformaatvanhetAORTAaccess_token)
+    Meer uitleg over dit token is te vinden op [Confluence](https://aorta-on-fhir.scrollhelp.site/aorta-on-fhir-specificaties-versie-07x/latest/token-specificaties-0-7-x)
   required: true
   schema:
     type: string
@@ -75,7 +75,7 @@ acces_token_AORTA:
 AORTA-Transactie:
   description: |
     AORTAonFHIR transactieToken \
-    Meer uitleg over dit token is te vinden op [Confluence](https://confluence.vzvz.nl/display/UBEBVLEL/Token+specificaties+-+0.7.x#Tokenspecificaties0.7.x-InhoudenformaatvanhetSAMLAORTAconsent_token)
+    Meer uitleg over dit token is te vinden op [Confluence](https://aorta-on-fhir.scrollhelp.site/aorta-on-fhir-specificaties-versie-07x/latest/token-specificaties-0-7-x)
   type: string
   format: SAML-token
   example: "{dummy token}"
