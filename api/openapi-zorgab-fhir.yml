@@ -1,9 +1,9 @@
 openapi: '3.0.3'
 info:
-  title: Zorg-AB FHIR (STU3) endpoints
+  title: ZORG-AB FHIR (STU3) endpoints
   version: '0.0.1'
   description: |
-    Beschrijving van de endpoints zoals benodigd voor de bevraging van Zorg-AB via FHIR. \
+    Beschrijving van de endpoints zoals benodigd voor de bevraging van ZORG-AB via FHIR. \
     Deze endpoints zijn gebaseerd op de FHIR endpoints zoals beschreven op de
     - [Publieke omgeving AORTA on FHIR](https://public.vzvz.nl/display/UBEBVLEL/AORTA+on+FHIR+specificaties+-+0.7.17)
       - [Leeswijzer AoF - 0.7.x](https://public.vzvz.nl/display/UBEBVLEL/Leeswijzer+AoF+-+0.7.x)
@@ -21,7 +21,7 @@ info:
 
 servers:
   - url: https://zab.test.aorta-zorg.nl/zab-ro/fhir
-    description: Zorg-AB Test omgeving
+    description: ZORG-AB Test omgeving
  
 tags:
   # - name: oauth
