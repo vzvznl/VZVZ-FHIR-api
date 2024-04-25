@@ -947,7 +947,7 @@ paths:
         - get_bgz:
           - 'patient/Specimen.read'  
 
-  /Document:
+  /DocumentReference:
     get:
       description: |
         ophalen van de Document zib op basis van de query zoals beschreven in de Notified-Pull Task.
