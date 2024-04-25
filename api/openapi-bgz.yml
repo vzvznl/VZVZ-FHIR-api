@@ -1144,13 +1144,13 @@ components:
   examples:
     NotifiedPullTask:
       summary: Notified-Pull Task
-      description: Zie ook [Simplifier voorbeeld](https://simplifier.net/VZVZ/nl-vzvz-notified-pull-example)
+      description: Zie ook [Simplifier voorbeeld](https://simplifier.net/vzvz/nl-vzvz-tasknotifiedpull-request-example)
       value: |
         <?xml version="1.0" encoding="UTF-8"?>
         <Task xmlns="http://hl7.org/fhir">
           <id value="nl-vzvz-Task-notified-pull-request-example"/>
           <meta>
-            <profile value="http://vzvz.nl/fhir/StructureDefinition/nl-vzvz-Task-notified-pull"/>
+            <profile value="http://vzvz.nl/fhir/StructureDefinition/nl-vzvz-TaskNotifiedPull"/>
           </meta>
           <!-- ..... -->
         </Task>
