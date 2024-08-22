@@ -18,3 +18,23 @@ De laatste specificaties van OAS is te vinden op: [OpenAPI Specification v3.1.0]
 Op basis van OAS 3.0 wordt bijbehorende 'API documentatie' gegenereerd. Deze kan men inzien via het VZVZ GitHub portaal: [vzvznl.github.io](https://vzvznl.github.io/VZVZ-FHIR-api/)
 
 OAS zorgt voor harmonisering van verschillende beschrijvingen van REST API’s en zorgt voor meer uniformiteit en verbeteringen in het bouwen, aanpassen en koppelen op REST API’s. Door de uniformering gaat de kwaliteit en snelheid aan de gebruikskant omhoog en het gebruik van OAS 3.0 maakt het testen van APIs gemakkelijker.
+
+# Designing APIs with Swagger and OpenAPI
+
+Dit boek (https://github.com/vzvznl/VZVZ-FHIR-api/blob/main/Designing%20APIs%20with%20Swagger%20and%20OpenAPI(Joshua%20S.%20Ponelat%20Lukas%20L.%20Rosenstock).pdf) heeft als doel je te helpen begrijpen hoe OpenAPI werkt, hoe het en de bijbehorende tools kunnen worden gebruikt om API's te ontwerpen, en hoe je geavanceerde en zeer specifieke workflows voor je team en organisatie kunt creëren. OpenAPI is bedoeld om delen van je workflow te automatiseren en teams de ruimte te geven om meer te bereiken. De kleine investering vooraf in het beschrijven van API's met OpenAPI wordt ruimschoots gecompenseerd door de mogelijkheden die het biedt en de nieuwe kansen die het creëert.
+
+Het boek is onderverdeeld in drie delen:
+
+Deel 1 behandelt de basiskennis van OpenAPI en introduceert je in de syntaxis en structuur van OpenAPI-definities, waardoor men in staatis om API's te beschrijven. 
+
+Deel 2 behandelt de ontwerpfase en hoe men de tools kan gebruiken om een nieuwe API te creëren en het ontwerp ervan te verfijnen. 
+
+Deel 3 is een diepere duik in enkele meer specifieke tools en workflows, met name met betrekking tot het vrijgeven of publicieren van een API aan het publiek.
+
+Samenvattend.
+
+OpenAPI is een specificatie voor het beschrijven van HTTP-gebaseerde API's, met name RESTful API's.
+Swagger is een term die verwijst naar een set tools van SmartBear. Het verwees vroeger naar de OpenAPI-specificatie zelf en wordt soms nog steeds op die manier gebruikt.
+Het beschrijven van API's door een definitie (een YAML-bestand) te schrijven, stelt je in staat om tools te gebruiken om veel API-gerelateerde processen te automatiseren.
+OpenAPI is nuttig voor consumenten, producenten en API-ontwerpers. Elk van hen kan profiteren van het kennen en gebruiken van tools die OpenAPI-definities consumeren.
+Dit boek zal uitleggen hoe je met OpenAPI kunt werken. Met deze kennis kun je uiteindelijk OpenAPI integreren in de workflows van je team en organisatie.
