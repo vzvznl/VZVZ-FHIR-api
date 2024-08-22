@@ -33,8 +33,7 @@ Deel 3 is een diepere duik in enkele meer specifieke tools en workflows, met nam
 
 Samenvattend.
 
-OpenAPI is een specificatie voor het beschrijven van HTTP-gebaseerde API's, met name RESTful API's.
-Swagger is een term die verwijst naar een set tools van SmartBear. Het verwees vroeger naar de OpenAPI-specificatie zelf en wordt soms nog steeds op die manier gebruikt.
-Het beschrijven van API's door een definitie (een YAML-bestand) te schrijven, stelt je in staat om tools te gebruiken om veel API-gerelateerde processen te automatiseren.
-OpenAPI is nuttig voor consumenten, producenten en API-ontwerpers. Elk van hen kan profiteren van het kennen en gebruiken van tools die OpenAPI-definities consumeren.
-Dit boek zal uitleggen hoe je met OpenAPI kunt werken. Met deze kennis kun je uiteindelijk OpenAPI integreren in de workflows van je team en organisatie.
+- OpenAPI is een specificatie voor het beschrijven van HTTP-gebaseerde API's, met name RESTful API's.
+- Swagger is een term die verwijst naar een set tools van SmartBear. Het verwees vroeger naar de OpenAPI-specificatie zelf en wordt soms nog steeds op die manier gebruikt.
+- Het beschrijven van API's door een definitie (een YAML-bestand) te schrijven, stelt je in staat om tools te gebruiken om veel API-gerelateerde processen te automatiseren.
+- OpenAPI is nuttig voor consumenten, producenten en API-ontwerpers. Elk van hen kan profiteren van het kennen en gebruiken van tools die OpenAPI-definities consumeren.
