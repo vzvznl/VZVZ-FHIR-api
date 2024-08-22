@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: ''
-  version: 2.9.1
+  version: 2.10.0
   title: ZORG-AB
   contact: {}
 host: zab.test.lsp.aorta-zorg.nl
@@ -2169,6 +2169,98 @@ paths:
         in: path
         required: true
         type: string
+  /subscriptions:
+    get:
+      tags:
+        - Subscription
+      produces:
+        - application/json
+      parameters: []
+      responses:
+        '200':
+          description: Status 200
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Subscription'
+        '400':
+          description: Status 400
+        '404':
+          description: Status 404
+    post:
+      tags:
+        - Subscription
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/SubscriptionInput'
+      responses:
+        '201':
+          description: Status 201
+          schema:
+            $ref: '#/definitions/Subscription'
+        '400':
+          description: Status 400
+  '/subscriptions/{id}':
+    get:
+      tags:
+        - Subscription
+      produces:
+        - application/json
+      parameters: []
+      responses:
+        '200':
+          description: Status 200
+          schema:
+            $ref: '#/definitions/Subscription'
+        '404':
+          description: Status 404
+    delete:
+      tags:
+        - Subscription
+      parameters: []
+      responses:
+        '204':
+          description: Status 204
+        '401':
+          description: Status 401
+        '404':
+          description: Status 404
+    patch:
+      tags:
+        - Subscription
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/SubscriptionInput'
+      responses:
+        '202':
+          description: Status 202
+          schema:
+            $ref: '#/definitions/Subscription'
+        '400':
+          description: Status 400
+        '401':
+          description: Status 401
+        '404':
+          description: Status 404
+    parameters:
+      - name: id
+        in: path
+        required: true
+        type: string
 definitions:
   Organization:
     type: object
@@ -3281,3 +3373,80 @@ definitions:
       speciality:
         type: string
         example: '1.000'
+  Subscription:
+    type: object
+    properties:
+      _className:
+        type: string
+        example: 'CSC.HPD.Subscription'
+      _id:
+        type: string
+      author:
+        type: string
+      channel:
+        type: object
+        properties:
+          endPoint:
+           type: string
+           example: 'https://webportaal.test.zorg-ab.nl/odata/notifications'
+          header:
+            type: array
+            items:
+              type: string
+            example: [ '$X-ID-ONLY$', '$X-SUBSCRIPTION-ID$' ]  
+          type:
+            type: string
+      end:
+        type: string
+      error:
+        type: string
+      criteria:
+        type: string
+      identifier:
+        type: string
+      reason:
+        type: string
+      status:
+        type: string
+      timestamp:
+        type: string
+  SubscriptionInput:
+    type: object
+    required:
+      - channel
+      - criteria
+      - reason
+      - status
+    properties:
+      channel:
+        type: object
+        properties:
+          endPoint:
+           type: string
+           example: 'https://webportaal.test.zorg-ab.nl/odata/notifications'
+          header:
+            type: array
+            items:
+              type: string
+            example: [ '$X-ID-ONLY$', '$X-SUBSCRIPTION-ID$' ]  
+            description: waardes $X-ID-ONLY$ en $X-SUBSCRIPTION-ID$ moeten aanwezig zijn
+          type:
+            type: string
+            example: 'rest-hook'
+            description: rest-hook is de enige toegestane waarde, en moet aanwezig zijn
+      end:
+        type: string
+        example: '2025-01-01T00:00:00'
+      criteria:
+        type: string
+        example: 'postalcode:[2225,2222];organizational:true'
+      identifier:
+        type: string
+      reason:
+        type: string
+      status:
+        type: string
+        enum:
+          - requested
+          - off
+        example: 'requested'
