@@ -2,4 +2,4 @@ api/fhirR4.yaml
 java*.zip
 token/schemas
 /archive
-*.pdf
+#*.pdf
