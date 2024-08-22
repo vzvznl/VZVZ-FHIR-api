@@ -21,7 +21,7 @@ OAS zorgt voor harmonisering van verschillende beschrijvingen van REST API’s e
 
 # Designing APIs with Swagger and OpenAPI
 
-Dit boek (https://github.com/vzvznl/VZVZ-FHIR-api/blob/main/Designing%20APIs%20with%20Swagger%20and%20OpenAPI(Joshua%20S.%20Ponelat%20Lukas%20L.%20Rosenstock).pdf) heeft als doel je te helpen begrijpen hoe OpenAPI werkt, hoe het en de bijbehorende tools kunnen worden gebruikt om API's te ontwerpen, en hoe je geavanceerde en zeer specifieke workflows voor je team en organisatie kunt creëren. OpenAPI is bedoeld om delen van je workflow te automatiseren en teams de ruimte te geven om meer te bereiken. De kleine investering vooraf in het beschrijven van API's met OpenAPI wordt ruimschoots gecompenseerd door de mogelijkheden die het biedt en de nieuwe kansen die het creëert.
+Dit [boek-Designing APIs with Swagger and OpenAPI] (https://github.com/vzvznl/VZVZ-FHIR-api/blob/main/Designing%20APIs%20with%20Swagger%20and%20OpenAPI(Joshua%20S.%20Ponelat%20Lukas%20L.%20Rosenstock).pdf) heeft als doel je te helpen begrijpen hoe OpenAPI werkt, hoe het en de bijbehorende tools kunnen worden gebruikt om API's te ontwerpen, en hoe je geavanceerde en zeer specifieke workflows voor je team en organisatie kunt creëren. OpenAPI is bedoeld om delen van je workflow te automatiseren en teams de ruimte te geven om meer te bereiken. De kleine investering vooraf in het beschrijven van API's met OpenAPI wordt ruimschoots gecompenseerd door de mogelijkheden die het biedt en de nieuwe kansen die het creëert.
 
 Het boek is onderverdeeld in drie delen:
 
