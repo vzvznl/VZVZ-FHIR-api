@@ -1,2173 +1,2019 @@
-swagger: '2.0'
+openapi: 3.0.0
 info:
-  description: ''
-  version: 2.10.0
+  description: ""
+  version: 2.11.0
   title: ZORG-AB
   contact: {}
-host: zab.test.lsp.aorta-zorg.nl
-basePath: /zab
-schemes:
-  - https
+servers:
+  - url: zab.test.lsp.aorta-zorg.nl
+
 paths:
-  '/applicationId/{applicationId}':
+  "/applicationId/{applicationId}":
     get:
       tags:
         - Organization
-      produces:
-        - application/json
       parameters:
         - name: $select
           in: query
           required: false
-          type: string
+          schema:
+            type: string
         - name: include-inactive
           in: query
           required: false
-          type: boolean
-      responses:
-        '200':
-          description: Status 200
           schema:
-            $ref: '#/definitions/Organization'
-        '404':
+            type: boolean
+      responses:
+        "200":
+          description: Status 200
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+        "404":
           description: Status 404
     parameters:
       - name: applicationId
         in: path
         required: true
-        type: string
-  '/applicationId-v2/{applicationId}':
+        schema:
+          type: string
+  "/applicationId-v2/{applicationId}":
     get:
       tags:
         - Organization
-      produces:
-        - application/json
       parameters:
         - name: $select
           in: query
           required: false
-          type: string
+          schema:
+            type: string
         - name: include-inactive
           in: query
           required: false
-          type: boolean
-      responses:
-        '200':
-          description: Status 200
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/Organization'
-        '404':
+            type: boolean
+      responses:
+        "200":
+          description: Status 200
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Organization"
+        "404":
           description: Status 404
     parameters:
       - name: applicationId
         in: path
         required: true
-        type: string
-  '/applications/{applicationId}':
+        schema:
+          type: string
+  "/applications/{applicationId}":
     get:
       tags:
         - LSP Application
-      produces:
-        - application/json
       parameters:
         - name: $select
           in: query
           required: false
-          type: string
+          schema:
+            type: string
         - name: include-inactive
           in: query
           required: false
-          type: boolean
-      responses:
-        '200':
-          description: Status 200
           schema:
-            $ref: '#/definitions/LSPApplication'
-        '404':
+            type: boolean
+      responses:
+        "200":
+          description: Status 200
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LSPApplication"
+        "404":
           description: Status 404
     parameters:
       - name: applicationId
         in: path
         required: true
-        type: string
-  '/identifications/{id}':
+        schema:
+          type: string
+  "/identifications/{id}":
     get:
       tags:
         - Organization
         - Practitioner
-      produces:
-        - application/json
       parameters:
         - name: $select
           in: query
           required: false
-          type: string
+          schema:
+            type: string
         - name: include-inactive
           in: query
           required: false
-          type: boolean
-      responses:
-        '200':
-          description: Status 200
           schema:
-            $ref: '#/definitions/OrganizationOrIndividual'
-        '404':
+            type: boolean
+      responses:
+        "200":
+          description: Status 200
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrganizationOrIndividual"
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
+        schema:
+          type: string
   /individuals:
     get:
       tags:
         - Practitioner
-      produces:
-        - application/json
       parameters:
         - name: $filter
           in: query
           required: false
-          type: string
-          x-example: speciality eq 'Apotheker' and city eq 'Utrecht'
+          example: speciality eq 'Apotheker' and city eq 'Utrecht'
+          schema:
+            type: string
         - name: $search
           in: query
           required: false
-          type: string
-          x-example: |-
+          example: |-
             apotheker utrecht
             apotheker (rotterdam or den haag)
             apotheker jan* utrecht
+          schema:
+            type: string
         - name: $select
           in: query
           required: false
-          type: string
-      responses:
-        '200':
-          description: Status 200
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/Individual'
-        '400':
+            type: string
+      responses:
+        "200":
+          description: Status 200
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Individual"
+        "400":
           description: Status 400
-        '404':
+        "404":
           description: Status 404
     post:
       tags:
         - Practitioner
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/IndividualInput'
+      requestBody:
+        $ref: "#/components/requestBodies/IndividualInput"
       responses:
-        '201':
+        "201":
           description: Status 201
-          schema:
-            $ref: '#/definitions/Individual'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Individual"
+        "400":
           description: Status 400
-  '/individuals/{id}':
+  "/individuals/{id}":
     get:
       tags:
         - Practitioner
-      produces:
-        - application/json
       parameters:
         - name: $select
           in: query
           required: false
-          type: string
+          schema:
+            type: string
       responses:
-        '200':
+        "200":
           description: Status 200
-          schema:
-            $ref: '#/definitions/Individual'
-        '404':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Individual"
+        "404":
           description: Status 404
     delete:
       tags:
         - Practitioner
-      parameters: []
       responses:
-        '204':
+        "204":
           description: Status 204
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     patch:
       tags:
         - Practitioner
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/IndividualInput'
+      requestBody:
+        $ref: "#/components/requestBodies/IndividualInput"
       responses:
-        '202':
+        "202":
           description: Status 202
-          schema:
-            $ref: '#/definitions/Individual'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Individual"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
-  '/individuals/{id}/addresses':
+        schema:
+          type: string
+  "/individuals/{id}/addresses":
     post:
       tags:
         - Practitioner
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/AddressInput'
+      requestBody:
+        $ref: "#/components/requestBodies/AddressInput"
       responses:
-        '201':
+        "201":
           description: Status 201
-          schema:
-            $ref: '#/definitions/Address'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Address"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
-  '/individuals/{id}/addresses/{index}':
+        schema:
+          type: string
+  "/individuals/{id}/addresses/{index}":
     delete:
       tags:
         - Practitioner
-      parameters: []
       responses:
-        '204':
+        "204":
           description: Status 204
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     patch:
       tags:
         - Practitioner
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/AddressInput'
+      requestBody:
+        $ref: "#/components/requestBodies/AddressInput"
       responses:
-        '202':
+        "202":
           description: Status 202
-          schema:
-            $ref: '#/definitions/Address'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Address"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
+        schema:
+          type: string
       - name: index
         in: path
         required: true
-        type: string
-  '/individuals/{id}/attachments':
+        schema:
+          type: string
+  "/individuals/{id}/attachments":
     post:
       tags:
         - Practitioner
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/AttachmentInput'
+      requestBody:
+        $ref: "#/components/requestBodies/AttachmentInput"
       responses:
-        '201':
+        "201":
           description: Status 201
-          schema:
-            $ref: '#/definitions/Attachment'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Attachment"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
-  '/individuals/{id}/attachments/{index}':
+        schema:
+          type: string
+  "/individuals/{id}/attachments/{index}":
     delete:
       tags:
         - Practitioner
-      parameters: []
       responses:
-        '204':
+        "204":
           description: Status 204
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     patch:
       tags:
         - Practitioner
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/AttachmentInput'
+      requestBody:
+        $ref: "#/components/requestBodies/AttachmentInput"
       responses:
-        '202':
+        "202":
           description: Status 202
-          schema:
-            $ref: '#/definitions/Attachment'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Attachment"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
+        schema:
+          type: string
       - name: index
         in: path
         required: true
-        type: string
-  '/individuals/{id}/credentials':
+        schema:
+          type: string
+  "/individuals/{id}/credentials":
     post:
       tags:
         - Practitioner
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/CredentialInput'
+      requestBody:
+        $ref: "#/components/requestBodies/CredentialInput"
       responses:
-        '201':
+        "201":
           description: Status 201
-          schema:
-            $ref: '#/definitions/Credential'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Credential"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
-  '/individuals/{id}/credentials/{index}':
+        schema:
+          type: string
+  "/individuals/{id}/credentials/{index}":
     delete:
       tags:
         - Practitioner
-      parameters: []
       responses:
-        '204':
+        "204":
           description: Status 204
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     patch:
       tags:
         - Practitioner
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/CredentialInput'
+      requestBody:
+        $ref: "#/components/requestBodies/CredentialInput"
       responses:
-        '202':
+        "202":
           description: Status 202
-          schema:
-            $ref: '#/definitions/Credential'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Credential"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
+        schema:
+          type: string
       - name: index
         in: path
         required: true
-        type: string
-  '/individuals/{id}/identifications':
+        schema:
+          type: string
+  "/individuals/{id}/identifications":
     post:
       tags:
         - Practitioner
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/IdentificationInput'
+      requestBody:
+        $ref: "#/components/requestBodies/IdentificationInput"
       responses:
-        '201':
+        "201":
           description: Status 201
-          schema:
-            $ref: '#/definitions/Identification'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Identification"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
-  '/individuals/{id}/identifications/{index}':
+        schema:
+          type: string
+  "/individuals/{id}/identifications/{index}":
     delete:
       tags:
         - Practitioner
-      parameters: []
       responses:
-        '204':
+        "204":
           description: Status 204
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     patch:
       tags:
         - Practitioner
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/IdentificationInput'
+      requestBody:
+        $ref: "#/components/requestBodies/IdentificationInput"
       responses:
-        '202':
+        "202":
           description: Status 202
-          schema:
-            $ref: '#/definitions/Identification'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Identification"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
+        schema:
+          type: string
       - name: index
         in: path
         required: true
-        type: string
-  '/individuals/{id}/names':
+        schema:
+          type: string
+  "/individuals/{id}/names":
     post:
       tags:
         - Practitioner
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/IndividualNameInput'
+      requestBody:
+        $ref: "#/components/requestBodies/IndividualNameInput"
       responses:
-        '201':
+        "201":
           description: Status 201
-          schema:
-            $ref: '#/definitions/IndividualName'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IndividualName"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
-  '/individuals/{id}/names/{index}':
+        schema:
+          type: string
+  "/individuals/{id}/names/{index}":
     delete:
       tags:
         - Practitioner
-      parameters: []
       responses:
-        '204':
+        "204":
           description: Status 204
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     patch:
       tags:
         - Practitioner
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/IndividualNameInput'
+      requestBody:
+        $ref: "#/components/requestBodies/IndividualNameInput"
       responses:
-        '202':
+        "202":
           description: Status 202
-          schema:
-            $ref: '#/definitions/IndividualName'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IndividualName"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
+        schema:
+          type: string
       - name: index
         in: path
         required: true
-        type: string
-  '/individuals/{id}/organizations':
+        schema:
+          type: string
+  "/individuals/{id}/organizations":
     get:
       tags:
         - Practitioner
-      produces:
-        - application/json
       parameters:
         - name: $select
           in: query
           required: false
-          type: string
-      responses:
-        '200':
-          description: Status 200
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/Organization'
-        '404':
+            type: string
+      responses:
+        "200":
+          description: Status 200
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Organization"
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
-  '/individuals/{id}/relations':
+        schema:
+          type: string
+  "/individuals/{id}/relations":
     get:
       tags:
         - Practitioner
-      produces:
-        - application/json
       parameters:
         - name: $select
           in: query
           required: false
-          type: string
+          schema:
+            type: string
       responses:
-        '200':
+        "200":
           description: Status 200
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/WorksAt'
-        '404':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/WorksAt"
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
-  '/individuals/{id}/services':
+        schema:
+          type: string
+  "/individuals/{id}/services":
     post:
       tags:
         - Practitioner
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/ElectronicServiceInput'
+      requestBody:
+        $ref: "#/components/requestBodies/ElectronicServiceInput"
       responses:
-        '201':
+        "201":
           description: Status 201
-          schema:
-            $ref: '#/definitions/ElectronicService'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ElectronicService"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
-  '/individuals/{id}/services/{index}':
+        schema:
+          type: string
+  "/individuals/{id}/services/{index}":
     delete:
       tags:
         - Practitioner
-      parameters: []
       responses:
-        '204':
+        "204":
           description: Status 204
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     patch:
       tags:
         - Practitioner
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/ElectronicServiceInput'
+      requestBody:
+        $ref: "#/components/requestBodies/ElectronicServiceInput"
       responses:
-        '202':
+        "202":
           description: Status 202
-          schema:
-            $ref: '#/definitions/ElectronicService'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ElectronicService"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
+        schema:
+          type: string
       - name: index
         in: path
         required: true
-        type: string
-  '/individuals/{id}/telecoms':
+        schema:
+          type: string
+  "/individuals/{id}/telecoms":
     post:
       tags:
         - Practitioner
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/TelecomInput'
+      requestBody:
+        $ref: "#/components/requestBodies/TelecomInput"
       responses:
-        '201':
+        "201":
           description: Status 201
-          schema:
-            $ref: '#/definitions/Telecom'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Telecom"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
-  '/individuals/{id}/telecoms/{index}':
+        schema:
+          type: string
+  "/individuals/{id}/telecoms/{index}":
     delete:
       tags:
         - Practitioner
-      parameters: []
       responses:
-        '204':
+        "204":
           description: Status 204
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     patch:
       tags:
         - Practitioner
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/TelecomInput'
+      requestBody:
+        $ref: "#/components/requestBodies/TelecomInput"
       responses:
-        '202':
+        "202":
           description: Status 202
-          schema:
-            $ref: '#/definitions/Telecom'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Telecom"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
+        schema:
+          type: string
       - name: index
         in: path
         required: true
-        type: string
-  '/individuals/{id}/types':
+        schema:
+          type: string
+  "/individuals/{id}/types":
     post:
       tags:
         - Practitioner
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/TypeInput'
+      requestBody:
+        $ref: "#/components/requestBodies/TypeInput"
       responses:
-        '201':
+        "201":
           description: Status 201
-          schema:
-            $ref: '#/definitions/Type'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Type"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
-  '/individuals/{id}/types/{index}':
+        schema:
+          type: string
+  "/individuals/{id}/types/{index}":
     delete:
       tags:
         - Practitioner
-      parameters: []
       responses:
-        '204':
+        "204":
           description: Status 204
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     patch:
       tags:
         - Practitioner
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/TypeInput'
+      requestBody:
+        $ref: "#/components/requestBodies/TypeInput"
       responses:
-        '202':
+        "202":
           description: Status 202
-          schema:
-            $ref: '#/definitions/Type'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Type"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
+        schema:
+          type: string
       - name: index
         in: path
         required: true
-        type: string
+        schema:
+          type: string
   /lspOrganizations:
     get:
       tags:
         - LSP Organization
-      produces:
-        - application/json
       parameters:
         - name: $filter
           in: query
           required: false
-          type: string
-          x-example: 'type eq ''NICTIZ:J8'' or type eq ''NICTIZ:K3'''
+          example: type eq 'NICTIZ:J8' or type eq 'NICTIZ:K3'
+          schema:
+            type: string
         - name: $search
           in: query
           required: true
-          type: string
-          x-example: apotheek janssen utrecht
+          example: apotheek janssen utrecht
+          schema:
+            type: string
         - name: $select
           in: query
           required: false
-          type: string
+          schema:
+            type: string
         - name: include-inactive
           in: query
           required: false
-          type: boolean
-      responses:
-        '200':
-          description: Status 200
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/Organization'
-        '400':
+            type: boolean
+      responses:
+        "200":
+          description: Status 200
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Organization"
+        "400":
           description: Status 400
-        '404':
+        "404":
           description: Status 404
   /organizations:
     get:
       tags:
         - Organization
-      produces:
-        - application/json
       parameters:
         - name: $filter
           in: query
           required: false
-          type: string
-          x-example: name eq 'Apotheek Janssen' and city eq 'Utrecht'
+          example: name eq 'Apotheek Janssen' and city eq 'Utrecht'
+          schema:
+            type: string
         - name: $search
           in: query
           required: false
-          type: string
-          x-example: |-
+          example: |-
             janssen utrecht
             (janssen or pieterssen) utrecht
             jan* utrecht
+          schema:
+            type: string
         - name: $select
           in: query
           required: false
-          type: string
+          schema:
+            type: string
         - name: include-inactive
           in: query
           required: false
-          type: boolean
+          schema:
+            type: boolean
         - name: include-suborg
           in: query
           required: false
-          type: boolean
-          description: Only valid in combination with $filter=identification_type eq 'MedMij'
-      responses:
-        '200':
-          description: Status 200
+          description: Only valid in combination with $filter=identification_type eq
+            'MedMij'
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/Organization'
-        '400':
+            type: boolean
+      responses:
+        "200":
+          description: Status 200
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Organization"
+        "400":
           description: Status 400
-        '404':
+        "404":
           description: Status 404
     post:
       tags:
         - Organization
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/OrganizationInput'
+      requestBody:
+        $ref: "#/components/requestBodies/OrganizationInput"
       responses:
-        '201':
+        "201":
           description: Status 201
-          schema:
-            $ref: '#/definitions/Organization'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+        "400":
           description: Status 400
   /organizations/_summary:
     get:
       tags:
         - Organization
-      produces:
-        - application/json
       parameters:
         - name: $filter
           in: query
           required: true
-          type: string
-          x-example: name eq 'Apotheek Janssen B.V.' and city eq 'Utrecht'
+          example: name eq 'Apotheek Janssen B.V.' and city eq 'Utrecht'
+          schema:
+            type: string
         - name: $select
           in: query
           required: false
-          type: string
+          schema:
+            type: string
         - name: include-inactive
           in: query
           required: false
-          type: boolean
-      responses:
-        '200':
-          description: Status 200
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/OrganizationSummary'
-        '400':
+            type: boolean
+      responses:
+        "200":
+          description: Status 200
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OrganizationSummary"
+        "400":
           description: Status 400
-        '404':
+        "404":
           description: Status 404
-  '/organizations/{id}':
+  "/organizations/{id}":
     get:
       tags:
         - Organization
-      produces:
-        - application/json
       parameters:
         - name: $select
           in: query
           required: false
-          type: string
+          schema:
+            type: string
         - name: include-inactive
           in: query
           required: false
-          type: boolean
-      responses:
-        '200':
-          description: Status 200
           schema:
-            $ref: '#/definitions/Organization'
-        '404':
+            type: boolean
+      responses:
+        "200":
+          description: Status 200
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+        "404":
           description: Status 404
     delete:
       tags:
         - Organization
-      parameters: []
       responses:
-        '204':
+        "204":
           description: Status 204
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     patch:
       tags:
         - Organization
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/OrganizationInput'
+      requestBody:
+        $ref: "#/components/requestBodies/OrganizationInput"
       responses:
-        '202':
+        "202":
           description: Status 202
-          schema:
-            $ref: '#/definitions/Organization'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
-  '/organizations/{id}/_summary':
+        schema:
+          type: string
+  "/organizations/{id}/_summary":
     get:
       tags:
         - Organization
-      produces:
-        - application/json
       parameters:
         - name: $select
           in: query
           required: false
-          type: string
+          schema:
+            type: string
         - name: include-inactive
           in: query
           required: false
-          type: boolean
+          schema:
+            type: boolean
       responses:
-        '200':
+        "200":
           description: Status 200
-          schema:
-            $ref: '#/definitions/OrganizationSummary'
-        '404':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrganizationSummary"
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
-  '/organizations/{id}/addresses':
+        schema:
+          type: string
+  "/organizations/{id}/addresses":
     post:
       tags:
         - Organization
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/AddressInput'
+      requestBody:
+        $ref: "#/components/requestBodies/AddressInput"
       responses:
-        '201':
+        "201":
           description: Status 201
-          schema:
-            $ref: '#/definitions/Address'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Address"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
-  '/organizations/{id}/addresses/{index}':
+        schema:
+          type: string
+  "/organizations/{id}/addresses/{index}":
     delete:
       tags:
         - Organization
-      parameters: []
       responses:
-        '204':
+        "204":
           description: Status 204
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     patch:
       tags:
         - Organization
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/AddressInput'
+      requestBody:
+        $ref: "#/components/requestBodies/AddressInput"
       responses:
-        '202':
+        "202":
           description: Status 202
-          schema:
-            $ref: '#/definitions/Address'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Address"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
+        schema:
+          type: string
       - name: index
         in: path
         required: true
-        type: string
-  '/organizations/{id}/attachments':
+        schema:
+          type: string
+  "/organizations/{id}/attachments":
     post:
       tags:
         - Organization
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/AttachmentInput'
+      requestBody:
+        $ref: "#/components/requestBodies/AttachmentInput"
       responses:
-        '201':
+        "201":
           description: Status 201
-          schema:
-            $ref: '#/definitions/Attachment'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Attachment"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
-  '/organizations/{id}/attachments/{index}':
+        schema:
+          type: string
+  "/organizations/{id}/attachments/{index}":
     delete:
       tags:
         - Organization
-      parameters: []
       responses:
-        '204':
+        "204":
           description: Status 204
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     patch:
       tags:
         - Organization
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/AttachmentInput'
+      requestBody:
+        $ref: "#/components/requestBodies/AttachmentInput"
       responses:
-        '202':
+        "202":
           description: Status 202
-          schema:
-            $ref: '#/definitions/Attachment'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Attachment"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
+        schema:
+          type: string
       - name: index
         in: path
         required: true
-        type: string
-  '/organizations/{id}/credentials':
+        schema:
+          type: string
+  "/organizations/{id}/credentials":
     post:
       tags:
         - Organization
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/CredentialInput'
+      requestBody:
+        $ref: "#/components/requestBodies/CredentialInput"
       responses:
-        '201':
+        "201":
           description: Status 201
-          schema:
-            $ref: '#/definitions/Credential'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Credential"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
-  '/organizations/{id}/credentials/{index}':
+        schema:
+          type: string
+  "/organizations/{id}/credentials/{index}":
     delete:
       tags:
         - Organization
-      parameters: []
       responses:
-        '204':
+        "204":
           description: Status 204
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     patch:
       tags:
         - Organization
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/CredentialInput'
+      requestBody:
+        $ref: "#/components/requestBodies/CredentialInput"
       responses:
-        '202':
+        "202":
           description: Status 202
-          schema:
-            $ref: '#/definitions/Credential'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Credential"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
+        schema:
+          type: string
       - name: index
         in: path
         required: true
-        type: string
-  '/organizations/{id}/identifications':
+        schema:
+          type: string
+  "/organizations/{id}/identifications":
     post:
       tags:
         - Organization
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/IdentificationInput'
+      requestBody:
+        $ref: "#/components/requestBodies/IdentificationInput"
       responses:
-        '201':
+        "201":
           description: Status 201
-          schema:
-            $ref: '#/definitions/Identification'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Identification"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
-  '/organizations/{id}/identifications/{index}':
+        schema:
+          type: string
+  "/organizations/{id}/identifications/{index}":
     delete:
       tags:
         - Organization
-      parameters: []
       responses:
-        '204':
+        "204":
           description: Status 204
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     patch:
       tags:
         - Organization
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/IdentificationInput'
+      requestBody:
+        $ref: "#/components/requestBodies/IdentificationInput"
       responses:
-        '202':
+        "202":
           description: Status 202
-          schema:
-            $ref: '#/definitions/Identification'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Identification"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
+        schema:
+          type: string
       - name: index
         in: path
         required: true
-        type: string
-  '/organizations/{id}/individuals':
+        schema:
+          type: string
+  "/organizations/{id}/individuals":
     get:
       tags:
         - Organization
-      produces:
-        - application/json
       parameters:
         - name: $select
           in: query
           required: false
-          type: string
-      responses:
-        '200':
-          description: Status 200
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/Individual'
-        '404':
+            type: string
+      responses:
+        "200":
+          description: Status 200
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Individual"
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
-  '/organizations/{id}/mainOrganization':
+        schema:
+          type: string
+  "/organizations/{id}/mainOrganization":
     get:
       tags:
         - Organization
-      produces:
-        - application/json
       parameters:
         - name: $select
           in: query
           required: false
-          type: string
+          schema:
+            type: string
         - name: include-inactive
           in: query
           required: false
-          type: boolean
-      responses:
-        '200':
-          description: Status 200
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/Organization'
-        '404':
+            type: boolean
+      responses:
+        "200":
+          description: Status 200
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Organization"
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
-  '/organizations/{id}/names':
+        schema:
+          type: string
+  "/organizations/{id}/names":
     post:
       tags:
         - Organization
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/OrganizationNameInput'
+      requestBody:
+        $ref: "#/components/requestBodies/OrganizationNameInput"
       responses:
-        '201':
+        "201":
           description: Status 201
-          schema:
-            $ref: '#/definitions/OrganizationName'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrganizationName"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
-  '/organizations/{id}/names/{index}':
+        schema:
+          type: string
+  "/organizations/{id}/names/{index}":
     delete:
       tags:
         - Organization
-      parameters: []
       responses:
-        '204':
+        "204":
           description: Status 204
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     patch:
       tags:
         - Organization
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/OrganizationNameInput'
+      requestBody:
+        $ref: "#/components/requestBodies/OrganizationNameInput"
       responses:
-        '202':
+        "202":
           description: Status 202
-          schema:
-            $ref: '#/definitions/OrganizationName'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrganizationName"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
+        schema:
+          type: string
       - name: index
         in: path
         required: true
-        type: string
-  '/organizations/{id}/relations':
+        schema:
+          type: string
+  "/organizations/{id}/relations":
     get:
       tags:
         - Organization
-      produces:
-        - application/json
       parameters:
         - name: $select
           in: query
           required: false
-          type: string
-      responses:
-        '200':
-          description: Status 200
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/Relation'
-        '404':
+            type: string
+      responses:
+        "200":
+          description: Status 200
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Relation"
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
-  '/organizations/{id}/services':
+        schema:
+          type: string
+  "/organizations/{id}/services":
     post:
       tags:
         - Organization
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/ElectronicServiceInput'
+      requestBody:
+        $ref: "#/components/requestBodies/ElectronicServiceInput"
       responses:
-        '201':
+        "201":
           description: Status 201
-          schema:
-            $ref: '#/definitions/ElectronicService'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ElectronicService"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
-  '/organizations/{id}/services/{index}':
+        schema:
+          type: string
+  "/organizations/{id}/services/{index}":
     delete:
       tags:
         - Organization
-      parameters: []
       responses:
-        '204':
+        "204":
           description: Status 204
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     patch:
       tags:
         - Organization
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/ElectronicServiceInput'
+      requestBody:
+        $ref: "#/components/requestBodies/ElectronicServiceInput"
       responses:
-        '202':
+        "202":
           description: Status 202
-          schema:
-            $ref: '#/definitions/ElectronicService'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ElectronicService"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
+        schema:
+          type: string
       - name: index
         in: path
         required: true
-        type: string
-  '/organizations/{id}/subOrganizations':
+        schema:
+          type: string
+  "/organizations/{id}/subOrganizations":
     get:
       tags:
         - Organization
-      produces:
-        - application/json
       parameters:
         - name: $select
           in: query
           required: false
-          type: string
+          schema:
+            type: string
         - name: include-inactive
           in: query
           required: false
-          type: boolean
+          schema:
+            type: boolean
       responses:
-        '200':
+        "200":
           description: Status 200
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Organization'
-        '404':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Organization"
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
-  '/organizations/{id}/telecoms':
+        schema:
+          type: string
+  "/organizations/{id}/telecoms":
     post:
       tags:
         - Organization
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/TelecomInput'
+      requestBody:
+        $ref: "#/components/requestBodies/TelecomInput"
       responses:
-        '201':
+        "201":
           description: Status 201
-          schema:
-            $ref: '#/definitions/Telecom'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Telecom"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
-  '/organizations/{id}/telecoms/{index}':
+        schema:
+          type: string
+  "/organizations/{id}/telecoms/{index}":
     delete:
       tags:
         - Organization
-      parameters: []
       responses:
-        '204':
+        "204":
           description: Status 204
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     patch:
       tags:
         - Organization
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/TelecomInput'
+      requestBody:
+        $ref: "#/components/requestBodies/TelecomInput"
       responses:
-        '202':
+        "202":
           description: Status 202
-          schema:
-            $ref: '#/definitions/Telecom'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Telecom"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
+        schema:
+          type: string
       - name: index
         in: path
         required: true
-        type: string
-  '/organizations/{id}/types':
+        schema:
+          type: string
+  "/organizations/{id}/types":
     post:
       tags:
         - Organization
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/TypeInput'
+      requestBody:
+        $ref: "#/components/requestBodies/TypeInput"
       responses:
-        '201':
+        "201":
           description: Status 201
-          schema:
-            $ref: '#/definitions/Type'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Type"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
-  '/organizations/{id}/types/{index}':
+        schema:
+          type: string
+  "/organizations/{id}/types/{index}":
     delete:
       tags:
         - Organization
-      parameters: []
       responses:
-        '204':
+        "204":
           description: Status 204
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     patch:
       tags:
         - Organization
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/TypeInput'
+      requestBody:
+        $ref: "#/components/requestBodies/TypeInput"
       responses:
-        '202':
+        "202":
           description: Status 202
-          schema:
-            $ref: '#/definitions/Type'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Type"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
+        schema:
+          type: string
       - name: index
         in: path
         required: true
-        type: string
+        schema:
+          type: string
   /subOrganization:
     post:
       tags:
         - SubOrganization Relation
-      consumes:
-        - application/json
-      produces:
-        - application/json
       parameters:
         - name: mainOrganizationId
           in: query
           required: false
-          type: string
+          schema:
+            type: string
         - name: subOrganizationId
           in: query
           required: false
-          type: string
-        - name: body
-          in: body
-          required: true
           schema:
-            $ref: '#/definitions/SubOrganizationInput'
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/SubOrganizationInput"
       responses:
-        '201':
+        "201":
           description: Status 201
-          schema:
-            $ref: '#/definitions/SubOrganization'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubOrganization"
+        "400":
           description: Status 400
     delete:
       tags:
         - SubOrganization Relation
-      parameters: []
       responses:
-        '204':
+        "204":
           description: Status 204
-        '400':
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     patch:
       tags:
         - SubOrganization Relation
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/SubOrganizationInput'
+      requestBody:
+        $ref: "#/components/requestBodies/SubOrganizationInput"
       responses:
-        '202':
+        "202":
           description: Status 202
-          schema:
-            $ref: '#/definitions/SubOrganization'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubOrganization"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
-  '/subOrganization/{id}':
+  "/subOrganization/{id}":
     get:
       tags:
         - SubOrganization Relation
-      produces:
-        - application/json
       parameters:
         - name: $select
           in: query
           required: false
-          type: string
-      responses:
-        '200':
-          description: Status 200
           schema:
-            $ref: '#/definitions/SubOrganization'
-        '404':
+            type: string
+      responses:
+        "200":
+          description: Status 200
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubOrganization"
+        "404":
           description: Status 404
     delete:
       tags:
         - SubOrganization Relation
-      parameters: []
       responses:
-        '204':
+        "204":
           description: Status 204
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     patch:
       tags:
         - SubOrganization Relation
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/SubOrganizationInput'
+      requestBody:
+        $ref: "#/components/requestBodies/SubOrganizationInput"
       responses:
-        '200':
+        "200":
           description: Status 200
-          schema:
-            $ref: '#/definitions/SubOrganization'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubOrganization"
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
-        type: string
-  '/agb/{agbCode}':
+        schema:
+          type: string
+  "/agb/{agbCode}":
     get:
       description: Searches for AGB_Onderneming/AGB_Vestiging
       tags:
         - Organization
-      produces:
-        - application/json
       parameters:
         - name: $select
           in: query
           required: false
-          type: string
+          schema:
+            type: string
         - name: include-inactive
           in: query
           required: false
-          type: boolean
-      responses:
-        '200':
-          description: Status 200
           schema:
-            $ref: '#/definitions/Organization'
-        '404':
+            type: boolean
+      responses:
+        "200":
+          description: Status 200
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+        "404":
           description: Status 404
     parameters:
       - name: agbCode
         in: path
         required: true
-        type: string
-  '/ura/{uraNumber}':
+        schema:
+          type: string
+  "/ura/{uraNumber}":
     get:
       tags:
         - Organization
-      produces:
-        - application/json
       parameters:
         - name: $select
           in: query
           required: false
-          type: string
+          schema:
+            type: string
         - name: include-inactive
           in: query
           required: false
-          type: boolean
-      responses:
-        '200':
-          description: Status 200
           schema:
-            $ref: '#/definitions/Organization'
-        '404':
+            type: boolean
+      responses:
+        "200":
+          description: Status 200
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+        "404":
           description: Status 404
     parameters:
       - name: uraNumber
         in: path
         required: true
-        type: string
-  '/uzi/{uziNumber}':
+        schema:
+          type: string
+  "/uzi/{uziNumber}":
     get:
       tags:
         - Practitioner
-      produces:
-        - application/json
       parameters:
         - name: $select
           in: query
           required: false
-          type: string
-      responses:
-        '200':
-          description: Status 200
           schema:
-            $ref: '#/definitions/Individual'
-        '404':
+            type: string
+      responses:
+        "200":
+          description: Status 200
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Individual"
+        "404":
           description: Status 404
     parameters:
       - name: uziNumber
         in: path
         required: true
-        type: string
+        schema:
+          type: string
   /careParties:
     get:
       tags:
-      - Organization
-      - Practitioner
-      - WorksAt Relation
-      produces:
-      - application/json
+        - Organization
+        - Practitioner
+        - WorksAt Relation
       parameters:
-      - name: organization-name
-        in: query
-        required: false
-        type: string
-      - name: individual-name
-        in: query
-        required: false
-        type: string
-      - name: city
-        in: query
-        required: false
-        type: string
-      - name: postalcode
-        in: query
-        required: false
-        type: string
-      - name: only-medmij
-        in: query
-        required: false
-        type: boolean
+        - name: organization-name
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: individual-name
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: city
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: postalcode
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: only-medmij
+          in: query
+          required: false
+          schema:
+            type: boolean
       responses:
         "200":
           description: Status 200
-          schema:
-            $ref: '#/definitions/OrganizationOrIndividualOrWorksAt'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrganizationOrIndividualOrWorksAt"
         "404":
           description: Status 404
   /worksAt:
     post:
       tags:
         - WorksAt Relation
-      consumes:
-        - application/json
-      produces:
-        - application/json
       parameters:
         - name: organizationId
           in: query
           required: false
-          type: string
+          schema:
+            type: string
         - name: individualId
           in: query
           required: false
-          type: string
-        - name: body
-          in: body
-          required: true
           schema:
-            $ref: '#/definitions/WorksAtInput'
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/WorksAtInput"
       responses:
-        '201':
+        "201":
           description: Status 201
-          schema:
-            $ref: '#/definitions/WorksAt'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorksAt"
+        "400":
           description: Status 400
     delete:
       tags:
         - WorksAt Relation
-      parameters: []
       responses:
-        '204':
+        "204":
           description: Status 204
-        '400':
+        "400":
           description: Status 400
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     patch:
       tags:
         - WorksAt Relation
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/WorksAtInput'
+      requestBody:
+        $ref: "#/components/requestBodies/WorksAtInput"
       responses:
-        '202':
+        "202":
           description: Status 202
-          schema:
-            $ref: '#/definitions/WorksAt'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorksAt"
+        "400":
           description: Status 400
-        '404':
+        "404":
           description: Status 404
-  '/worksAt/{id}':
+  "/worksAt/{id}":
     get:
       tags:
         - WorksAt Relation
-      produces:
-        - application/json
       parameters:
         - name: $select
           in: query
           required: false
-          type: string
-      responses:
-        '200':
-          description: Status 200
           schema:
-            $ref: '#/definitions/WorksAt'
-        '404':
+            type: string
+      responses:
+        "200":
+          description: Status 200
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorksAt"
+        "404":
           description: Status 404
     delete:
       tags:
         - WorksAt Relation
-      parameters: []
       responses:
-        '204':
+        "204":
           description: Status 204
-        '401':
+        "401":
           description: Status 401
-        '404':
+        "404":
           description: Status 404
     patch:
       tags:
         - WorksAt Relation
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/WorksAtInput'
+      requestBody:
+        $ref: "#/components/requestBodies/WorksAtInput"
       responses:
-        '202':
+        "202":
           description: Status 202
-          schema:
-            $ref: '#/definitions/WorksAt'
-        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorksAt"
+        "400":
           description: Status 400
-        '404':
+        "404":
           description: Status 404
     parameters:
       - name: id
         in: path
         required: true
+<<<<<<< Updated upstream
         type: string
   /subscriptions:
     get:
@@ -2318,822 +2164,1038 @@ definitions:
         type: array
         description: Deprecated. Supported until 31-12-2020
         items:
+=======
+        schema:
+>>>>>>> Stashed changes
           type: string
-      applicationIds:
-        type: array
-        items:
+  /subscriptions:
+    get:
+      tags:
+        - Subscription
+      responses:
+        "200":
+          description: Status 200
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Subscription"
+        "400":
+          description: Status 400
+        "404":
+          description: Status 404
+    post:
+      tags:
+        - Subscription
+      requestBody:
+        $ref: "#/components/requestBodies/SubscriptionInput"
+      responses:
+        "201":
+          description: Status 201
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Subscription"
+        "400":
+          description: Status 400
+  "/subscriptions/{id}":
+    get:
+      tags:
+        - Subscription
+      responses:
+        "200":
+          description: Status 200
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Subscription"
+        "404":
+          description: Status 404
+    delete:
+      tags:
+        - Subscription
+      responses:
+        "204":
+          description: Status 204
+        "401":
+          description: Status 401
+        "404":
+          description: Status 404
+    patch:
+      tags:
+        - Subscription
+      requestBody:
+        $ref: "#/components/requestBodies/SubscriptionInput"
+      responses:
+        "202":
+          description: Status 202
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Subscription"
+        "400":
+          description: Status 400
+        "401":
+          description: Status 401
+        "404":
+          description: Status 404
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
           type: string
-      ura:
-        type: string
-      displayName:
-        type: string
-      medMijZorgaanbiedernaam:
-        type: string
-  OrganizationSummary:
-    type: object
-    properties:
-      _self:
-        type: string
-      _id:
-        type: string
-      ura:
-        type: string
-      displayName:
-        type: string
-      applicationIds:
-        type: array
-        items:
+servers:
+  - url: https://zab.test.lsp.aorta-zorg.nl/zab
+components:
+  requestBodies:
+    ElectronicServiceInput:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ElectronicServiceInput"
+      required: true
+    AddressInput:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AddressInput"
+      required: true
+    TypeInput:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/TypeInput"
+      required: true
+    TelecomInput:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/TelecomInput"
+      required: true
+    OrganizationNameInput:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/OrganizationNameInput"
+      required: true
+    AttachmentInput:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AttachmentInput"
+      required: true
+    SubscriptionInput:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SubscriptionInput"
+      required: true
+    IndividualInput:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/IndividualInput"
+      required: true
+    WorksAtInput:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/WorksAtInput"
+      required: true
+    CredentialInput:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/CredentialInput"
+      required: true
+    IndividualNameInput:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/IndividualNameInput"
+      required: true
+    IdentificationInput:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/IdentificationInput"
+      required: true
+    OrganizationInput:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/OrganizationInput"
+      required: true
+    SubOrganizationInput:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SubOrganizationInput"
+      required: true
+  schemas:
+    Organization:
+      type: object
+      properties:
+        _self:
           type: string
-      type:
-        type: array
-        description: Deprecated. Supported until 31-12-2020
-        items:
+        _className:
           type: string
-      types:
-        type: array
-        items:
-          $ref: '#/definitions/Type'
-  Individual:
-    type: object
-    properties:
-      _self:
-        type: string
-      _className:
-        type: string
-      _id:
-        type: string
-      active:
-        type: boolean
-        default: true
-      author:
-        type: string
-      addresses:
-        type: array
-        items:
-          $ref: '#/definitions/Address'
-      telecoms:
-        type: array
-        items:
-          $ref: '#/definitions/Telecom'
-      identifications:
-        type: array
-        items:
-          $ref: '#/definitions/Identification'
-      credentials:
-        type: array
-        items:
-          $ref: '#/definitions/Credential'
-      electronicServices:
-        type: array
-        items:
-          $ref: '#/definitions/ElectronicService'
-      attachments:
-        type: array
-        items:
-          $ref: '#/definitions/Attachment'
-      speciality:
-        type: string
-        example: '1.000'
-      comment:
-        type: string
-      types:
-        type: array
-        items:
-          $ref: '#/definitions/Type'
-      timestamp:
-        type: string
-      names:
-        type: array
-        items:
-          $ref: '#/definitions/IndividualName'
-      gender:
-        type: string
-        enum:
-          - male
-          - female
-          - other
-          - unknown
-      doB:
-        type: string
-      languages:
-        type: array
-        items:
+        _id:
           type: string
-          enum:
-            - ar
-            - bn
-            - cs
-            - da
-            - de
-            - de-AT
-            - de-CH
-            - de-DE
-            - el
-            - en
-            - en-AU
-            - en-CA
-            - en-GB
-            - en-IN
-            - en-NZ
-            - en-SG
-            - en-US
-            - es
-            - es-AR
-            - es-ES
-            - es-UY
-            - fi
-            - fr
-            - fr-BE
-            - fr-CH
-            - fr-FR
-            - fy
-            - fy-NL
-            - hi
-            - hr
-            - it
-            - it-CH
-            - it-IT
-            - ja
-            - ko
-            - nl
-            - nl-BE
-            - nl-NL
-            - 'no'
-            - no-NO
-            - pa
-            - pt
-            - pt-BR
-            - ru
-            - ru-RU
-            - sr
-            - sr-SP
-            - sv
-            - sv-SE
-            - te
-            - zh
-            - zh-CN
-            - zh-HK
-            - zh-SG
-            - zh-TW
-      uzi:
-        type: string
-      displayName:
-        type: string
-  OrganizationOrIndividual:
-    type: object
-    properties:
-      _self:
-        type: string
-      _className:
-        type: string
-      _id:
-        type: string
-      active:
-        type: boolean
-        default: true
-      author:
-        type: string
-      addresses:
-        type: array
-        items:
-          $ref: '#/definitions/Address'
-      telecoms:
-        type: array
-        items:
-          $ref: '#/definitions/Telecom'
-      identifications:
-        type: array
-        items:
-          $ref: '#/definitions/Identification'
-      credentials:
-        type: array
-        items:
-          $ref: '#/definitions/Credential'
-      electronicServices:
-        type: array
-        items:
-          $ref: '#/definitions/ElectronicService'
-      attachments:
-        type: array
-        items:
-          $ref: '#/definitions/Attachment'
-      speciality:
-        type: string
-      comment:
-        type: string
-      types:
-        type: array
-        items:
-          $ref: '#/definitions/Type'
-      timestamp:
-        type: string
-      names:
-        type: array
-        items:
-          $ref: '#/definitions/OrganizationNameOrIndividualName'
-      type:
-        type: array
-        description: Deprecated. Supported until 31-12-2020
-        items:
+        active:
+          type: boolean
+          default: true
+        author:
           type: string
-      applicationIds:
-        type: array
-        items:
+        addresses:
+          type: array
+          items:
+            $ref: "#/components/schemas/Address"
+        telecoms:
+          type: array
+          items:
+            $ref: "#/components/schemas/Telecom"
+        identifications:
+          type: array
+          items:
+            $ref: "#/components/schemas/Identification"
+        credentials:
+          type: array
+          items:
+            $ref: "#/components/schemas/Credential"
+        electronicServices:
+          type: array
+          items:
+            $ref: "#/components/schemas/ElectronicService"
+        attachments:
+          type: array
+          items:
+            $ref: "#/components/schemas/Attachment"
+        speciality:
           type: string
-      ura:
-        type: string
-      displayName:
-        type: string
-      gender:
-        type: string
-      doB:
-        type: string
-      languages:
-        type: array
-        items:
+        comment:
           type: string
-      uzi:
-        type: string
-  OrganizationOrIndividualOrWorksAt:
-    type: object
-    properties:
-      _self:
-        type: string
-      _className:
-        type: string
-      _id:
-        type: string
-      active:
-        type: boolean
-        default: true
-      author:
-        type: string
-      addresses:
-        type: array
-        items:
-          $ref: '#/definitions/Address'
-      telecoms:
-        type: array
-        items:
-          $ref: '#/definitions/Telecom'
-      identifications:
-        type: array
-        items:
-          $ref: '#/definitions/Identification'
-      credentials:
-        type: array
-        items:
-          $ref: '#/definitions/Credential'
-      electronicServices:
-        type: array
-        items:
-          $ref: '#/definitions/ElectronicService'
-      attachments:
-        type: array
-        items:
-          $ref: '#/definitions/Attachment'
-      speciality:
-        type: string
-      comment:
-        type: string
-      types:
-        type: array
-        items:
-          $ref: '#/definitions/Type'
-      timestamp:
-        type: string
-      names:
-        type: array
-        items:
-          $ref: '#/definitions/OrganizationNameOrIndividualName'
-      type:
-        type: array
-        description: Deprecated. Supported until 31-12-2020
-        items:
+        types:
+          type: array
+          items:
+            $ref: "#/components/schemas/Type"
+        timestamp:
           type: string
-      applicationIds:
-        type: array
-        items:
+        names:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrganizationName"
+        type:
+          type: array
+          description: Deprecated. Supported until 31-12-2020
+          items:
+            type: string
+        applicationIds:
+          type: array
+          items:
+            type: string
+        ura:
           type: string
-      ura:
-        type: string
-      displayName:
-        type: string
-      gender:
-        type: string
-      doB:
-        type: string
-      languages:
-        type: array
-        items:
+        displayName:
           type: string
-      uzi:
-        type: string
-      organizationId:
-        type: string
-      individualId:
-        type: string
-      availability:
-        type: string
-  OrganizationName:
-    type: object
-    properties:
-      author:
-        type: string
-      fullName:
-        type: string
-      type:
-        type: string
-        example: Display
-      preferred:
-        type: boolean
-        default: false
-      active:
-        type: boolean
-        default: true
-      index:
-        type: string
-      timestamp:
-        type: string
-  IndividualName:
-    type: object
-    properties:
-      author:
-        type: string
-      active:
-        type: boolean
-        default: true
-      familyName:
-        type: string
-      firstName:
-        type: string
-      fullName:
-        type: string
-      preferred:
-        type: boolean
-        default: false
-      prefix:
-        type: string
-      type:
-        type: string
-        example: Display
-      index:
-        type: string
-      timestamp:
-        type: string
-  OrganizationNameOrIndividualName:
-    type: object
-    properties:
-      author:
-        type: string
-      fullName:
-        type: string
-      type:
-        type: string
-      preferred:
-        type: boolean
-        default: false
-      active:
-        type: boolean
-        default: true
-      familyName:
-        type: string
-      firstName:
-        type: string
-      prefix:
-        type: string
-      index:
-        type: string
-      timestamp:
-        type: string
-  Address:
-    type: object
-    properties:
-      author:
-        type: string
-      type:
-        type: string
-        example: Practice
-      active:
-        type: boolean
-        default: true
-      firstLine:
-        type: string
-      address:
-        type: string
-      streetName:
-        type: string
-      streetNumber:
-        type: string
-      postalCode:
-        type: string
-      city:
-        type: string
-      state:
-        type: string
-      country:
-        type: string
-      geolocation:
-        type: string
-      index:
-        type: string
-      timestamp:
-        type: string
-  Telecom:
-    type: object
-    properties:
-      author:
-        type: string
-      type:
-        type: string
-        example: Phone
-      name:
-        type: string
-      value:
-        type: string
-      active:
-        type: boolean
-        default: true
-      preferred:
-        type: boolean
-        default: false
-      index:
-        type: string
-      timestamp:
-        type: string
-  Identification:
-    type: object
-    properties:
-      author:
-        type: string
-      type:
-        type: string
-      value:
-        type: string
-      description:
-        type: string
-      active:
-        type: boolean
-        default: true
-      index:
-        type: string
-      timestamp:
-        type: string
-  Credential:
-    type: object
-    properties:
-      author:
-        type: string
-      type:
-        type: string
-      active:
-        type: boolean
-        default: true
-      description:
-        type: string
-      index:
-        type: string
-      timestamp:
-        type: string
-  ElectronicService:
-    type: object
-    properties:
-      _className:
-        type: string
-      author:
-        type: string
-      type:
-        type: string
-      index:
-        type: string
-      active:
-        type: boolean
-        description: >-
-          Deprecated for objects of type LSP Application. Supported for objects
-          of type LSP Application until 31-12-2021
-        default: true
-      value:
-        type: string
-      address:
-        type: string
-      description:
-        type: string
-      id:
-        type: string
-      timestamp:
-        type: string
-      applicationId:
-        type: string
-      systemRoles:
-        type: array
-        items:
+        medMijZorgaanbiedernaam:
           type: string
-      conformances:
-        type: array
-        items:
-          $ref: '#/definitions/Conformance'
-      status:
-        type: string
-        example: active
-      gegevensdienstId:
-        type: string
-      weergavenaam:
-        type: string
-      interfaceversies:
-        type: array
-        items:
-          $ref: '#/definitions/Interfaceversie'
-      authorizationEndpoint:
-        $ref: '#/definitions/AuthorizationEndpoint'
-      tokenEndpoint:
-        $ref: '#/definitions/TokenEndpoint'
-      abonneren:
-        $ref: '#/definitions/Abonneren'
-      systeemrollen:
-        type: array
-        items:
-          $ref: '#/definitions/Systeemrol'
-  LSPApplication:
-    type: object
-    properties:
-      _self:
-        type: string
-      _className:
-        type: string
-      author:
-        type: string
-      active:
-        type: boolean
-        description: Deprecated. Supported until 31-12-2021
-        default: true
-      address:
-        type: string
-      description:
-        type: string
-      applicationId:
-        type: string
-      systemRoles:
-        type: array
-        items:
+    OrganizationSummary:
+      type: object
+      properties:
+        _self:
           type: string
-      conformances:
-        type: array
-        items:
-          $ref: '#/definitions/Conformance'
-      status:
-        type: string
-        example: active
-      timestamp:
-        type: string
-  Conformance:
-    type: object
-    properties:
-      interactionId:
-        type: string
-      send:
-        type: boolean
-        default: true
-      receive:
-        type: boolean
-        default: true
-  Interfaceversie:
-    type: object
-    properties:
-      interfaceversieId:
-        type: string
-  AuthorizationEndpoint:
-    type: object
-    properties:
-      authorizationEndpointuri:
-        type: string
-  TokenEndpoint:
-    type: object
-    properties:
-      tokenEndpointuri:
-        type: string
-  Abonneren:
-    type: object
-    properties:
-      maximaleDuur:
-        type: string
-      subscriptionEndpointuri:
-        type: string
-  Systeemrol:
-    type: object
-    properties:
-      systeemrolcode:
-        type: string
-      resourceEndpoint:
-        $ref: '#/definitions/ResourceEndpoint'
-  ResourceEndpoint:
-    type: object
-    properties:
-      resourceEndpointuri:
-        type: string
-  Attachment:
-    type: object
-    properties:
-      author:
-        type: string
-      description:
-        type: string
-      mimeType:
-        type: string
-      data:
-        type: string
-      index:
-        type: string
-      timestamp:
-        type: string
-  Type:
-    type: object
-    properties:
-      author:
-        type: string
-      type:
-        type: string
-      code:
-        type: string
-      displayName:
-        type: string
-      active:
-        type: boolean
-        default: true
-      index:
-        type: string
-      timestamp:
-        type: string
-  SubOrganization:
-    type: object
-    properties:
-      _self:
-        type: string
-      _className:
-        type: string
-      _id:
-        type: string
-      author:
-        type: string
-      mainOrganizationId:
-        type: string
-      subOrganizationId:
-        type: string
-      timestamp:
-        type: string
-  WorksAt:
-    type: object
-    properties:
-      _self:
-        type: string
-      _className:
-        type: string
-      _id:
-        type: string
-      author:
-        type: string
-      organizationId:
-        type: string
-      individualId:
-        type: string
-      availability:
-        type: string
-      telecoms:
-        type: array
-        items:
-          $ref: '#/definitions/Telecom'
-      speciality:
-        type: string
-        example: '1.000'
-      timestamp:
-        type: string
-  Relation:
-    type: object
-    properties:
-      _self:
-        type: string
-      _className:
-        type: string
-      _id:
-        type: string
-      author:
-        type: string
-      mainOrganizationId:
-        type: string
-      subOrganizationId:
-        type: string
-      organizationId:
-        type: string
-      individualId:
-        type: string
-      availability:
-        type: string
-      telecoms:
-        type: array
-        items:
-          $ref: '#/definitions/Telecom'
-      speciality:
-        type: string
-        example: '1.000'
-      timestamp:
-        type: string
-  OrganizationInput:
-    type: object
-    properties:
-      addresses:
-        type: array
-        items:
-          $ref: '#/definitions/AddressInput'
-      telecoms:
-        type: array
-        items:
-          $ref: '#/definitions/TelecomInput'
-      identifications:
-        type: array
-        items:
-          $ref: '#/definitions/IdentificationInput'
-      credentials:
-        type: array
-        items:
-          $ref: '#/definitions/CredentialInput'
-      electronicServices:
-        type: array
-        items:
-          $ref: '#/definitions/ElectronicServiceInput'
-      attachments:
-        type: array
-        items:
-          $ref: '#/definitions/AttachmentInput'
-      speciality:
-        type: string
-      comment:
-        type: string
-      types:
-        type: array
-        items:
-          $ref: '#/definitions/TypeInput'
-      names:
-        type: array
-        items:
-          $ref: '#/definitions/OrganizationNameInput'
-      type:
-        type: array
-        description: Deprecated. Supported until 31-12-2020
-        items:
+        _id:
           type: string
-  IndividualInput:
-    type: object
-    properties:
-      addresses:
-        type: array
-        items:
-          $ref: '#/definitions/AddressInput'
-      telecoms:
-        type: array
-        items:
-          $ref: '#/definitions/TelecomInput'
-      identifications:
-        type: array
-        items:
-          $ref: '#/definitions/IdentificationInput'
-      credentials:
-        type: array
-        items:
-          $ref: '#/definitions/CredentialInput'
-      electronicServices:
-        type: array
-        items:
-          $ref: '#/definitions/ElectronicServiceInput'
-      attachments:
-        type: array
-        items:
-          $ref: '#/definitions/AttachmentInput'
-      speciality:
-        type: string
-        example: '1.000'
-      comment:
-        type: string
-      types:
-        type: array
-        items:
-          $ref: '#/definitions/TypeInput'
-      names:
-        type: array
-        items:
-          $ref: '#/definitions/IndividualNameInput'
-      gender:
-        type: string
-        enum:
-          - male
-          - female
-          - other
-          - unknown
-      doB:
-        type: string
-      languages:
-        type: array
-        items:
+        ura:
+          type: string
+        displayName:
+          type: string
+        applicationIds:
+          type: array
+          items:
+            type: string
+        type:
+          type: array
+          description: Deprecated. Supported until 31-12-2020
+          items:
+            type: string
+        types:
+          type: array
+          items:
+            $ref: "#/components/schemas/Type"
+    Individual:
+      type: object
+      properties:
+        _self:
+          type: string
+        _className:
+          type: string
+        _id:
+          type: string
+        active:
+          type: boolean
+          default: true
+        author:
+          type: string
+        addresses:
+          type: array
+          items:
+            $ref: "#/components/schemas/Address"
+        telecoms:
+          type: array
+          items:
+            $ref: "#/components/schemas/Telecom"
+        identifications:
+          type: array
+          items:
+            $ref: "#/components/schemas/Identification"
+        credentials:
+          type: array
+          items:
+            $ref: "#/components/schemas/Credential"
+        electronicServices:
+          type: array
+          items:
+            $ref: "#/components/schemas/ElectronicService"
+        attachments:
+          type: array
+          items:
+            $ref: "#/components/schemas/Attachment"
+        speciality:
+          type: string
+          example: "1.000"
+        comment:
+          type: string
+        types:
+          type: array
+          items:
+            $ref: "#/components/schemas/Type"
+        timestamp:
+          type: string
+        names:
+          type: array
+          items:
+            $ref: "#/components/schemas/IndividualName"
+        gender:
           type: string
           enum:
+            - male
+            - female
+            - other
+            - unknown
+        doB:
+          type: string
+        languages:
+          type: array
+          items:
+            type: string
+            enum:
+              - ar
+              - bn
+              - cs
+              - da
+              - de
+              - de-AT
+              - de-CH
+              - de-DE
+              - el
+              - en
+              - en-AU
+              - en-CA
+              - en-GB
+              - en-IN
+              - en-NZ
+              - en-SG
+              - en-US
+              - es
+              - es-AR
+              - es-ES
+              - es-UY
+              - fi
+              - fr
+              - fr-BE
+              - fr-CH
+              - fr-FR
+              - fy
+              - fy-NL
+              - hi
+              - hr
+              - it
+              - it-CH
+              - it-IT
+              - ja
+              - ko
+              - nl
+              - nl-BE
+              - nl-NL
+              - no
+              - no-NO
+              - pa
+              - pt
+              - pt-BR
+              - ru
+              - ru-RU
+              - sr
+              - sr-SP
+              - sv
+              - sv-SE
+              - te
+              - zh
+              - zh-CN
+              - zh-HK
+              - zh-SG
+              - zh-TW
+        uzi:
+          type: string
+        displayName:
+          type: string
+    OrganizationOrIndividual:
+      type: object
+      properties:
+        _self:
+          type: string
+        _className:
+          type: string
+        _id:
+          type: string
+        active:
+          type: boolean
+          default: true
+        author:
+          type: string
+        addresses:
+          type: array
+          items:
+            $ref: "#/components/schemas/Address"
+        telecoms:
+          type: array
+          items:
+            $ref: "#/components/schemas/Telecom"
+        identifications:
+          type: array
+          items:
+            $ref: "#/components/schemas/Identification"
+        credentials:
+          type: array
+          items:
+            $ref: "#/components/schemas/Credential"
+        electronicServices:
+          type: array
+          items:
+            $ref: "#/components/schemas/ElectronicService"
+        attachments:
+          type: array
+          items:
+            $ref: "#/components/schemas/Attachment"
+        speciality:
+          type: string
+        comment:
+          type: string
+        types:
+          type: array
+          items:
+            $ref: "#/components/schemas/Type"
+        timestamp:
+          type: string
+        names:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrganizationNameOrIndividualName"
+        type:
+          type: array
+          description: Deprecated. Supported until 31-12-2020
+          items:
+            type: string
+        applicationIds:
+          type: array
+          items:
+            type: string
+        ura:
+          type: string
+        displayName:
+          type: string
+        gender:
+          type: string
+        doB:
+          type: string
+        languages:
+          type: array
+          items:
+            type: string
+        uzi:
+          type: string
+    OrganizationOrIndividualOrWorksAt:
+      type: object
+      properties:
+        _self:
+          type: string
+        _className:
+          type: string
+        _id:
+          type: string
+        active:
+          type: boolean
+          default: true
+        author:
+          type: string
+        addresses:
+          type: array
+          items:
+            $ref: "#/components/schemas/Address"
+        telecoms:
+          type: array
+          items:
+            $ref: "#/components/schemas/Telecom"
+        identifications:
+          type: array
+          items:
+            $ref: "#/components/schemas/Identification"
+        credentials:
+          type: array
+          items:
+            $ref: "#/components/schemas/Credential"
+        electronicServices:
+          type: array
+          items:
+            $ref: "#/components/schemas/ElectronicService"
+        attachments:
+          type: array
+          items:
+            $ref: "#/components/schemas/Attachment"
+        speciality:
+          type: string
+        comment:
+          type: string
+        types:
+          type: array
+          items:
+            $ref: "#/components/schemas/Type"
+        timestamp:
+          type: string
+        names:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrganizationNameOrIndividualName"
+        type:
+          type: array
+          description: Deprecated. Supported until 31-12-2020
+          items:
+            type: string
+        applicationIds:
+          type: array
+          items:
+            type: string
+        ura:
+          type: string
+        displayName:
+          type: string
+        gender:
+          type: string
+        doB:
+          type: string
+        languages:
+          type: array
+          items:
+            type: string
+        uzi:
+          type: string
+        organizationId:
+          type: string
+        individualId:
+          type: string
+        availability:
+          type: string
+    OrganizationName:
+      type: object
+      properties:
+        author:
+          type: string
+        fullName:
+          type: string
+        type:
+          type: string
+          example: Display
+        preferred:
+          type: boolean
+          default: false
+        active:
+          type: boolean
+          default: true
+        index:
+          type: string
+        timestamp:
+          type: string
+    IndividualName:
+      type: object
+      properties:
+        author:
+          type: string
+        active:
+          type: boolean
+          default: true
+        familyName:
+          type: string
+        firstName:
+          type: string
+        fullName:
+          type: string
+        preferred:
+          type: boolean
+          default: false
+        prefix:
+          type: string
+        type:
+          type: string
+          example: Display
+        index:
+          type: string
+        timestamp:
+          type: string
+    OrganizationNameOrIndividualName:
+      type: object
+      properties:
+        author:
+          type: string
+        fullName:
+          type: string
+        type:
+          type: string
+        preferred:
+          type: boolean
+          default: false
+        active:
+          type: boolean
+          default: true
+        familyName:
+          type: string
+        firstName:
+          type: string
+        prefix:
+          type: string
+        index:
+          type: string
+        timestamp:
+          type: string
+    Address:
+      type: object
+      properties:
+        author:
+          type: string
+        type:
+          type: string
+          example: Practice
+        active:
+          type: boolean
+          default: true
+        firstLine:
+          type: string
+        address:
+          type: string
+        streetName:
+          type: string
+        streetNumber:
+          type: string
+        postalCode:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        country:
+          type: string
+        geolocation:
+          type: string
+        index:
+          type: string
+        timestamp:
+          type: string
+    Telecom:
+      type: object
+      properties:
+        author:
+          type: string
+        type:
+          type: string
+          example: Phone
+        name:
+          type: string
+        value:
+          type: string
+        active:
+          type: boolean
+          default: true
+        preferred:
+          type: boolean
+          default: false
+        index:
+          type: string
+        timestamp:
+          type: string
+    Identification:
+      type: object
+      properties:
+        author:
+          type: string
+        type:
+          type: string
+        value:
+          type: string
+        description:
+          type: string
+        active:
+          type: boolean
+          default: true
+        index:
+          type: string
+        timestamp:
+          type: string
+    Credential:
+      type: object
+      properties:
+        author:
+          type: string
+        type:
+          type: string
+        active:
+          type: boolean
+          default: true
+        description:
+          type: string
+        index:
+          type: string
+        timestamp:
+          type: string
+    ElectronicService:
+      type: object
+      properties:
+        _className:
+          type: string
+        author:
+          type: string
+        type:
+          type: string
+        index:
+          type: string
+        active:
+          type: boolean
+          description: Deprecated for objects of type LSP Application. Supported for
+            objects of type LSP Application until 31-12-2021
+          default: true
+        value:
+          type: string
+        address:
+          type: string
+        description:
+          type: string
+        id:
+          type: string
+        timestamp:
+          type: string
+        applicationId:
+          type: string
+        systemRoles:
+          type: array
+          items:
+            type: string
+        conformances:
+          type: array
+          items:
+            $ref: "#/components/schemas/Conformance"
+        status:
+          type: string
+          example: active
+        gegevensdienstId:
+          type: string
+        weergavenaam:
+          type: string
+        interfaceversies:
+          type: array
+          items:
+            $ref: "#/components/schemas/Interfaceversie"
+        authorizationEndpoint:
+          $ref: "#/components/schemas/AuthorizationEndpoint"
+        tokenEndpoint:
+          $ref: "#/components/schemas/TokenEndpoint"
+        abonneren:
+          $ref: "#/components/schemas/Abonneren"
+        systeemrollen:
+          type: array
+          items:
+            $ref: "#/components/schemas/Systeemrol"
+    LSPApplication:
+      type: object
+      properties:
+        _self:
+          type: string
+        _className:
+          type: string
+        author:
+          type: string
+        active:
+          type: boolean
+          description: Deprecated. Supported until 31-12-2021
+          default: true
+        address:
+          type: string
+        description:
+          type: string
+        applicationId:
+          type: string
+        systemRoles:
+          type: array
+          items:
+            type: string
+        conformances:
+          type: array
+          items:
+            $ref: "#/components/schemas/Conformance"
+        status:
+          type: string
+          example: active
+        timestamp:
+          type: string
+    Conformance:
+      type: object
+      properties:
+        interactionId:
+          type: string
+        send:
+          type: boolean
+          default: true
+        receive:
+          type: boolean
+          default: true
+    Interfaceversie:
+      type: object
+      properties:
+        interfaceversieId:
+          type: string
+    AuthorizationEndpoint:
+      type: object
+      properties:
+        authorizationEndpointuri:
+          type: string
+    TokenEndpoint:
+      type: object
+      properties:
+        tokenEndpointuri:
+          type: string
+    Abonneren:
+      type: object
+      properties:
+        maximaleDuur:
+          type: string
+        subscriptionEndpointuri:
+          type: string
+    Systeemrol:
+      type: object
+      properties:
+        systeemrolcode:
+          type: string
+        resourceEndpoint:
+          $ref: "#/components/schemas/ResourceEndpoint"
+    ResourceEndpoint:
+      type: object
+      properties:
+        resourceEndpointuri:
+          type: string
+    Attachment:
+      type: object
+      properties:
+        author:
+          type: string
+        description:
+          type: string
+        mimeType:
+          type: string
+        data:
+          type: string
+        index:
+          type: string
+        timestamp:
+          type: string
+    Type:
+      type: object
+      properties:
+        author:
+          type: string
+        type:
+          type: string
+        code:
+          type: string
+        displayName:
+          type: string
+        active:
+          type: boolean
+          default: true
+        index:
+          type: string
+        timestamp:
+          type: string
+    SubOrganization:
+      type: object
+      properties:
+        _self:
+          type: string
+        _className:
+          type: string
+        _id:
+          type: string
+        author:
+          type: string
+        mainOrganizationId:
+          type: string
+        subOrganizationId:
+          type: string
+        timestamp:
+          type: string
+    WorksAt:
+      type: object
+      properties:
+        _self:
+          type: string
+        _className:
+          type: string
+        _id:
+          type: string
+        author:
+          type: string
+        organizationId:
+          type: string
+        individualId:
+          type: string
+        availability:
+          type: string
+        telecoms:
+          type: array
+          items:
+            $ref: "#/components/schemas/Telecom"
+        speciality:
+          type: string
+          example: "1.000"
+        timestamp:
+          type: string
+    Relation:
+      type: object
+      properties:
+        _self:
+          type: string
+        _className:
+          type: string
+        _id:
+          type: string
+        author:
+          type: string
+        mainOrganizationId:
+          type: string
+        subOrganizationId:
+          type: string
+        organizationId:
+          type: string
+        individualId:
+          type: string
+        availability:
+          type: string
+        telecoms:
+          type: array
+          items:
+            $ref: "#/components/schemas/Telecom"
+        speciality:
+          type: string
+          example: "1.000"
+        timestamp:
+          type: string
+    OrganizationInput:
+      type: object
+      properties:
+        addresses:
+          type: array
+          items:
+            $ref: "#/components/schemas/AddressInput"
+        telecoms:
+          type: array
+          items:
+            $ref: "#/components/schemas/TelecomInput"
+        identifications:
+          type: array
+          items:
+            $ref: "#/components/schemas/IdentificationInput"
+        credentials:
+          type: array
+          items:
+            $ref: "#/components/schemas/CredentialInput"
+        electronicServices:
+          type: array
+          items:
+            $ref: "#/components/schemas/ElectronicServiceInput"
+        attachments:
+          type: array
+          items:
+            $ref: "#/components/schemas/AttachmentInput"
+        speciality:
+          type: string
+        comment:
+          type: string
+        types:
+          type: array
+          items:
+            $ref: "#/components/schemas/TypeInput"
+        names:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrganizationNameInput"
+        type:
+          type: array
+          description: Deprecated. Supported until 31-12-2020
+          items:
+            type: string
+    IndividualInput:
+      type: object
+      properties:
+        addresses:
+          type: array
+          items:
+            $ref: "#/components/schemas/AddressInput"
+        telecoms:
+          type: array
+          items:
+            $ref: "#/components/schemas/TelecomInput"
+        identifications:
+          type: array
+          items:
+            $ref: "#/components/schemas/IdentificationInput"
+        credentials:
+          type: array
+          items:
+            $ref: "#/components/schemas/CredentialInput"
+        electronicServices:
+          type: array
+          items:
+            $ref: "#/components/schemas/ElectronicServiceInput"
+        attachments:
+          type: array
+          items:
+            $ref: "#/components/schemas/AttachmentInput"
+        speciality:
+          type: string
+          example: "1.000"
+        comment:
+          type: string
+        types:
+          type: array
+          items:
+            $ref: "#/components/schemas/TypeInput"
+        names:
+          type: array
+          items:
+            $ref: "#/components/schemas/IndividualNameInput"
+        gender:
+          type: string
+          enum:
+<<<<<<< Updated upstream
             - ar
             - bn
             - cs
@@ -3450,3 +3512,336 @@ definitions:
           - requested
           - off
         example: 'requested'
+=======
+            - male
+            - female
+            - other
+            - unknown
+        doB:
+          type: string
+        languages:
+          type: array
+          items:
+            type: string
+            enum:
+              - ar
+              - bn
+              - cs
+              - da
+              - de
+              - de-AT
+              - de-CH
+              - de-DE
+              - el
+              - en
+              - en-AU
+              - en-CA
+              - en-GB
+              - en-IN
+              - en-NZ
+              - en-SG
+              - en-US
+              - es
+              - es-AR
+              - es-ES
+              - es-UY
+              - fi
+              - fr
+              - fr-BE
+              - fr-CH
+              - fr-FR
+              - fy
+              - fy-NL
+              - hi
+              - hr
+              - it
+              - it-CH
+              - it-IT
+              - ja
+              - ko
+              - nl
+              - nl-BE
+              - nl-NL
+              - no
+              - no-NO
+              - pa
+              - pt
+              - pt-BR
+              - ru
+              - ru-RU
+              - sr
+              - sr-SP
+              - sv
+              - sv-SE
+              - te
+              - zh
+              - zh-CN
+              - zh-HK
+              - zh-SG
+              - zh-TW
+    OrganizationNameInput:
+      type: object
+      properties:
+        fullName:
+          type: string
+        type:
+          type: string
+          example: Display
+        preferred:
+          type: boolean
+          default: false
+        active:
+          type: boolean
+          default: true
+    IndividualNameInput:
+      type: object
+      properties:
+        active:
+          type: boolean
+          default: true
+        familyName:
+          type: string
+        firstName:
+          type: string
+        fullName:
+          type: string
+        preferred:
+          type: boolean
+          default: false
+        prefix:
+          type: string
+        type:
+          type: string
+          example: Display
+    AddressInput:
+      type: object
+      properties:
+        type:
+          type: string
+          example: Practice
+        active:
+          type: boolean
+          default: true
+        firstLine:
+          type: string
+        address:
+          type: string
+        streetName:
+          type: string
+        streetNumber:
+          type: string
+        postalCode:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        country:
+          type: string
+        geolocation:
+          type: string
+    TelecomInput:
+      type: object
+      properties:
+        type:
+          type: string
+          example: Phone
+        name:
+          type: string
+        value:
+          type: string
+        active:
+          type: boolean
+          default: true
+        preferred:
+          type: boolean
+          default: false
+    IdentificationInput:
+      type: object
+      properties:
+        type:
+          type: string
+        value:
+          type: string
+        description:
+          type: string
+        active:
+          type: boolean
+          default: true
+    CredentialInput:
+      type: object
+      properties:
+        type:
+          type: string
+        active:
+          type: boolean
+          default: true
+        description:
+          type: string
+    ElectronicServiceInput:
+      type: object
+      properties:
+        _className:
+          type: string
+          example: CSC.HPD.IHE.ElectronicService
+        type:
+          type: string
+        active:
+          type: boolean
+          default: true
+        value:
+          type: string
+        address:
+          type: string
+        description:
+          type: string
+        gegevensdienstId:
+          type: string
+        weergavenaam:
+          type: string
+        interfaceversies:
+          type: array
+          items:
+            $ref: "#/components/schemas/Interfaceversie"
+        authorizationEndpoint:
+          $ref: "#/components/schemas/AuthorizationEndpoint"
+        tokenEndpoint:
+          $ref: "#/components/schemas/TokenEndpoint"
+        abonneren:
+          $ref: "#/components/schemas/Abonneren"
+        systeemrollen:
+          type: array
+          items:
+            $ref: "#/components/schemas/Systeemrol"
+    AttachmentInput:
+      type: object
+      properties:
+        description:
+          type: string
+        mimeType:
+          type: string
+        data:
+          type: string
+    TypeInput:
+      type: object
+      properties:
+        type:
+          type: string
+        code:
+          type: string
+        displayName:
+          type: string
+        active:
+          type: boolean
+          default: true
+    SubOrganizationInput:
+      type: object
+      required:
+        - mainOrganizationId
+        - subOrganizationId
+      properties:
+        mainOrganizationId:
+          type: string
+        subOrganizationId:
+          type: string
+    WorksAtInput:
+      type: object
+      required:
+        - individualId
+        - organizationId
+      properties:
+        organizationId:
+          type: string
+        individualId:
+          type: string
+        availability:
+          type: string
+        telecoms:
+          type: array
+          items:
+            $ref: "#/components/schemas/Telecom"
+        speciality:
+          type: string
+          example: "1.000"
+    Subscription:
+      type: object
+      properties:
+        _className:
+          type: string
+          example: CSC.HPD.Subscription
+        _id:
+          type: string
+        author:
+          type: string
+        channel:
+          type: object
+          properties:
+            endPoint:
+              type: string
+              example: https://webportaal.test.zorg-ab.nl/odata/notifications
+            header:
+              type: array
+              items:
+                type: string
+              example:
+                - $X-ID-ONLY$
+                - $X-SUBSCRIPTION-ID$
+            type:
+              type: string
+        end:
+          type: string
+        error:
+          type: string
+        criteria:
+          type: string
+        identifier:
+          type: string
+        reason:
+          type: string
+        status:
+          type: string
+        timestamp:
+          type: string
+    SubscriptionInput:
+      type: object
+      required:
+        - channel
+        - criteria
+        - reason
+        - status
+      properties:
+        channel:
+          type: object
+          properties:
+            endPoint:
+              type: string
+              example: https://webportaal.test.zorg-ab.nl/odata/notifications
+            header:
+              type: array
+              items:
+                type: string
+              example:
+                - $X-ID-ONLY$
+                - $X-SUBSCRIPTION-ID$
+              description: waardes $X-ID-ONLY$ en $X-SUBSCRIPTION-ID$ moeten aanwezig zijn
+            type:
+              type: string
+              example: rest-hook
+              description: rest-hook is de enige toegestane waarde, en moet aanwezig zijn
+        end:
+          type: string
+          example: 2025-01-01T00:00:00
+        criteria:
+          type: string
+          example: postalcode:[2225,2222];organizational:true
+        identifier:
+          type: string
+        reason:
+          type: string
+        status:
+          type: string
+          enum:
+            - requested
+            - off
+          example: requested
+>>>>>>> Stashed changes
