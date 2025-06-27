@@ -1,0 +1,818 @@
+openapi: '3.0.3'
+info:
+  title: Mitz
+  version: '4.0.0-beta.1'
+  description: |
+    Beschrijving van de endpoints zoals benodigd voor de bevraging van Mitz. 
+
+    **UPDATE 2025-03-12** eerste aanzet tot het uitwerken van de open en gesloten vraag in FHIR.
+
+    Deze endpoints zijn gebaseerd op de endpoints van Topicus en VECOZO zoals beschreven in:
+    - [Actueel overzicht Mitz-omgevingen](https://vzvz.atlassian.net/wiki/spaces/MITZ/pages/66944445/Actueel+overzicht+Mitz-omgevingen)
+
+    **Let op**: alle voorbeelden in dit document zijn indicatief. Voor volledige voorbeelden
+    en uitgebreidere specificaties, wordt verwezen naar [Mitz Service en Beheer](https://vzvz.atlassian.net/wiki/spaces/MITZ/overview?homepageId=66846726).
+
+        LET OP: Deze versie is nog verre van compleet en kan nog fouten bevatten.
+  
+  contact:
+    email: info@vzvz.nl
+
+servers:
+- url: https://test.test.mijnmitz.nl
+  description: Frontend (Topicus)
+# - url: https://mijnmitz.nl/oti/mitz/
+#   description: Backend (VECOZO)
+- url: https://test.test.mijnmitz.nl/reg/
+  description: Test Koppelvlak
+- url: https://ktt.ts.zorginfrastructuur.nl/
+  description: Test Autorisatie Server
+
+ 
+tags:
+  # - name: oauth
+  #   description: endpoints related to authorization
+  - name: closed
+    description: endpoints related to the closed consent question
+  - name: open
+    description: endpoints related to the open consent question
+
+security:
+  - accessToken: 
+    - patient/Patient.read
+    - patient$is-allowed
+
+paths:
+  /fhir/v4/Consent/$has-mitz-consent:
+    post:
+      tags:
+        - closed
+      requestBody:
+        description: |
+          Consent resource to request if data exchange is allowed.
+
+          __Note__: the Consent resource is wrapped in a `Parameters` object to be passed onto the operation.
+        required: true
+        content:
+          application/fhir+json;fhirVersion=4.0:
+            schema:
+                $ref: '#/components/schemas/closedPermissionRequest'
+            examples:
+              closedPermissionRequest:
+                $ref: '#/components/examples/closedPermissionRequestJSON'
+          application/fhir+xml;fhirVersion=4.0:
+            schema:
+                $ref: '#/components/schemas/closedPermissionRequest'
+            examples:
+              closedPermissionRequest:
+                $ref: '#/components/examples/closedPermissionRequestXML'
+      responses:
+        200:
+          description: ok, consent response available
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/closedPermissionResponse'
+              examples:
+                closedPermissionResponse:
+                  $ref: '#/components/examples/closedPermissionResponseJSONOK'
+            application/fhir+xml:
+              schema:
+                  $ref: '#/components/schemas/closedPermissionResponse'
+              examples:
+                closedPermissionResponse:
+                  $ref: '#/components/examples/closedPermissionResponseXMLOK'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        406:
+          $ref: '#/components/responses/406'
+        429:
+          $ref: '#/components/responses/429'
+
+  /fhir/v4/Consent/$get-mitz-sources:
+    post:
+      tags:
+        - open
+      requestBody:
+        description: |
+          Consent resource to request endpoints that can provide data according to consent.
+
+          __Note__: the Consent resource is wrapped in a `Parameters` object to be passed onto the operation.
+        required: true
+        content:
+          application/fhir+json;fhirVersion=4.0:
+            schema:
+              $ref: '#/components/schemas/openPermissionRequest'
+            examples:
+              openPermissionRequest:
+                $ref: '#/components/examples/openPermissionRequestJSON'
+          application/fhir+xml;fhirVersion=4.0:
+            schema:
+              $ref: '#/components/schemas/openPermissionRequest'
+            examples:
+              openPermissionRequest:
+                $ref: '#/components/examples/openPermissionRequestXML'
+      responses:
+        200:
+          description: ok, consent response available
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/openPermissionResponse'
+              examples:
+                openPermissionResponse:
+                  $ref: '#/components/examples/openPermissionResponseJSON'
+            application/fhir+xml:
+              schema:
+                $ref: '#/components/schemas/openPermissionResponse'
+              examples:
+                openPermissionResponse:
+                  $ref: '#/components/examples/openPermissionResponseXML'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        406:
+          $ref: '#/components/responses/406'
+        429:
+          $ref: '#/components/responses/429'
+
+components:
+  headers:
+    authenticateHeader:
+      schema:
+        type: string 
+        maxLength: 1024
+        # pattern: 'string'
+        format: 'WWW-Authenticate header'
+        example: 'WWW-Authenticate: Bearer realm="example", error="invalid_token", error_description="The access token expired"'
+  
+  schemas:
+    closedPermissionRequest:
+      description: |
+        Parameters object to pass the Consent instance to the operation. 
+        This Consent instance used for the closed permission request
+      externalDocs:
+        url: https:://simplifier.net/VZVZ
+      $ref: '#/components/schemas/Parameters'
+
+    closedPermissionResponse:
+      description: |
+        The response of a closed permission request is an OperationOutcome
+      externalDocs:
+        url: https://simplifier.net/VZVZ
+      $ref: '#/components/schemas/OperationOutcome'
+
+    openPermissionRequest:
+      description: |
+        Consent instance used for the open permission request
+      externalDocs:
+        url: https://simplifier.net/VZVZ
+      $ref: '#/components/schemas/Parameters'
+
+    openPermissionResponse:
+      description: |
+        The response of an open permission request is a Bundle
+      externalDocs:
+        url: https://simplifier.net/VZVZ
+      $ref: '#/components/schemas/Bundle'
+
+    Parameters:
+      description: |
+        Object to pass the input parameter Consent to the operation
+      type: object
+      required:
+        - resourceType
+        - parameter
+      properties:
+        resourceType:
+          type: string
+          enum: 
+            - Parameters
+          description: Identifies this as a FHIR Parameters resource.
+        parameter:
+          type: array
+          items:
+            type: object
+            required:
+              - name
+              - resource
+            properties:
+              name:
+                type: string
+                example: consent
+                description: The name of the parameter.
+              resource:
+                $ref: '#/components/schemas/Consent'
+
+    OperationOutcome:
+      description: |
+        Generic object to describe errors and, in case of Mitz, also the consent permission 
+
+        **NOTE**: This schema is intentionally incomplete. It only serves to make the examples render
+        correctly. The full definition can be found at [FHIR R4B OperationOutcome](https://hl7.org/fhir/R4B/operationoutcome.html)
+      externalDocs:
+        description: FHIR R4B OperationOutcome
+        url: http://hl7.org/fhir/R4B/operationoutcome.html
+      type: object
+      # $ref: 'https://hl7.org/fhir/R4B/fhir.schema.json#/definitions/OperationOutcome'
+      properties:
+        issue:
+          type: array
+          description: A list of error, warning, or information messages.
+          items:
+            $ref: '#/components/schemas/OperationOutcomeIssue'
+    OperationOutcomeIssue:
+      type: object
+      description: An issue representing an error, warning, or information message.
+      properties:
+        severity:
+          type: string
+          enum: ["fatal", "error", "warning", "information"]
+          description: The severity of the issue.
+        code:
+          type: string
+          description: A code indicating the type of issue.
+        details:
+          $ref: '#/components/schemas/CodeableConcept'
+    CodeableConcept:
+      type: object
+      description: A concept that may be defined by a code, text, or both.
+      properties:
+        coding:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Coding"
+    Coding:
+      type: object
+      description: A coding representation of a concept.
+      properties:
+        system:
+          type: string
+          description: The system defining the code.
+        code:
+          type: string
+          description: The code itself.
+
+    Bundle:
+      description: |
+        A container for a collection of resources.
+
+        **NOTE**: This schema is intentionally incomplete. It only serves to make the examples render
+        correctly. The full definition can be found at [FHIR R4B Bundle](https://hl7.org/fhir/R4B/bundle.html)
+      properties:
+        type:
+          description: Indicates the purpose of this bundle - how it is intended to be used.
+          properties:
+            system:
+              type: string
+              description: The system defining the code.
+            code:
+              type: string
+              description: The code itself.
+        total:
+          description: If a set of search matches, this is the total number of entries of type 'match' across all pages in the search. It does not include search.mode = 'include' or 'outcome' entries and it does not provide a count of the number of entries in the Bundle.
+          type: integer
+        entry:
+          description: An entry in a bundle resource - will either contain a resource or information about a resource (transactions and history only).
+          type: array
+          items:
+            $ref: "#/components/schemas/Bundle_Entry"
+    
+    Bundle_Entry:
+      description: |
+        A container for a collection of resources.
+
+        **NOTE**: This schema is intentionally incomplete. It only serves to make the examples render
+        correctly. The full definition can be found at [FHIR R4B Bundle](https://hl7.org/fhir/R4B/bundle.html)
+
+      properties:
+        id:
+          description: Unique id for the element within a resource (for internal references).
+          type: string
+        fullUrl:
+          description: The Absolute URL for the resource (uri).
+          type: string
+        resource:
+          description: The Resource for the entry.
+        search:
+          description: Information about the search process that led to the creation of this entry.
+          $ref: "#/components/schemas/Bundle_Search"
+        request:
+          description: Additional information about how this entry should be processed as part of a transaction or batch.
+          $ref: "#/components/schemas/Bundle_Request"
+        response:
+          description: Indicates the results of processing the corresponding request entry in the batch or transaction being responded to.
+          $ref: "#/components/schemas/Bundle_Response"
+
+    Bundle_Search:
+      description: A container for a collection of resources.
+      properties:
+        mode:
+          description: Why this entry is in the result set.
+          type: string
+
+    Bundle_Request:
+      description: A container for a collection of resources.
+      properties:
+        id:
+          description: Unique id for the element within a resource (for internal references).
+          type: string
+        method:
+          description: The HTTP action to be executed for this entry.
+          type: string
+        url:
+          description: The URL for this entry, relative to the root.
+          type: string
+
+    Bundle_Response:
+      description: A container for a collection of resources.
+      properties:
+        status:
+          description: The status code returned by processing this entry.
+          type: string
+      
+    Consent:
+      description: |
+        A record of a healthcare consumer's choices, which permits or denies identified recipient(s) or recipient role(s) to perform one or more actions within a given policy context, for specific purposes and periods of time.
+
+        **NOTE**: This schema is intentionally incomplete. It only serves to make the examples render
+        correctly. The full definition can be found at [FHIR R4B Consent](https://hl7.org/fhir/R4B/consent.html)
+
+      properties:
+        status:
+          description: "Indicates the current state of this consent."
+          type: string
+        scope:
+          description: "A selector of the type of consent being presented."
+          $ref: "#/components/schemas/CodeableConcept"
+
+    # Subscription:
+    #   description: JSON Abonnement
+    #   type: object
+    #   externalDocs:
+    #     description: JSON Abonnement voorbeelden
+    #     url: https://simplifier.net/VZVZ/examples-mitz-nl-vzvz-mitz-subscription/~json
+
+  securitySchemes:
+    accessToken:
+      type: http
+      scheme: bearer
+      description: |
+        AORTAonFHIR accessToken \
+        Meer uitleg over dit token is te vinden op [Confluence](https://confluence.vzvz.nl/display/UBEBVLEL/Token+specificaties+-+0.7.x#Tokenspecificaties0.7.x-InhoudenformaatvanhetAORTAaccess_token)
+
+  responses:
+    400:
+      description: |
+        Bad request 
+
+        Syntactically incorrect parameter in search request
+      headers:
+        authenticateHeader:
+          $ref: '#/components/headers/authenticateHeader'
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+          examples:
+            badRequest:
+              $ref: '#/components/examples/badRequestOperationOutcomeJSON'
+        application/fhir+xml:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+          examples:
+            badRequest:
+              $ref: '#/components/examples/badRequestOperationOutcomeXML'
+    401:
+      description: |
+        Unauthorized (try again with correct credentials)
+      headers:
+        authenticateHeader:
+          $ref: '#/components/headers/authenticateHeader'
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+          examples:
+            unauthorized:
+              $ref: '#/components/examples/unauthorizedOperationOutcomeJSON'
+        application/fhir+xml:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+          examples:
+            unauthorized:
+              $ref: '#/components/examples/unauthorizedOperationOutcomeXML'
+    403:
+      description: |
+        Request outside access token scope or
+        Voldoet niet aan beschikbaarheidscriterium
+      headers:
+        authenticateHeader:
+          $ref: '#/components/headers/authenticateHeader'
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+          examples:
+            unauthorized:
+              $ref: '#/components/examples/unauthorizedOperationOutcomeJSON'
+
+        application/fhir+xml:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+          examples:
+            unauthorized:
+              $ref: '#/components/examples/unauthorizedOperationOutcomeXML'
+    404:
+      description: |
+        FHIR resourcetype niet ondersteund 
+      headers:
+        authenticateHeader:
+          $ref: '#/components/headers/authenticateHeader'
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+          examples:
+            notSupported:
+              $ref: '#/components/examples/notSupportedOperationOutcomeJSON'
+        application/fhir+xml:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+          examples:
+            notSupported:
+              $ref: '#/components/examples/notSupportedOperationOutcomeXML'
+    406:
+      description: |
+        Not acceptable (server cannot parse request)
+
+            LET OP: moet nog verder uitgewerkt worden
+      headers:
+        authenticateHeader:
+          $ref: '#/components/headers/authenticateHeader'
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+          examples:
+            invalid:
+              $ref: '#/components/examples/invalidDataJSON'
+        application/fhir+xml:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+          examples:
+            invalid:
+              $ref: '#/components/examples/invalidDataXML'
+    422:
+      description: |
+        Unprocessable Entity
+
+            LET OP: moet nog verder uitgewerkt worden
+      headers:
+        authenticateHeader:
+          $ref: '#/components/headers/authenticateHeader'
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+          examples:
+            invalid:
+              $ref: '#/components/examples/invalidDataJSON'
+        application/fhir+xml:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+          examples:
+            invalid:
+                $ref: '#/components/examples/invalidDataXML'
+    429:
+      description: |
+        Too many requests (server imposes rate-limiting)
+
+            LET OP: moet nog verder uitgewerkt worden
+      headers:
+        authenticateHeader:
+          $ref: '#/components/headers/authenticateHeader'
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+          examples:
+            invalid:
+              $ref: '#/components/examples/invalidDataJSON'
+        application/fhir+xml:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+          examples:
+            invalid:
+                $ref: '#/components/examples/invalidDataXML'
+
+  examples:
+    closedPermissionRequestXML:
+      summary: closed permission request
+      description: |
+        Partial example of a Parameters object holding a Consent for closed permission request in XML.
+        More information on the profile can be found on [Simplifier](https://simplifier.net/VZVZ).       
+      value: |
+        <?xml version="1.0" encoding="UTF-8"?>
+        <Parameters xmlns="http://hl7.org/fhir">
+          <parameter>
+            <name value="consent"/>
+            <resource>
+              <Consent xmlns="http://hl7.org/fhir">
+                  <id value="closed-permission-request-example"/>
+                  <status value="proposed"/>
+                  <scope> 
+                    <coding> 
+                      <system value="http://terminology.hl7.org/CodeSystem/consentscope"/> 
+                      <code value="patient-privacy"/> 
+                    </coding> 
+                  </scope> 
+                  <!-- ....other details.... -->
+              </Consent>
+            </resource>
+          </parameter>
+        </Parameters>
+
+    closedPermissionRequestJSON:
+      summary: closed permission request
+      description: |
+        Partial example of Consent for closed permission request in JSON.
+        More information on the profile can be found on [Simplifier](https://simplifier.net/VZVZ).       
+      value: |
+        {
+          "resourceType" : "Parameters",
+          "parameter" : [
+            {
+              "name" : "consent",
+              "resource" : {
+                "resourceType": "Consent",
+                "id": "closed-permission-request-example",
+                "status": "proposed",
+                "scope": {
+                  "coding": [
+                    {
+                      "system": "http://terminology.hl7.org/CodeSystem/consentscope",
+                      "code": "patient-privacy"
+                    }
+                  ]
+                },
+                "comment": "....other details...."     
+              }
+            }
+          ]
+        }
+
+    closedPermissionResponseXMLOK:
+      summary: example of a permit response
+      description: Example of a response in XML.
+      value: |
+          <?xml version="1.0" encoding="UTF-8"?>
+          <OperationOutcome>
+            <issue>
+              <severity value="information"/>
+              <code value="informational"/>
+              <details>
+                <coding>
+                  <system value="http://vzvz.nl/fhir/otv/permission-response"/>
+                  <code value="permit"/>
+                </coding>
+              </details>
+            </issue>
+          </OperationOutcome>
+
+    closedPermissionResponseJSONOK:
+      summary: example of a permit response
+      description: Example of a response in JSON.
+      value: |
+          {
+            "resourceType": "OperationOutcome",
+            "issue": [
+              {
+                "severity": "information",
+                "code": "informational",
+                "details": {
+                  "system": "http://vzvz.nl/fhir/otv/permission-response",
+                  "code": "permit"
+                }
+              }
+            ]
+          }
+
+    openPermissionRequestXML:
+      summary: open permission request
+      description: |
+        Partial example of Consent for open permission request in XML.
+        More information on the profile can be found on [Simplifier](https://simplifier.net/VZVZ).       
+      value: |
+        <?xml version="1.0" encoding="UTF-8"?>
+        <Parameters xmlns="http://hl7.org/fhir">
+          <parameter>
+            <name value="consent"/>
+            <resource>        
+              <Consent xmlns="http://hl7.org/fhir">
+                <id value="open-permission-request-example"/>
+                <status value="proposed"/>
+                <scope> 
+                  <coding> 
+                    <system value="http://terminology.hl7.org/CodeSystem/consentscope"/> 
+                    <code value="patient-privacy"/> 
+                  </coding> 
+                </scope> 
+                <!-- .... -->
+                </Consent>
+            </resource>
+          </parameter>
+        </Parameters>
+
+    openPermissionRequestJSON:
+      summary: open permission request
+      description: |
+        Partial example of Consent for open permission request in JSON.
+        More information on the profile can be found on [Simplifier](https://simplifier.net/VZVZ).       
+      value: |
+        {
+          "resourceType" : "Parameters",
+          "parameter" : [
+            {
+              "name" : "consent",
+              "resource" : {
+                "resourceType": "Consent",
+                "id": "open-permission-request-example",
+                "status": "proposed",
+                "scope": {
+                  "coding": [
+                    {
+                      "system": "http://terminology.hl7.org/CodeSystem/consentscope",
+                      "code": "patient-privacy"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+
+    openPermissionResponseXML:
+      summary: open permission response
+      description: |
+        Example of an open response in XML.
+
+        **NOTE**: this example is intentionally incomplete. For complete and validated
+        examples see [Simplifier](https://simplifier.net/VZVZ)
+      value: |
+          <?xml version="1.0" encoding="UTF-8"?>
+          <Bundle>
+            <type value="searchSet"/>
+            <entry>
+              <fullUrl value="8d6da895-eafe-4f1b-a370-fbf2cc5a7283"/>
+              <resource>
+                <Device>
+                  <!-- .... -->
+                </Device>
+              <resource>
+              <search>
+                <mode value="match"/>
+              </search>
+            </entry>
+            <!-- .... -->
+          </Bundle>
+
+    openPermissionResponseJSON:
+      summary: open permission response
+      description: |
+        Example of an open response in XML.
+
+        **NOTE**: this example is intentionally incomplete. For complete and validated
+        examples see [Simplifier](https://simplifier.net/VZVZ)
+      value:
+        {
+          "resourceType": "Bundle",
+          "type": "searchSet",
+          "entry": [
+            {
+              "fullUrl": "8d6da895-eafe-4f1b-a370-fbf2cc5a7283",
+              "resource": {
+                "resourceType": "Device",
+                "// Additional fields would go here": null
+              },
+              "search": {
+                "mode": "match"
+              }
+            }
+          ]
+        }
+
+    badRequestOperationOutcomeXML:
+      summary: Bad request
+      description: |
+        OperationOutcome bij een bad request error
+
+        Dit is een voorbeeld omdat er meerdere foutcodes mogelijk zijn
+      value: |
+        <OperationOutcome>
+          <issue>
+            <severity value="error"/>
+            <code value="invalid"/>
+          </issue>
+        </OperationOutcome>
+
+    badRequestOperationOutcomeJSON:
+      summary: Bad request
+      description: |
+        OperationOutcome bij een bad request error
+
+        Dit is een voorbeeld omdat er meerdere foutcodes mogelijk zijn
+      value: |
+        {
+          "resourceType": "OperationOutcome",
+          "issue": [
+            {
+              "severity": "error",
+              "code": "invalid"
+            }
+          ]
+        }
+
+    unauthorizedOperationOutcomeXML:
+      summary: Unauthorized error
+      description: |
+        Unauthorized error
+      value: |
+        <OperationOutcome>
+          <issue>
+            <severity value="error"/>
+            <code value="security"/>
+          </issue>
+        </OperationOutcome>
+
+    unauthorizedOperationOutcomeJSON:
+      summary: Unauthorized error
+      description: |
+        Unauthorized error
+      value: |
+          {
+            "resourceType": "OperationOutcome",
+            "issue": [
+              {
+                "severity": "error",
+                "code": "security"
+              }
+            ]
+          }
+
+    notSupportedOperationOutcomeXML:
+      summary: Not Found error
+      value: |
+        <OperationOutcome>
+          <issue>
+            <severity value="error"/>
+            <code value="not-supported"/>
+          </issue>
+        </OperationOutcome>
+
+    notSupportedOperationOutcomeJSON:
+      summary: Not Found error
+      value: |
+          {
+            "resourceType": "OperationOutcome",
+            "issue": [
+              {
+                "severity": "error",
+                "code": "not-supported"
+              }
+            ]
+          }
+
+    invalidDataXML:
+      summary: invalid data
+      value: |
+        <OperationOutcome>
+          <issue>
+            <severity value="error"/>
+            <code value="invalid"/>
+          </issue>
+        </OperationOutcome>
+
+    invalidDataJSON:
+      summary: invalid data
+      value: |
+          {
+            "resourceType": "OperationOutcome",
+            "issue": [
+              {
+                "severity": "error",
+                "code": "invalid"
+              }
+            ]
+          }
