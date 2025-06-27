@@ -8,11 +8,12 @@ ROOT_DIR="$ME_DIR"
 
 base_url="https://vzvznl.github.io/VZVZ-FHIR-api"
 
-for l in $( ls -1 "${ROOT_DIR}"/api/open*.yml ); do
+# for l in $( ls -1 "${ROOT_DIR}"/api/open*.yml ); do
+  for l in "${ROOT_DIR}"/api/open*.yml ; do
     file=$( basename "${l}" )
 
     # create symlinks for each openapi file
-    echo creating symlink for "${file}"
+    echo 'DEBUG creating symlink for '"${file}"
 
     ln -sf "../api/${file}" "${ROOT_DIR}/docs/${file}"
 
@@ -23,5 +24,5 @@ for l in $( ls -1 "${ROOT_DIR}"/api/open*.yml ); do
     sed -e "s|OPENAPI_YML_FILE|${url}|" "${ROOT_DIR}/TEMPLATE.html" \
     > "${ROOT_DIR}/docs/${file%%.*}.html"
 
-    ls -1 "${ROOT_DIR}/docs/${file%%.*}.html"
+    echo 'DEBUG ' "$( ls -1 "${ROOT_DIR}/docs/${file%%.*}.html" )"
 done
