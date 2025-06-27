@@ -6,3 +6,12 @@ OperationOutcomeSTU3:
     description: FHIR STU3 OperationOutcome
     url: http://hl7.org/fhir/STU3/operationoutcome.html
   # $ref: https://hl7.org/fhir/STU3/fhir.schema.json#/definitions/OperationOutcome
+
+OperationOutcomeR4B:
+  description: |
+    Generic object to describe errors and, in case of Mitz, also the consent permission \
+    See also: [FHIR R4B OperationOutcome](https://hl7.org/fhir/R4B/operationoutcome.html)
+  externalDocs:
+    description: FHIR R4B OperationOutcome
+    url: http://hl7.org/fhir/R4B/operationoutcome.html
+  # $ref: https://hl7.org/fhir/R4B/fhir.schema.json#/definitions/OperationOutcome
