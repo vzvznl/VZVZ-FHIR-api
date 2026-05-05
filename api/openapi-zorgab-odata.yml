@@ -1994,7 +1994,6 @@ paths:
     get:
       tags:
       - GTK
-      description: This endpoint is available only in the test environment it is not yet supported in production.
       parameters:
       - name: identifier
         in: path
@@ -2017,7 +2016,36 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TwiinGtkDienst"
+                $ref: "#/components/schemas/ElectronicServiceTwiinGtkDienst"
+        "404":
+          description: Status 404
+  /twiinServiceIdentifier/{identifier}:
+    get:
+      tags:
+      - GTK
+      parameters:
+      - name: identifier
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: $select
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: include-inactive
+        in: query
+        required: false
+        schema:
+          type: boolean
+      responses:
+        "200":
+          description: Status 200
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
         "404":
           description: Status 404
   /uzi/{uziNumber}:
@@ -2298,6 +2326,7 @@ components:
             - $ref: "#/components/schemas/ElectronicServiceLSP"
             - $ref: "#/components/schemas/ElectronicServiceMedMij"
             - $ref: "#/components/schemas/ElectronicServiceIHE"
+            - $ref: "#/components/schemas/ElectronicServiceTwiinGtkDienst"
         endDate:
           type: string
         identifications:
@@ -3348,7 +3377,7 @@ components:
           type: string
         type:
           type: string
-    TwiinGtkDienst:
+    ElectronicServiceTwiinGtkDienst:
       type: object
       properties:
         _className:
