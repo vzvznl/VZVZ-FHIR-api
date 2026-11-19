@@ -8,6 +8,7 @@ info:
     Deze gegevens zijn essentieel voor veilige en efficiënte elektronische
     gegevensuitwisseling tussen zorgpartijen.
 
+
     **Wat is ZORG-AB:**
 
     - Een centrale bron met actuele en betrouwbare contactgegevens van
@@ -29,7 +30,7 @@ info:
     name: ZORG-AB
     url: https://www.vzvz.nl/diensten/gemeenschappelijke-diensten/zorg-ab
     email: zorg-ab@vzvz.nl
-  version: "2.14"
+  version: "2.15"
 servers:
   - url: https://zab.test.lsp.aorta-zorg.nl/zab
     description: ZORG-AB Test
@@ -123,40 +124,396 @@ paths:
                 $ref: "#/components/schemas/ElectronicServiceLSP"
         "404":
           description: Status 404
-  /identifications/{id}:
+  /identifications/URA:{id}:
     get:
+      operationId: getOrganizationByUra
       tags:
-        - Organization
-        - Individual
-      description: 
-        Gebruik voor {id}. Sleutelwaarden van ura, agb, kvk, uzi, big, enz.
-     
-        **Voorbeelden**
-        - /identifications/ura:00017075
-        - /identifications/agb:12345678
+        - Identifications
+      description: |
+        Zoek een organisatie op basis van een URA-nummer.
+
+        De identificatie wordt opgebouwd als `ura:<waarde>`, bijvoorbeeld
+        `ura:00017075`.
       parameters:
         - name: id
           in: path
           required: true
+          description: URA-nummer
           schema:
             type: string
-        - name: $select
-          in: query
-          required: false
-          schema:
-            type: string
-        - name: include-inactive
-          in: query
-          required: false
-          schema:
-            type: boolean
+          example: "00017075"
+        - $ref: "#/components/parameters/select"
+        - $ref: "#/components/parameters/includeInactive"
       responses:
         "200":
           description: Status 200
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrganizationOrIndividual"
+                $ref: "#/components/schemas/Organization"
+        "404":
+          description: Status 404
+  /identifications/AGB:{id}:
+    get:
+      operationId: getOrganizationByAgb
+      tags:
+        - Identifications
+      description: >
+        Zoek een organisatie op basis van een AGB-code (onderneming, vestiging
+        of zorgaanbieder).
+
+
+        De identificatie wordt opgebouwd als `agb:<waarde>`, bijvoorbeeld
+
+        `agb:12345678`.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: AGB-code (onderneming, vestiging of zorgaanbieder)
+          schema:
+            type: string
+          example: "12345678"
+        - $ref: "#/components/parameters/select"
+        - $ref: "#/components/parameters/includeInactive"
+      responses:
+        "200":
+          description: Status 200
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+        "404":
+          description: Status 404
+  /identifications/AGB_Onderneming:{id}:
+    get:
+      operationId: getOrganizationByAgbOnderneming
+      tags:
+        - Identifications
+      description: >
+        Zoek een organisatie op basis van een AGB-code van een onderneming.
+
+
+        De identificatie wordt opgebouwd als `agb_onderneming:<waarde>`,
+        bijvoorbeeld
+
+        `agb_onderneming:12345678`.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: AGB-code van een onderneming
+          schema:
+            type: string
+          example: "12345678"
+        - $ref: "#/components/parameters/select"
+        - $ref: "#/components/parameters/includeInactive"
+      responses:
+        "200":
+          description: Status 200
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+        "404":
+          description: Status 404
+  /identifications/AGB_Vestiging:{id}:
+    get:
+      operationId: getOrganizationByAgbVestiging
+      tags:
+        - Identifications
+      description: >
+        Zoek een organisatie op basis van een AGB-code van een vestiging.
+
+
+        De identificatie wordt opgebouwd als `agb_vestiging:<waarde>`,
+        bijvoorbeeld
+
+        `agb_vestiging:12345678`.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: AGB-code van een vestiging
+          schema:
+            type: string
+          example: "12345678"
+        - $ref: "#/components/parameters/select"
+        - $ref: "#/components/parameters/includeInactive"
+      responses:
+        "200":
+          description: Status 200
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+        "404":
+          description: Status 404
+  /identifications/AGB_Zorgaanbieder:{id}:
+    get:
+      operationId: getOrganizationByAgbZorgaanbieder
+      tags:
+        - Identifications
+      description: >
+        Zoek een organisatie op basis van een AGB-code van een zorgaanbieder.
+
+
+        De identificatie wordt opgebouwd als `agb_zorgaanbieder:<waarde>`,
+        bijvoorbeeld
+
+        `agb_zorgaanbieder:12345678`.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: AGB-code van een zorgaanbieder
+          schema:
+            type: string
+          example: "12345678"
+        - $ref: "#/components/parameters/select"
+        - $ref: "#/components/parameters/includeInactive"
+      responses:
+        "200":
+          description: Status 200
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+        "404":
+          description: Status 404
+  /identifications/ZAB-Id:{id}:
+    get:
+      operationId: getOrganizationByZabId
+      tags:
+        - Identifications
+      description: |
+        Zoek een organisatie op basis van een ZAB-ID.
+
+        De identificatie wordt opgebouwd als `zab-id:<waarde>`, bijvoorbeeld
+        `zab-id:12345678`.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ZAB-ID
+          schema:
+            type: string
+          example: "12345678"
+        - $ref: "#/components/parameters/select"
+        - $ref: "#/components/parameters/includeInactive"
+      responses:
+        "200":
+          description: Status 200
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+        "404":
+          description: Status 404
+  /identifications/UZOVI:{id}:
+    get:
+      operationId: getOrganizationByUzovi
+      tags:
+        - Identifications
+      description: |
+        Zoek een organisatie op basis van een UZOVI-code.
+
+        De identificatie wordt opgebouwd als `uzovi:<waarde>`, bijvoorbeeld
+        `uzovi:0505`.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: UZOVI-code
+          schema:
+            type: string
+          example: "0505"
+        - $ref: "#/components/parameters/select"
+        - $ref: "#/components/parameters/includeInactive"
+      responses:
+        "200":
+          description: Status 200
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+        "404":
+          description: Status 404
+  /identifications/NVZID:{id}:
+    get:
+      operationId: getOrganizationByNvzid
+      tags:
+        - Identifications
+      description: |
+        Zoek een organisatie op basis van een NVZID.
+
+        De identificatie wordt opgebouwd als `nvzid:<waarde>`, bijvoorbeeld
+        `nvzid:2.16.528.1.1007.3.3.12345`.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: NVZ-ID
+          schema:
+            type: string
+          example: 2.16.528.1.1007.3.3.12345
+        - $ref: "#/components/parameters/select"
+        - $ref: "#/components/parameters/includeInactive"
+      responses:
+        "200":
+          description: Status 200
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+        "404":
+          description: Status 404
+  /identifications/MedMij:{id}:
+    get:
+      operationId: getOrganizationByMedMij
+      tags:
+        - Identifications
+      description: |
+        Zoek een organisatie op basis van een MedMij-adres.
+
+        De identificatie wordt opgebouwd als `medmij:<waarde>`, bijvoorbeeld
+        `medmij:apotheekjanssen@medmij`.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: MedMij-adres
+          schema:
+            type: string
+          example: apotheekjanssen@medmij
+        - $ref: "#/components/parameters/select"
+        - $ref: "#/components/parameters/includeInactive"
+      responses:
+        "200":
+          description: Status 200
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+        "404":
+          description: Status 404
+  /identifications/KVK:{id}:
+    get:
+      operationId: getOrganizationByKvk
+      tags:
+        - Identifications
+      description: |
+        Zoek een organisatie op basis van een KvK-nummer.
+
+        De identificatie wordt opgebouwd als `kvk:<waarde>`, bijvoorbeeld
+        `kvk:000012345678`.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: KvK-nummer
+          schema:
+            type: string
+          example: "000012345678"
+        - $ref: "#/components/parameters/select"
+        - $ref: "#/components/parameters/includeInactive"
+      responses:
+        "200":
+          description: Status 200
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+        "404":
+          description: Status 404
+  /identifications/AGB_Zorgverlener:{id}:
+    get:
+      operationId: getIndividualByAgbZorgverlener
+      tags:
+        - Identifications
+      description: >
+        Zoek een persoon op basis van een AGB-code van een zorgverlener.
+
+
+        De identificatie wordt opgebouwd als `agb_zorgverlener:<waarde>`,
+        bijvoorbeeld
+
+        `agb_zorgverlener:12345678`.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: AGB-code van een zorgverlener
+          schema:
+            type: string
+          example: "12345678"
+        - $ref: "#/components/parameters/select"
+        - $ref: "#/components/parameters/includeInactive"
+      responses:
+        "200":
+          description: Status 200
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Individual"
+        "404":
+          description: Status 404
+  /identifications/BIG:{id}:
+    get:
+      operationId: getIndividualByBig
+      tags:
+        - Identifications
+      description: |
+        Zoek een persoon op basis van een BIG-nummer.
+
+        De identificatie wordt opgebouwd als `big:<waarde>`, bijvoorbeeld
+        `big:12345678910`.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: BIG-nummer
+          schema:
+            type: string
+          example: "12345678910"
+        - $ref: "#/components/parameters/select"
+        - $ref: "#/components/parameters/includeInactive"
+      responses:
+        "200":
+          description: Status 200
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Individual"
+        "404":
+          description: Status 404
+  /identifications/UZI:{id}:
+    get:
+      operationId: getIndividualByUzi
+      tags:
+        - Identifications
+      description: |
+        Zoek een persoon op basis van een UZI-nummer.
+
+        De identificatie wordt opgebouwd als `uzi:<waarde>`, bijvoorbeeld
+        `uzi:123456789`.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: UZI-nummer
+          schema:
+            type: string
+          example: "123456789"
+        - $ref: "#/components/parameters/select"
+        - $ref: "#/components/parameters/includeInactive"
+      responses:
+        "200":
+          description: Status 200
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Individual"
         "404":
           description: Status 404
   /individuals:
@@ -263,12 +620,12 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/AddressInput"
       responses:
-        "201":
-          description: Status 201
+        "200":
+          description: Status 200
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Address"
+                $ref: "#/components/schemas/Individual"
         "400":
           description: Status 400
         "401":
@@ -291,8 +648,8 @@ paths:
           schema:
             type: string
       responses:
-        "204":
-          description: Status 204
+        "200":
+          description: Status 200
         "401":
           description: Status 401
         "404":
@@ -314,12 +671,12 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/AddressInput"
       responses:
-        "202":
-          description: Status 202
+        "200":
+          description: Status 200
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Address"
+                $ref: "#/components/schemas/Individual"
         "400":
           description: Status 400
         "401":
@@ -340,12 +697,12 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/AttachmentInput"
       responses:
-        "201":
-          description: Status 201
+        "200":
+          description: Status 200
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Attachment"
+                $ref: "#/components/schemas/Individual"
         "400":
           description: Status 400
         "401":
@@ -369,8 +726,8 @@ paths:
           schema:
             type: string
       responses:
-        "204":
-          description: Status 204
+        "200":
+          description: Status 200
         "401":
           description: Status 401
         "404":
@@ -392,12 +749,12 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/AttachmentInput"
       responses:
-        "202":
-          description: Status 202
+        "200":
+          description: Status 200
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Attachment"
+                $ref: "#/components/schemas/Individual"
         "400":
           description: Status 400
         "401":
@@ -417,12 +774,12 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/CredentialInput"
       responses:
-        "201":
-          description: Status 201
+        "200":
+          description: Status 200
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Credential"
+                $ref: "#/components/schemas/Individual"
         "400":
           description: Status 400
         "401":
@@ -445,8 +802,8 @@ paths:
           schema:
             type: string
       responses:
-        "204":
-          description: Status 204
+        "200":
+          description: Status 200
         "401":
           description: Status 401
         "404":
@@ -468,12 +825,12 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/CredentialInput"
       responses:
-        "202":
-          description: Status 202
+        "200":
+          description: Status 200
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Credential"
+                $ref: "#/components/schemas/Individual"
         "400":
           description: Status 400
         "401":
@@ -493,12 +850,12 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/IdentificationInput"
       responses:
-        "201":
-          description: Status 201
+        "200":
+          description: Status 200
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Identification"
+                $ref: "#/components/schemas/Individual"
         "400":
           description: Status 400
         "401":
@@ -521,8 +878,8 @@ paths:
           schema:
             type: string
       responses:
-        "204":
-          description: Status 204
+        "200":
+          description: Status 200
         "401":
           description: Status 401
         "404":
@@ -544,12 +901,12 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/IdentificationInput"
       responses:
-        "202":
-          description: Status 202
+        "200":
+          description: Status 200
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Identification"
+                $ref: "#/components/schemas/Individual"
         "400":
           description: Status 400
         "401":
@@ -569,12 +926,12 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/IndividualNameInput"
       responses:
-        "201":
-          description: Status 201
+        "200":
+          description: Status 200
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/IndividualName"
+                $ref: "#/components/schemas/Individual"
         "400":
           description: Status 400
         "401":
@@ -597,8 +954,8 @@ paths:
           schema:
             type: string
       responses:
-        "204":
-          description: Status 204
+        "200":
+          description: Status 200
         "401":
           description: Status 401
         "404":
@@ -620,12 +977,12 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/IndividualNameInput"
       responses:
-        "202":
-          description: Status 202
+        "200":
+          description: Status 200
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/IndividualName"
+                $ref: "#/components/schemas/Individual"
         "400":
           description: Status 400
         "401":
@@ -697,12 +1054,12 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/ElectronicServiceIHEInput"
       responses:
-        "201":
-          description: Status 201
+        "200":
+          description: Status 200
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ElectronicServiceIHE"
+                $ref: "#/components/schemas/Individual"
         "400":
           description: Status 400
         "401":
@@ -725,8 +1082,8 @@ paths:
           schema:
             type: string
       responses:
-        "204":
-          description: Status 204
+        "200":
+          description: Status 200
         "401":
           description: Status 401
         "404":
@@ -748,12 +1105,12 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/ElectronicServiceIHEInput"
       responses:
-        "202":
-          description: Status 202
+        "200":
+          description: Status 200
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ElectronicServiceIHE"
+                $ref: "#/components/schemas/Individual"
         "400":
           description: Status 400
         "401":
@@ -773,12 +1130,12 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/TelecomInput"
       responses:
-        "201":
-          description: Status 201
+        "200":
+          description: Status 200
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Telecom"
+                $ref: "#/components/schemas/Individual"
         "400":
           description: Status 400
         "401":
@@ -801,8 +1158,8 @@ paths:
           schema:
             type: string
       responses:
-        "204":
-          description: Status 204
+        "200":
+          description: Status 200
         "401":
           description: Status 401
         "404":
@@ -824,12 +1181,12 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/TelecomInput"
       responses:
-        "202":
-          description: Status 202
+        "200":
+          description: Status 200
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Telecom"
+                $ref: "#/components/schemas/Individual"
         "400":
           description: Status 400
         "401":
@@ -849,12 +1206,12 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/TypeInput"
       responses:
-        "201":
-          description: Status 201
+        "200":
+          description: Status 200
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Type"
+                $ref: "#/components/schemas/Individual"
         "400":
           description: Status 400
         "401":
@@ -877,8 +1234,8 @@ paths:
           schema:
             type: string
       responses:
-        "204":
-          description: Status 204
+        "200":
+          description: Status 200
         "401":
           description: Status 401
         "404":
@@ -900,12 +1257,12 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/TypeInput"
       responses:
-        "202":
-          description: Status 202
+        "200":
+          description: Status 200
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Type"
+                $ref: "#/components/schemas/Individual"
         "400":
           description: Status 400
         "401":
@@ -1249,12 +1606,12 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/AddressInput"
       responses:
-        "201":
-          description: Status 201
+        "200":
+          description: Status 200
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Address"
+                $ref: "#/components/schemas/Organization"
         "400":
           description: Status 400
         "401":
@@ -1277,8 +1634,8 @@ paths:
           schema:
             type: string
       responses:
-        "204":
-          description: Status 204
+        "200":
+          description: Status 200
         "401":
           description: Status 401
         "404":
@@ -1300,12 +1657,12 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/AddressInput"
       responses:
-        "202":
-          description: Status 202
+        "200":
+          description: Status 200
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Address"
+                $ref: "#/components/schemas/Organization"
         "400":
           description: Status 400
         "401":
@@ -1326,12 +1683,12 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/AttachmentInput"
       responses:
-        "201":
-          description: Status 201
+        "200":
+          description: Status 200
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Attachment"
+                $ref: "#/components/schemas/Organization"
         "400":
           description: Status 400
         "401":
@@ -1355,8 +1712,8 @@ paths:
           schema:
             type: string
       responses:
-        "204":
-          description: Status 204
+        "200":
+          description: Status 200
         "401":
           description: Status 401
         "404":
@@ -1378,12 +1735,12 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/AttachmentInput"
       responses:
-        "202":
-          description: Status 202
+        "200":
+          description: Status 200
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Attachment"
+                $ref: "#/components/schemas/Organization"
         "400":
           description: Status 400
         "401":
@@ -1403,12 +1760,12 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/CredentialInput"
       responses:
-        "201":
-          description: Status 201
+        "200":
+          description: Status 200
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Credential"
+                $ref: "#/components/schemas/Organization"
         "400":
           description: Status 400
         "401":
@@ -1431,8 +1788,8 @@ paths:
           schema:
             type: string
       responses:
-        "204":
-          description: Status 204
+        "200":
+          description: Status 200
         "401":
           description: Status 401
         "404":
@@ -1454,12 +1811,12 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/CredentialInput"
       responses:
-        "202":
-          description: Status 202
+        "200":
+          description: Status 200
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Credential"
+                $ref: "#/components/schemas/Organization"
         "400":
           description: Status 400
         "401":
@@ -1479,12 +1836,12 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/IdentificationInput"
       responses:
-        "201":
-          description: Status 201
+        "200":
+          description: Status 200
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Identification"
+                $ref: "#/components/schemas/Organization"
         "400":
           description: Status 400
         "401":
@@ -1507,8 +1864,8 @@ paths:
           schema:
             type: string
       responses:
-        "204":
-          description: Status 204
+        "200":
+          description: Status 200
         "401":
           description: Status 401
         "404":
@@ -1530,12 +1887,12 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/IdentificationInput"
       responses:
-        "202":
-          description: Status 202
+        "200":
+          description: Status 200
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Identification"
+                $ref: "#/components/schemas/Organization"
         "400":
           description: Status 400
         "401":
@@ -1612,12 +1969,12 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/OrganizationNameInput"
       responses:
-        "201":
-          description: Status 201
+        "200":
+          description: Status 200
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrganizationName"
+                $ref: "#/components/schemas/Organization"
         "400":
           description: Status 400
         "401":
@@ -1640,8 +1997,8 @@ paths:
           schema:
             type: string
       responses:
-        "204":
-          description: Status 204
+        "200":
+          description: Status 200
         "401":
           description: Status 401
         "404":
@@ -1663,12 +2020,12 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/OrganizationNameInput"
       responses:
-        "202":
-          description: Status 202
+        "200":
+          description: Status 200
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrganizationName"
+                $ref: "#/components/schemas/Organization"
         "400":
           description: Status 400
         "401":
@@ -1714,12 +2071,12 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/ElectronicServiceIHEInput"
       responses:
-        "201":
-          description: Status 201
+        "200":
+          description: Status 200
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ElectronicServiceIHE"
+                $ref: "#/components/schemas/Organization"
         "400":
           description: Status 400
         "401":
@@ -1742,8 +2099,8 @@ paths:
           schema:
             type: string
       responses:
-        "204":
-          description: Status 204
+        "200":
+          description: Status 200
         "401":
           description: Status 401
         "404":
@@ -1765,12 +2122,12 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/ElectronicServiceIHEInput"
       responses:
-        "202":
-          description: Status 202
+        "200":
+          description: Status 200
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ElectronicServiceIHE"
+                $ref: "#/components/schemas/Organization"
         "400":
           description: Status 400
         "401":
@@ -1821,12 +2178,12 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/TelecomInput"
       responses:
-        "201":
-          description: Status 201
+        "200":
+          description: Status 200
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Telecom"
+                $ref: "#/components/schemas/Organization"
         "400":
           description: Status 400
         "401":
@@ -1849,8 +2206,8 @@ paths:
           schema:
             type: string
       responses:
-        "204":
-          description: Status 204
+        "200":
+          description: Status 200
         "401":
           description: Status 401
         "404":
@@ -1872,12 +2229,12 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/TelecomInput"
       responses:
-        "202":
-          description: Status 202
+        "200":
+          description: Status 200
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Telecom"
+                $ref: "#/components/schemas/Organization"
         "400":
           description: Status 400
         "401":
@@ -1897,12 +2254,12 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/TypeInput"
       responses:
-        "201":
-          description: Status 201
+        "200":
+          description: Status 200
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Type"
+                $ref: "#/components/schemas/Organization"
         "400":
           description: Status 400
         "401":
@@ -1925,8 +2282,8 @@ paths:
           schema:
             type: string
       responses:
-        "204":
-          description: Status 204
+        "200":
+          description: Status 200
         "401":
           description: Status 401
         "404":
@@ -1948,12 +2305,12 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/TypeInput"
       responses:
-        "202":
-          description: Status 202
+        "200":
+          description: Status 200
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Type"
+                $ref: "#/components/schemas/Organization"
         "400":
           description: Status 400
         "401":
@@ -1964,6 +2321,8 @@ paths:
     post:
       tags:
         - SubOrganization Relation
+      description: Both request body AND parameters may be used, parameters have
+        priority. Either can be used separate. Store _id as relationId
       parameters:
         - name: mainOrganizationId
           in: query
@@ -2005,14 +2364,9 @@ paths:
       tags:
         - SubOrganization Relation
       parameters:
-        - name: id
+        - name: relationId
           in: path
           required: true
-          schema:
-            type: string
-        - name: $select
-          in: query
-          required: false
           schema:
             type: string
       responses:
@@ -2028,7 +2382,7 @@ paths:
       tags:
         - SubOrganization Relation
       parameters:
-        - name: id
+        - name: relationId
           in: path
           required: true
           schema:
@@ -2128,6 +2482,22 @@ paths:
                 $ref: "#/components/schemas/Organization"
         "404":
           description: Status 404
+    post:
+      tags:
+        - Organization
+      description: Alleen gebruikers die zijn geauthenticeerd met een geldig URA-pas
+        kunnen een URA-registratie aanmaken via deze endpoint.
+      requestBody:
+        $ref: "#/components/requestBodies/OrganizationInput"
+      responses:
+        "201":
+          description: Status 201
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+        "400":
+          description: Status 400
   /twiinServices/{identifier}:
     get:
       tags:
@@ -2282,12 +2652,7 @@ paths:
       tags:
         - WorksAt Relation
       parameters:
-        - name: organizationId
-          in: query
-          required: true
-          schema:
-            type: string
-        - name: individualId
+        - name: worksatid
           in: query
           required: true
           schema:
@@ -2301,12 +2666,12 @@ paths:
           description: Status 401
         "404":
           description: Status 404
-  /worksAt/{id}:
+  /worksAt/{worksatid}:
     get:
       tags:
         - WorksAt Relation
       parameters:
-        - name: id
+        - name: worksatid
           in: path
           required: true
           schema:
@@ -2329,7 +2694,7 @@ paths:
       tags:
         - WorksAt Relation
       parameters:
-        - name: id
+        - name: worksatid
           in: path
           required: true
           schema:
@@ -2419,8 +2784,8 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/SubscriptionInput"
       responses:
-        "202":
-          description: Status 202
+        "200":
+          description: Status 200
           content:
             application/json:
               schema:
@@ -2432,6 +2797,19 @@ paths:
         "404":
           description: Status 404
 components:
+  parameters:
+    select:
+      name: $select
+      in: query
+      required: false
+      schema:
+        type: string
+    includeInactive:
+      name: include-inactive
+      in: query
+      required: false
+      schema:
+        type: boolean
   schemas:
     Organization:
       type: object
@@ -2528,6 +2906,8 @@ components:
         _self:
           type: string
         _id:
+          type: string
+        agb:
           type: string
         applicationIds:
           type: array
@@ -2673,18 +3053,17 @@ components:
         uzi:
           type: string
     OrganizationOrIndividual:
-          type: array
-          items:
-            oneOf:
-              - $ref: "#/components/schemas/Organization"
-              - $ref: "#/components/schemas/Individual"
+      items:
+        oneOf:
+          - $ref: "#/components/schemas/Organization"
+          - $ref: "#/components/schemas/Individual"
     OrganizationOrIndividualOrWorksAt:
-          type: array
-          items:
-            oneOf:
-              - $ref: "#/components/schemas/Organization"
-              - $ref: "#/components/schemas/Individual"
-              - $ref: "#/components/schemas/WorksAt"
+      type: array
+      items:
+        oneOf:
+          - $ref: "#/components/schemas/Organization"
+          - $ref: "#/components/schemas/Individual"
+          - $ref: "#/components/schemas/WorksAt"
     OrganizationName:
       type: object
       properties:
@@ -2732,11 +3111,11 @@ components:
           type: string
           example: Display
     OrganizationNameOrIndividualName:
-          type: array
-          items:
-            oneOf:
-              - $ref: "#/components/schemas/OrganizationName"
-              - $ref: "#/components/schemas/IndividualName"
+      type: array
+      items:
+        oneOf:
+          - $ref: "#/components/schemas/OrganizationName"
+          - $ref: "#/components/schemas/IndividualName"
     Address:
       type: object
       properties:
@@ -3389,6 +3768,8 @@ components:
     ElectronicServiceTwiinGtkDienst:
       type: object
       properties:
+        _self:
+          type: string
         _className:
           type: string
           example: CSC.HPD.Twiin.GtKDienst

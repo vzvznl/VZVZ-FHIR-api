@@ -1,9 +1,9 @@
 # VZVZ FHIR REST API
 
-De zorg maakt steeds meer gebruik van web gebaseerde koppelvlakken, (zogenaamde ‘FHIR REST APIs’), om hun data (FHIR Resources) te ontsluiten voor gebruik. Zo kunnen ontwikkelaars van apps makkelijk gegevens uitwisselen en gebruiken (voorbeelden zijn de uitwisseling van de verschillende FHIR resources).
+De zorg maakt steeds meer gebruik van web-gebaseerde koppelvlakken, (zogenaamde ‘FHIR REST APIs’), om hun data (FHIR Resources) te ontsluiten voor gebruik. Zo kunnen ontwikkelaars van apps makkelijk gegevens uitwisselen en gebruiken (voorbeelden zijn de uitwisseling van de verschillende FHIR resources).
 
 Het is belangrijk dat deze (zorg) koppelvlakken duidelijk en uniform gedocumenteerd worden zodat gebruikers gemakkelijk kunnen vinden hoe ze bevraagd kunnen worden. 
-Hiervoor bestaat een open standaard met breed internationaal draagvlak, de Open API Specification v3.0 (OAS 3.0)
+Hiervoor bestaat een open standaard met breed internationaal draagvlak, de Open API Specification v3.0 (OAS 3.0).
 
 # OpenAPI Specifications v3.0
 
